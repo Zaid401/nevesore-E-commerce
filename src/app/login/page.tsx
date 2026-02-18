@@ -1,0 +1,111 @@
+import Navbar from "@/components/navbar";
+
+export default function LoginPage() {
+  return (
+    <main className="min-h-screen text-white">
+      <Navbar />
+      <section className="relative flex justify-center px-6 py-16 sm:py-20">
+        <div className="pointer-events-none absolute inset-0" aria-hidden />
+        <div className="relative w-full max-w-md">
+          <div className="rounded-[32px] border border-white/5 bg-gradient-to-b from-neutral-900/90 via-neutral-950 to-black p-10 shadow-[0_30px_70px_rgba(0,0,0,0.55)]">
+            <div className="flex flex-col gap-6">
+              <header className="flex flex-col gap-2 text-left">
+                <h1 className="text-2xl font-extrabold uppercase tracking-[0.3em]">
+                  Access Your Potential
+                </h1>
+                <p className="text-sm text-neutral-300">
+                  Enter your credentials to continue your training.
+                </p>
+              </header>
+
+              <form className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2 text-xs font-semibold uppercase tracking-[0.35em] text-neutral-400">
+                  <label htmlFor="login-email">Email Address</label>
+                  <input
+                    id="login-email"
+                    type="email"
+                    placeholder="athlete@neversore.com"
+                    className="h-12 rounded-2xl border border-white/10 bg-neutral-900/80 px-5 text-sm font-medium tracking-normal text-neutral-100 placeholder:text-neutral-500 focus:border-red-500/80 focus:outline-none focus:ring-2 focus:ring-red-500/40"
+                    required
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2 text-xs font-semibold uppercase tracking-[0.35em] text-neutral-400">
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="login-password">Password</label>
+                    <a href="#" className="text-[10px] font-bold tracking-[0.4em] text-red-400 transition-colors hover:text-red-300">
+                      Forgot?
+                    </a>
+                  </div>
+                  <div className="relative flex items-center">
+                    <input
+                      id="login-password"
+                      type="password"
+                      placeholder="••••••••"
+                      className="h-12 w-full rounded-2xl border border-white/10 bg-neutral-900/80 px-5 pr-12 text-sm font-medium tracking-[0.1em] text-neutral-100 placeholder:text-neutral-500 focus:border-red-500/80 focus:outline-none focus:ring-2 focus:ring-red-500/40"
+                      required
+                    />
+                    <button
+                      type="button"
+                      aria-label="Toggle password visibility"
+                      className="absolute right-3 flex h-8 w-8 items-center justify-center rounded-full text-neutral-500 transition-colors hover:text-neutral-300"
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
+                        <path
+                          fill="currentColor"
+                          d="M12 5c-5.05 0-9.27 3.11-11 7.5 1.73 4.39 5.95 7.5 11 7.5s9.27-3.11 11-7.5C21.27 8.11 17.05 5 12 5m0 12a4.5 4.5 0 1 1 4.5-4.5A4.5 4.5 0 0 1 12 17m0-7a2.5 2.5 0 1 0 2.5 2.5A2.5 2.5 0 0 0 12 10"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="h-12 rounded-2xl bg-red-600 text-sm font-bold uppercase tracking-[0.4em] text-white transition-transform duration-150 hover:-translate-y-0.5 hover:bg-red-500"
+                >
+                  Sign In
+                </button>
+              </form>
+
+              <div className="flex items-center gap-4 text-xs uppercase tracking-[0.4em] text-neutral-500">
+                <span className="h-px flex-1 bg-neutral-800" aria-hidden />
+                <span>Or</span>
+                <span className="h-px flex-1 bg-neutral-800" aria-hidden />
+              </div>
+
+              <button
+                type="button"
+                className="flex h-12 items-center justify-center gap-3 rounded-2xl border border-white/10 bg-neutral-900/80 text-sm font-semibold uppercase tracking-[0.25em] text-white transition-transform duration-150 hover:-translate-y-0.5 hover:border-white/30"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
+                  <path
+                    fill="currentColor"
+                    d="M21.35 11.1h-9.18v2.93h5.29a4.54 4.54 0 0 1-1.93 2.98l3.11 2.41a8.36 8.36 0 0 0 2.71-6.44 8.17 8.17 0 0 0-.21-1.88"
+                  />
+                  <path
+                    fill="currentColor"
+                    d="M12.17 21c2.45 0 4.51-.81 6.02-2.21l-3.11-2.41a4.7 4.7 0 0 1-6.93-2.48H5.9v2.5A8.44 8.44 0 0 0 12.17 21"
+                  />
+                  <path
+                    fill="currentColor"
+                    d="M7 13.9a4.69 4.69 0 0 1 0-3.8v-2.5H4.04a8.5 8.5 0 0 0 0 8.8l2.96-2.5"
+                  />
+                  <path
+                    fill="currentColor"
+                    d="M12.17 7.54a4.55 4.55 0 0 1 3.21 1.26l2.42-2.37A8.41 8.41 0 0 0 12.17 3a8.44 8.44 0 0 0-6.27 2.6l2.96 2.49a4.7 4.7 0 0 1 3.31-1.55"
+                  />
+                </svg>
+                Sign in with Google
+              </button>
+
+              <p className="text-center text-xs uppercase tracking-[0.3em] text-neutral-400">
+                Don&apos;t have an account? <a href="#" className="text-red-400 transition-colors hover:text-red-300">Create Account</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}

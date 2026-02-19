@@ -2,12 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 const navLinks = [
-  { label: "Shop", href: "#" },
-  { label: "New Arrivals", href: "#" },
-  { label: "Tops", href: "#" },
-  { label: "Bottoms", href: "#" },
-  { label: "Activewear", href: "#" },
-  { label: "Sale", href: "#", highlight: false },
+  { label: "Upper", href: "/upper" },
+  { label: "Bottom", href: "/bottom" },
+  { label: "Active", href: "/active" },
+  { label: "Casual", href: "/casual" },
 ];
 
 export default function Navbar() {
@@ -33,11 +31,11 @@ export default function Navbar() {
               >
                 Products
               </button>
-              <div className="absolute left-0 top-full z-50 w-[520px] translate-y-2 rounded-3xl border border-neutral-200/70 bg-white/95 p-6 text-left shadow-[0_30px_60px_rgba(15,23,42,0.16)] opacity-0 transition-all duration-200 ease-out pointer-events-none group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
+              <div className="absolute left-0 top-full z-50 w-[520px] translate-y-2 rounded-1xl border border-neutral-200/70 bg-white p-6 text-left shadow-[0_30px_60px_rgba(15,23,42,0.16)] opacity-0 transition-all duration-200 ease-out pointer-events-none group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
                 <ul className="grid grid-cols-2 gap-4 text-xs font-semibold uppercase tracking-[0.3em] text-neutral-700">
                   {navLinks.map((link) => (
                     <li key={link.label}>
-                      <a
+                      <Link
                         href={link.href}
                         className={`inline-flex w-full items-center justify-between rounded-2xl border border-transparent px-4 py-3 transition-colors hover:border-neutral-200  hover:text-[#cc071e] ${
                           link.highlight ? "text-red-500" : ""
@@ -45,7 +43,7 @@ export default function Navbar() {
                       >
                         {link.label}
                         <span className="text-[0.6rem] tracking-[0.4em] text-neutral-400">&gt;</span>
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -88,11 +86,11 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <div className="flex w-full items-center gap-4 overflow-x-auto border-t border-neutral-100 pt-4 text-sm font-medium uppercase tracking-[0.25em] text-neutral-700 md:hidden">
+        <div className="flex w-full items-center gap-4 overflow-x-auto border-t border-neutral-100 pt-4 text-sm font-medium uppercase tracking-[0.1em] text-neutral-700 md:hidden">
           {navLinks.map((link) => (
-            <a key={link.label} href={link.href} className={`whitespace-nowrap rounded-full border border-transparent px-4 py-2 transition-colors hover:border-neutral-200 hover:text-neutral-900 ${link.highlight ? "text-red-500" : ""}`}>
+            <Link key={link.label} href={link.href} className={`whitespace-nowrap border border-transparent px-4 py-2 transition-colors hover:border-neutral-200 hover:text-neutral-900 ${link.highlight ? "text-red-500" : ""}`}>
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
       </nav>

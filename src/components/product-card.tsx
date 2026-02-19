@@ -15,7 +15,7 @@ export default function ProductCard({ id, name, price, image, category }: Produc
       href={`/products/${id}`}
       className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white transition-all duration-200 hover:-translate-y-1 hover:border-neutral-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)]"
     >
-      <div className="relative aspect-[3/4] overflow-hidden bg-neutral-100">
+      <div className="relative aspect-3/4 overflow-hidden bg-neutral-100">
         <Image
           src={image}
           alt={name}
@@ -23,7 +23,7 @@ export default function ProductCard({ id, name, price, image, category }: Produc
           className="object-cover transition-transform duration-300 group-hover:scale-105"
           sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
       </div>
       <div className="p-4">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-neutral-500">

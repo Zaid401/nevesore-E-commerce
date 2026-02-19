@@ -55,7 +55,7 @@ export default function UpperPage() {
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-10">
-            <span className="text-xs font-semibold uppercase tracking-[0.1em] text-red-600">
+            <span className="text-xs font-semibold uppercase tracking-widest text-red-600">
               Upper Body
             </span>
             <h1 className="mt-3 text-4xl font-black uppercase tracking-[0.08em] text-neutral-900">

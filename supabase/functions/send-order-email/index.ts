@@ -1,5 +1,36 @@
+// @ts-expect-error - Deno runtime import
 import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
-import { supabaseAdmin } from '../_shared/supabase.ts';
+import { supabaseAdmin } from '../_shared/supabase';
+
+interface OrderItem {
+  product_name: string;
+  color_name: string;
+  size_label: string;
+  quantity: number;
+  unit_price: number;
+  total_price: number;
+}
+
+interface Order {
+  id: string;
+  order_number: string;
+  user: { email: string; full_name: string | null };
+  order_items: OrderItem[];
+  subtotal: number;
+  discount_amount: number;
+  tax_amount: number;
+  shipping_cost: number;
+  total_amount: number;
+  shipping_full_name: string;
+  shipping_address_line_1: string;
+  shipping_address_line_2: string | null;
+  shipping_city: string;
+  shipping_state: string;
+  shipping_postal_code: string;
+  shipping_country: string;
+  tracking_number?: string | null;
+  tracking_url?: string | null;
+}
 
 serve(async (req: Request) => {
   try {
@@ -47,11 +78,12 @@ serve(async (req: Request) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        // @ts-expect-error - Deno.env is available in Deno runtime
         'Authorization': `Bearer ${Deno.env.get('RESEND_API_KEY')}`,
       },
       body: JSON.stringify({
-        from: `Neversore <orders@neversore.com>`,
-        to: [order.user.email],
+        // @ts-expect-error - Deno.env is available in Deno runtime
+        from: `${Deno.env.get('SENDER_NAME') ?? 'Neversore'} <${Deno.env.get('SENDER_EMAIL') ?? 'orders@neversore.com'}>`,        to: [order.user.email],
         subject,
         html: htmlBody,
       }),
@@ -63,16 +95,17 @@ serve(async (req: Request) => {
     }
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+  } catch (error: unknown) {
+    const err = error as Error;
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
 });
 
 // --- HTML Template Builders ---
 
-function buildOrderConfirmationHtml(order: any): string {
+function buildOrderConfirmationHtml(order: Order): string {
   const itemsHtml = order.order_items
-    .map((item: any) => `
+    .map((item: OrderItem) => `
       <tr>
         <td style="padding: 8px; border: 1px solid #ddd;">${item.product_name} (${item.color_name} / ${item.size_label})</td>
         <td style="padding: 8px; border: 1px solid #ddd;">${item.quantity}</td>
@@ -128,7 +161,7 @@ function buildOrderConfirmationHtml(order: any): string {
   `;
 }
 
-function buildShippedHtml(order: any): string {
+function buildShippedHtml(order: Order): string {
   return `
     <!DOCTYPE html>
     <html>
@@ -157,7 +190,7 @@ function buildShippedHtml(order: any): string {
   `;
 }
 
-function buildDeliveredHtml(order: any): string {
+function buildDeliveredHtml(order: Order): string {
   return `
     <!DOCTYPE html>
     <html>
@@ -180,7 +213,7 @@ function buildDeliveredHtml(order: any): string {
   `;
 }
 
-function buildReturnUpdateHtml(order: any): string {
+function buildReturnUpdateHtml(order: Order): string {
   return `
     <!DOCTYPE html>
     <html>

@@ -1,54 +1,62 @@
+"use client";
+
+import { useState } from "react";
+import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 
 export default function LoginPage() {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
-    <main className="min-h-screen text-white">
+    <main className="min-h-screen bg-neutral-50 text-neutral-900">
       <Navbar />
       <section className="relative flex justify-center px-6 py-16 sm:py-20">
         <div className="pointer-events-none absolute inset-0" aria-hidden />
         <div className="relative w-full max-w-md">
-          <div className="rounded-[32px] border border-white/5 bg-gradient-to-b from-neutral-900/90 via-neutral-950 to-black p-10 shadow-[0_30px_70px_rgba(0,0,0,0.55)]">
+          <div className="rounded-[32px] border border-neutral-200 bg-white p-10 shadow-[0_30px_70px_rgba(0,0,0,0.1)]">
             <div className="flex flex-col gap-6">
               <header className="flex flex-col gap-2 text-left">
-                <h1 className="text-2xl font-extrabold uppercase tracking-[0.3em]">
+                <h1 className="text-2xl font-extrabold uppercase  text-neutral-900">
                   Access Your Potential
                 </h1>
-                <p className="text-sm text-neutral-300">
+                <p className="text-sm text-neutral-600">
                   Enter your credentials to continue your training.
                 </p>
               </header>
 
               <form className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2 text-xs font-semibold uppercase tracking-[0.35em] text-neutral-400">
+                <div className="flex flex-col gap-2 text-xs font-semibold uppercase tracking-[0.1em] text-neutral-600">
                   <label htmlFor="login-email">Email Address</label>
                   <input
                     id="login-email"
                     type="email"
-                    placeholder="athlete@neversore.com"
-                    className="h-12 rounded-2xl border border-white/10 bg-neutral-900/80 px-5 text-sm font-medium tracking-normal text-neutral-100 placeholder:text-neutral-500 focus:border-red-500/80 focus:outline-none focus:ring-2 focus:ring-red-500/40"
+                    placeholder="enter your email address"
+                    className="h-12 rounded-2xl border border-neutral-300 bg-neutral-50 px-5 text-sm font-medium tracking-normal text-neutral-900 placeholder:text-neutral-400 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
                     required
                   />
                 </div>
 
-                <div className="flex flex-col gap-2 text-xs font-semibold uppercase tracking-[0.35em] text-neutral-400">
+                <div className="flex flex-col gap-2 text-xs font-semibold uppercase tracking-[0.1em] text-neutral-600">
                   <div className="flex items-center justify-between">
                     <label htmlFor="login-password">Password</label>
-                    <a href="#" className="text-[10px] font-bold tracking-[0.4em] text-red-400 transition-colors hover:text-red-300">
+                    <a href="#" className="text-[10px] font-bold tracking-[0.1em] text-red-600 transition-colors hover:text-red-700">
                       Forgot?
                     </a>
                   </div>
                   <div className="relative flex items-center">
                     <input
                       id="login-password"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      className="h-12 w-full rounded-2xl border border-white/10 bg-neutral-900/80 px-5 pr-12 text-sm font-medium tracking-[0.1em] text-neutral-100 placeholder:text-neutral-500 focus:border-red-500/80 focus:outline-none focus:ring-2 focus:ring-red-500/40"
+                      className="h-12 w-full rounded-2xl border border-neutral-300 bg-neutral-50 px-5 pr-12 text-sm font-medium tracking-[0.1em] text-neutral-900 placeholder:text-neutral-400 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
                       required
                     />
                     <button
                       type="button"
                       aria-label="Toggle password visibility"
-                      className="absolute right-3 flex h-8 w-8 items-center justify-center rounded-full text-neutral-500 transition-colors hover:text-neutral-300"
+                      aria-pressed={showPassword}
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      className="absolute right-3 flex h-8 w-8 items-center justify-center rounded-full text-neutral-500 transition-colors hover:text-neutral-700"
                     >
                       <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
                         <path
@@ -62,21 +70,21 @@ export default function LoginPage() {
 
                 <button
                   type="submit"
-                  className="h-12 rounded-2xl bg-red-600 text-sm font-bold uppercase tracking-[0.4em] text-white transition-transform duration-150 hover:-translate-y-0.5 hover:bg-red-500"
+                  className="h-12 rounded-2xl bg-red-600 text-sm font-bold uppercase tracking-[0.1em] text-white transition-transform duration-150 hover:-translate-y-0.5 hover:bg-red-700"
                 >
                   Sign In
                 </button>
               </form>
 
-              <div className="flex items-center gap-4 text-xs uppercase tracking-[0.4em] text-neutral-500">
-                <span className="h-px flex-1 bg-neutral-800" aria-hidden />
+              <div className="flex items-center gap-4 text-xs uppercase tracking-[0.4em] text-neutral-400">
+                <span className="h-px flex-1 bg-neutral-300" aria-hidden />
                 <span>Or</span>
-                <span className="h-px flex-1 bg-neutral-800" aria-hidden />
+                <span className="h-px flex-1 bg-neutral-300" aria-hidden />
               </div>
 
               <button
                 type="button"
-                className="flex h-12 items-center justify-center gap-3 rounded-2xl border border-white/10 bg-neutral-900/80 text-sm font-semibold uppercase tracking-[0.25em] text-white transition-transform duration-150 hover:-translate-y-0.5 hover:border-white/30"
+                className="flex h-12 items-center justify-center gap-3 rounded-2xl border border-neutral-300 bg-neutral-50 text-sm font-semibold uppercase tracking-[0.1em] text-neutral-900 transition-transform duration-150 hover:-translate-y-0.5 hover:border-neutral-400"
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
                   <path
@@ -99,13 +107,14 @@ export default function LoginPage() {
                 Sign in with Google
               </button>
 
-              <p className="text-center text-xs uppercase tracking-[0.3em] text-neutral-400">
-                Don&apos;t have an account? <a href="#" className="text-red-400 transition-colors hover:text-red-300">Create Account</a>
+              <p className="text-center text-xs uppercase tracking-[0.1em] text-neutral-500">
+                Don&apos;t have an account? <a href="#" className="text-red-600 transition-colors hover:text-red-700">Create Account</a>
               </p>
             </div>
           </div>
         </div>
       </section>
+      <Footer />
     </main>
   );
 }

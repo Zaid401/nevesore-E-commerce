@@ -12,7 +12,7 @@ const navLinks = [
 
 export default function Navbar() {
   return (
-    <header className="w-full bg-white shadow-[0_6px_25px_rgba(0,0,0,0.08)]">
+    <header className="w-full bg-white shadow-[0_6px_25px_rgba(0,0,0,0.08)] z-10">
       <nav className="flex w-full flex-wrap items-center justify-between gap-6 px-6 py-4 text-neutral-900 sm:px-10 lg:px-14">
         <div className="flex items-center gap-6">
             <Link href="/" className="h-9 w-auto">

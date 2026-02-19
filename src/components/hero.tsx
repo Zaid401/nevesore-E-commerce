@@ -2,10 +2,10 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[520px] overflow-hidden bg-black text-white sm:min-h-[640px]">
+    <section className="relative min-h-screen overflow-hidden bg-black text-white sm:min-h-[640px]">
       <div className="absolute inset-0">
         <Image
-          src="/hero.png"
+          src="/hero2.png"
           alt="Athlete posing confidently in activewear"
           fill
           priority
@@ -21,7 +21,7 @@ export default function Hero() {
             Sculpted Support
           </p>
           <h1 className="text-4xl font-bold uppercase leading-tight sm:text-5xl md:text-6xl">
-            Confidence, seamlessly built
+            Confidence, <span className="text-[#cc071e]">seamlessly</span> built
           </h1>
           <p className="max-w-lg text-base text-white/80 sm:text-lg">
             Premium gym wear designed for the elite athlete. Built for maximum strength, durability, and intense movement.
@@ -29,7 +29,7 @@ export default function Hero() {
           <div className="pt-4">
             <button
               type="button"
-              className="inline-flex items-center rounded-3xl text-white px-8 py-3 text-sm font-semibold uppercase tracking-[0.25em] text-neutral-900 transition-colors
+              className="inline-flex items-center rounded-1xl text-white px-8 py-3 text-sm font-semibold uppercase tracking-[0.25em] text-neutral-900 transition-colors
                bg-[#cc071e] hover:bg-white/90 hover:text-black cursor-pointer" 
             >
              Explore Collection

@@ -41,7 +41,8 @@ const footerColumns = [
 
 const socialIcons = [
   {
-    label: "Community",
+   label: "Community",
+   href: "#",
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
         <path
@@ -53,6 +54,7 @@ const socialIcons = [
   },
   {
     label: "YouTube",
+    href: "#",
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
         <path
@@ -64,6 +66,7 @@ const socialIcons = [
   },
   {
     label: "Instagram",
+    href: "https://www.instagram.com/be.neversore?igsh=MWF4cTRmNDN1c3dwNA%3D%3",
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
         <path
@@ -88,27 +91,30 @@ export default function Footer() {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.6fr)_repeat(4,minmax(0,1fr))]">
           <div className="flex flex-col gap-6">
             <div className="flex items-center gap-4">
-              <Image src="/logo.png" alt="Neversore logo" width={300} height={300} className="h-8 w-auto" />
+              <Link href="/" aria-label="Neversore Home">
+              <Image src="/logo.png" alt="Neversore logo" width={400} height={400} className="h-8 w-auto" />
+              </Link>
             </div>
+
             <p className="max-w-xs text-sm text-neutral-400">
               The world isn&apos;t built for the weak. We build for the ones who keep going when it hurts.
             </p>
             <div className="flex items-center gap-4">
               {socialIcons.map((item) => (
-                <button
+                <Link
                   key={item.label}
-                  type="button"
                   aria-label={item.label}
+                  href={item.href}
                   className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-colors hover:border-red-500/80 hover:text-red-400"
                 >
                   {item.icon}
-                </button>
+                </Link>
               ))}
             </div>
           </div>
           {footerColumns.map((column) => (
             <div key={column.title} className="flex flex-col gap-4">
-              <h3 className="text-sm font-semibold uppercase tracking-[0.35em] text-white">
+              <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-white">
                 {column.title}
               </h3>
               <ul className="flex flex-col gap-3 text-sm text-neutral-400">
@@ -127,7 +133,7 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="flex flex-col gap-6 border-t border-white/10 pt-6 text-xs uppercase tracking-[0.35em] text-neutral-500 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-6 border-t border-white/10 pt-6 text-xs uppercase tracking-[0.1em] text-neutral-500 sm:flex-row sm:items-center sm:justify-between">
           <span>© {new Date().getFullYear()} Neversore Performance Apparel. All rights reserved.</span>
           <div className="flex flex-wrap items-center gap-4">
             {legalLinks.map((link) => (

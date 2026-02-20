@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <section className="relative h-screen overflow-hidden bg-black text-white">
+    <section className="relative h-screen overflow-hidden  text-white">
       <div className="absolute inset-0">
         <Image
           src="/hero2.png"
@@ -12,7 +12,7 @@ export default function Hero() {
           className="object-cover"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 to-black/10" aria-hidden />
+        <div className="absolute inset-0 " aria-hidden />
       </div>
 
       <div className="relative mx-auto flex h-full max-w-[1100px] items-center px-6 py-20 sm:px-10 lg:px-16">

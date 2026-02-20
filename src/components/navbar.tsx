@@ -1,5 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useCart } from "@/context/cart-context";
+import { useWishlist } from "@/context/wishlist-context";
 
 const navLinks = [
   { label: "Upper", href: "/upper" },
@@ -9,6 +13,9 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  const { itemCount } = useCart();
+  const { itemCount: wishlistCount } = useWishlist();
+
   return (
     <header className="w-full bg-white shadow-[0_6px_25px_rgba(0,0,0,0.08)] z-10">
       <nav className="flex w-full flex-wrap items-center justify-between gap-6 px-6 py-4 text-neutral-900 sm:px-10 lg:px-14">
@@ -37,9 +44,7 @@ export default function Navbar() {
                     <li key={link.label}>
                       <Link
                         href={link.href}
-                        className={`inline-flex w-full items-center justify-between rounded-2xl border border-transparent px-4 py-3 transition-colors hover:border-neutral-200  hover:text-[#cc071e] ${
-                          link.highlight ? "text-red-500" : ""
-                        }`}
+                        className="inline-flex w-full items-center justify-between rounded-2xl border border-transparent px-4 py-3 transition-colors hover:border-neutral-200 hover:text-[#cc071e]"
                       >
                         {link.label}
                         <span className="text-[0.6rem] tracking-[0.4em] text-neutral-400">&gt;</span>
@@ -61,8 +66,27 @@ export default function Navbar() {
               />
             </svg>
           </button>
-          <button
-            type="button"
+          <Link
+            href="/wishlist"
+            className="relative rounded-full p-2 transition-colors hover:bg-neutral-100"
+            aria-label="Wishlist"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
+              <path
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+              />
+            </svg>
+            {wishlistCount > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                {wishlistCount}
+              </span>
+            )}
+          </Link>
+          <Link
+            href="/cart"
             className="relative rounded-full p-2 transition-colors hover:bg-neutral-100"
             aria-label="Cart"
           >
@@ -72,10 +96,12 @@ export default function Navbar() {
                 d="M7 4h-2l-1 2v2h2l3 9h9l3-11H8.42zM10 20a1 1 0 1 1-2 0 1 1 0 0 1 2 0m8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"
               />
             </svg>
-            <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-              3
-            </span>
-          </button>
+            {itemCount > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                {itemCount}
+              </span>
+            )}
+          </Link>
           <Link href="/login" className="rounded-full p-2 transition-colors hover:bg-neutral-100" aria-label="Account">
             <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
               <path
@@ -88,7 +114,7 @@ export default function Navbar() {
 
         <div className="flex w-full items-center gap-4 overflow-x-auto border-t border-neutral-100 pt-4 text-sm font-medium uppercase tracking-[0.1em] text-neutral-700 md:hidden">
           {navLinks.map((link) => (
-            <Link key={link.label} href={link.href} className={`whitespace-nowrap border border-transparent px-4 py-2 transition-colors hover:border-neutral-200 hover:text-neutral-900 ${link.highlight ? "text-red-500" : ""}`}>
+            <Link key={link.label} href={link.href} className="whitespace-nowrap border border-transparent px-4 py-2 transition-colors hover:border-neutral-200 hover:text-neutral-900">
               {link.label}
             </Link>
           ))}

@@ -55,28 +55,23 @@ export default function WhyChooseUs() {
   ];
 
   return (
-    <section className="relative overflow-hidden bg-[#0e0f10] py-24 text-white">
-      <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_55%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,_rgba(255,255,255,0.05)_1px,_transparent_1px),linear-gradient(180deg,_rgba(255,255,255,0.05)_1px,_transparent_1px)] bg-[size:240px_240px] opacity-20" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-      </div>
+    <section className="relative overflow-hidden bg-white py-24 text-neutral-900">
 
       <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-10 px-6 text-center">
         <div className="flex flex-col items-center gap-4">
-          <span className="text-xs font-semibold uppercase tracking-[0.1em] text-red-500">
+          <span className="text-xs font-semibold uppercase tracking-[0.1em] text-red-600">
             Why Neversore
           </span>
           <div className="space-y-2">
-            <h2 className="text-4xl font-black uppercase tracking-[0.08em] text-white sm:text-5xl">
+            <h2 className="text-4xl font-black uppercase tracking-[0.08em] text-neutral-900 sm:text-5xl">
               Built for Performance.
             </h2>
-            <p className="text-3xl font-black uppercase tracking-[0.08em] text-red-500 sm:text-5xl">
+            <p className="text-3xl font-black uppercase tracking-[0.08em] text-red-600 sm:text-5xl">
               Designed for Power.
             </p>
           </div>
           <div className="h-px w-16 bg-red-600" />
-          <p className="max-w-2xl text-sm text-neutral-300">
+          <p className="max-w-2xl text-sm text-neutral-600">
             Engineered gym wear that supports your strength, endurance, and intensity.
             No compromises. Just elite results.
           </p>
@@ -86,23 +81,22 @@ export default function WhyChooseUs() {
           {highlights.map((item) => (
             <div
               key={item.title}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 text-left shadow-[0_25px_60px_rgba(0,0,0,0.45)]"
+              className="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-white p-6 text-left shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_25px_50px_rgba(0,0,0,0.12)]"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_60%)] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-              <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 text-red-200">
+              <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-red-50 text-red-600">
                 {item.icon}
               </div>
-              <h3 className="relative mt-5 text-sm font-bold uppercase tracking-[0.1em] text-white">
+              <h3 className="relative mt-5 text-sm font-bold uppercase tracking-[0.1em] text-neutral-900">
                 {item.title}
               </h3>
-              <p className="relative mt-3 text-sm text-neutral-400">{item.description}</p>
+              <p className="relative mt-3 text-sm text-neutral-600">{item.description}</p>
             </div>
           ))}
         </div>
 
         <a
           href="#"
-          className="group inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.1em] text-red-500 transition-colors hover:text-red-400"
+          className="group inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.1em] text-red-600 transition-colors hover:text-red-700"
         >
           Experience the collection
           <span className="text-base transition-transform duration-200 group-hover:translate-x-1">→</span>

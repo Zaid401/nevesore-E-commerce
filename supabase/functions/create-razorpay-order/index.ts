@@ -48,7 +48,7 @@ serve(async (req: Request) => {
             id, sku, stock_quantity, price_override, is_active,
             product:products (id, name, base_price, sale_price, is_active),
             color:product_colors (color_name),
-            size:product_sizes (size_label)
+            size:sizes (size_label)
           )
         )
       `)

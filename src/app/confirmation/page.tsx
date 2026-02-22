@@ -61,17 +61,17 @@ export default function ConfirmationPage() {
                   <p className="text-sm text-[#555555]">Your cart is currently empty.</p>
                 ) : (
                   items.map((item) => (
-                    <div key={`${item.id}-${item.color}-${item.size}`} className="flex items-center gap-4">
+                    <div key={item.variant_id} className="flex items-center gap-4">
                       <div className="relative h-16 w-16 overflow-hidden rounded-xl bg-[#f1f1f1]">
-                        <Image src={item.image} alt={item.name} fill className="object-cover" />
+                        <Image src={item.image} alt={item.product_name} fill className="object-cover" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-semibold">{item.name}</p>
+                        <p className="text-sm font-semibold">{item.product_name}</p>
                         <p className="text-xs text-[#555555]">
-                          Size {item.size} | Qty {item.quantity}
+                          Size {item.size_label} | Qty {item.quantity}
                         </p>
                       </div>
-                      <p className="text-sm font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="text-sm font-semibold">₹{(item.price * item.quantity).toLocaleString("en-IN")}</p>
                     </div>
                   ))
                 )}
@@ -82,11 +82,11 @@ export default function ConfirmationPage() {
               <div className="space-y-2 text-sm text-[#555555]">
                 <div className="flex items-center justify-between">
                   <span>Subtotal</span>
-                  <span className="font-semibold text-[#111111]">${subtotal.toFixed(2)}</span>
+                  <span className="font-semibold text-[#111111]">₹{subtotal.toLocaleString("en-IN")}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Shipping</span>
-                  <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                  <span>{shipping === 0 ? "Free" : `₹${shipping.toLocaleString("en-IN")}`}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Tax</span>
@@ -94,7 +94,7 @@ export default function ConfirmationPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Discount</span>
-                  <span>{discount > 0 ? `-$${discount.toFixed(2)}` : "-"}</span>
+                  <span>{discount > 0 ? `-₹${discount.toLocaleString("en-IN")}` : "-"}</span>
                 </div>
               </div>
 
@@ -102,7 +102,7 @@ export default function ConfirmationPage() {
 
               <div className="flex items-center justify-between text-base font-bold">
                 <span>Total Paid</span>
-                <span>${total.toFixed(2)}</span>
+                <span>₹{total.toLocaleString("en-IN")}</span>
               </div>
             </section>
 
@@ -111,11 +111,7 @@ export default function ConfirmationPage() {
                 Shipping Address
               </h2>
               <div className="mt-3 text-sm text-[#555555]">
-                <p className="font-semibold text-[#111111]">Jordan Brooks</p>
-                <p>123 Performance Blvd, Apt 5C</p>
-                <p>Los Angeles, CA 90028</p>
-                <p>United States</p>
-                <p className="mt-2">Phone: +1 555 234 8821</p>
+                <p className="text-[#777]">Shipping details provided at checkout.</p>
               </div>
             </section>
 

@@ -254,7 +254,7 @@ export default function TrackOrderPage() {
                       <p className="text-sm font-semibold">{item.name}</p>
                       <p className="text-xs text-[#555555]">Size {item.size} | Qty {item.quantity}</p>
                     </div>
-                    <p className="text-sm font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="text-sm font-semibold">₹{(item.price * item.quantity).toLocaleString("en-IN")}</p>
                   </div>
                 ))}
               </div>
@@ -263,7 +263,7 @@ export default function TrackOrderPage() {
 
               <div className="flex items-center justify-between text-sm font-semibold">
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>₹{subtotal.toLocaleString("en-IN")}</span>
               </div>
             </section>
 

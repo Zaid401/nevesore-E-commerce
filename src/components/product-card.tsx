@@ -9,19 +9,23 @@ interface ProductCardProps {
   id: string;
   name: string;
   price: number;
+  sale_price?: number | null;
   image: string;
   category: string;
 }
 
-export default function ProductCard({ id, name, price, image, category }: ProductCardProps) {
+export default function ProductCard({ id, name, price, sale_price, image, category }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const { isInWishlist, addItem } = useWishlist();
   const isFavorited = isInWishlist(id);
 
+  const displayPrice = sale_price ?? price;
+  const hasDiscount = sale_price != null && sale_price < price;
+
   const handleWishlistClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addItem({ id, name, price, image, category });
+    addItem({ id, name, price: displayPrice, image, category });
   };
 
   return (
@@ -48,7 +52,12 @@ export default function ProductCard({ id, name, price, image, category }: Produc
         <h3 className="mt-1 text-sm font-semibold uppercase tracking-[0.2em] text-neutral-900">
           {name}
         </h3>
-        <p className="mt-2 text-base font-bold text-red-600">${price.toFixed(2)}</p>
+        <div className="mt-2 flex items-center gap-2">
+          <p className="text-base font-bold text-red-600">₹{displayPrice.toLocaleString("en-IN")}</p>
+          {hasDiscount && (
+            <p className="text-sm text-neutral-400 line-through">₹{price.toLocaleString("en-IN")}</p>
+          )}
+        </div>
       </div>
       {isHovered ? (
         <button

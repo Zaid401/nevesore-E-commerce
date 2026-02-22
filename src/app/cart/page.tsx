@@ -7,7 +7,7 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { useCart } from "@/context/cart-context";
 
-const FREE_SHIPPING_THRESHOLD = 150;
+const FREE_SHIPPING_THRESHOLD = 999;
 
 export default function CartPage() {
   const { items, subtotal, updateQuantity, removeItem } = useCart();
@@ -56,26 +56,26 @@ export default function CartPage() {
             <div className="lg:col-span-8 space-y-6">
               {items.map((item) => (
                 <div
-                  key={`${item.id}-${item.color}-${item.size}`}
+                  key={item.variant_id}
                   className="rounded-2xl border border-[#e5e5e5] bg-white p-6 shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-all hover:-translate-y-0.5 hover:shadow-[0_14px_38px_rgba(0,0,0,0.08)]"
                 >
                   <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
                     <div className="relative h-24 w-24 overflow-hidden rounded-xl bg-[#f1f1f1]">
-                      <Image src={item.image} alt={item.name} fill className="object-cover" />
+                      <Image src={item.image} alt={item.product_name} fill className="object-cover" />
                     </div>
                     <div className="flex-1">
-                      <h2 className="text-lg font-bold">{item.name}</h2>
+                      <h2 className="text-lg font-bold">{item.product_name}</h2>
                       <p className="mt-1 text-sm text-[#555555]">
-                        Size: <span className="font-semibold">{item.size}</span> | Color:{" "}
-                        <span className="font-semibold">{item.color}</span>
+                        Size: <span className="font-semibold">{item.size_label}</span> | Color:{" "}
+                        <span className="font-semibold">{item.color_name}</span>
                       </p>
-                      <p className="mt-2 text-sm text-[#555555]">${item.price.toFixed(2)}</p>
+                      <p className="mt-2 text-sm text-[#555555]">&#8377;{item.price.toLocaleString("en-IN")}</p>
                     </div>
                     <div className="flex items-center gap-4">
                       <div className="flex items-center rounded-full border border-[#e5e5e5] bg-white">
                         <button
                           type="button"
-                          onClick={() => updateQuantity(item.id, item.color, item.size, item.quantity - 1)}
+                          onClick={() => updateQuantity(item.variant_id, item.quantity - 1)}
                           className="h-10 w-10 text-sm font-semibold text-[#555555] hover:text-[#111111]"
                         >
                           -
@@ -83,7 +83,7 @@ export default function CartPage() {
                         <span className="w-10 text-center text-sm font-semibold">{item.quantity}</span>
                         <button
                           type="button"
-                          onClick={() => updateQuantity(item.id, item.color, item.size, item.quantity + 1)}
+                          onClick={() => updateQuantity(item.variant_id, item.quantity + 1)}
                           className="h-10 w-10 text-sm font-semibold text-[#555555] hover:text-[#111111]"
                         >
                           +
@@ -91,14 +91,14 @@ export default function CartPage() {
                       </div>
                       <button
                         type="button"
-                        onClick={() => removeItem(item.id, item.color, item.size)}
+                        onClick={() => removeItem(item.variant_id)}
                         className="text-xs font-semibold uppercase tracking-[0.2em] text-[#cc071e]"
                       >
                         Remove
                       </button>
                     </div>
                     <div className="text-right text-sm font-semibold text-[#111111]">
-                      ${ (item.price * item.quantity).toFixed(2) }
+                      &#8377;{(item.price * item.quantity).toLocaleString("en-IN")}
                     </div>
                   </div>
                 </div>
@@ -120,7 +120,7 @@ export default function CartPage() {
                   </div>
                   {remainingForFreeShipping > 0 ? (
                     <p className="mt-2 text-xs text-[#555555]">
-                      Add ${remainingForFreeShipping.toFixed(2)} to unlock free shipping.
+                      Add &#8377;{remainingForFreeShipping.toLocaleString("en-IN")} to unlock free shipping.
                     </p>
                   ) : (
                     <p className="mt-2 text-xs font-semibold text-[#cc071e]">
@@ -133,7 +133,7 @@ export default function CartPage() {
                 <div className="mt-4 space-y-3 text-sm text-[#555555]">
                   <div className="flex items-center justify-between">
                     <span>Subtotal</span>
-                    <span className="font-semibold text-[#111111]">${subtotal.toFixed(2)}</span>
+                    <span className="font-semibold text-[#111111]">&#8377;{subtotal.toLocaleString("en-IN")}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Shipping</span>
@@ -141,7 +141,7 @@ export default function CartPage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Discount</span>
-                    <span>{discount > 0 ? `-$${discount.toFixed(2)}` : "-"}</span>
+                    <span>{discount > 0 ? `-&#8377;${discount.toLocaleString("en-IN")}` : "-"}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Tax</span>
@@ -153,7 +153,7 @@ export default function CartPage() {
 
                 <div className="flex items-center justify-between text-base font-bold">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>&#8377;{total.toLocaleString("en-IN")}</span>
                 </div>
 
                 <div className="mt-6 space-y-3">
@@ -201,7 +201,7 @@ export default function CartPage() {
         <div className="fixed bottom-0 left-0 right-0 border-t border-[#e5e5e5] bg-white p-4 shadow-[0_-10px_30px_rgba(0,0,0,0.08)] lg:hidden">
           <div className="flex items-center justify-between text-sm font-semibold">
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>&#8377;{total.toLocaleString("en-IN")}</span>
           </div>
           <Link
             href="/checkout"

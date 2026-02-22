@@ -1,77 +1,79 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import type { CartItem } from "@/types/product";
 
-export type CartItem = {
-  id: string;
-  category: string;
-  name: string;
-  price: number;
-  image: string;
-  color: string;
-  size: string;
-  quantity: number;
-};
+export type { CartItem };
 
 type CartContextValue = {
   items: CartItem[];
   itemCount: number;
   subtotal: number;
   addItem: (item: CartItem) => void;
-  updateQuantity: (id: string, color: string, size: string, quantity: number) => void;
-  removeItem: (id: string, color: string, size: string) => void;
+  updateQuantity: (variant_id: string, quantity: number) => void;
+  removeItem: (variant_id: string) => void;
   clearCart: () => void;
 };
 
 const CartContext = createContext<CartContextValue | undefined>(undefined);
 
-const getItemKey = (id: string, color: string, size: string) =>
-  `${id}-${color}-${size}`;
+const STORAGE_KEY = "neversore_cart";
+
+function loadFromStorage(): CartItem[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as CartItem[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveToStorage(items: CartItem[]): void {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  } catch {
+    // storage quota exceeded — ignore
+  }
+}
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(loadFromStorage);
+
+  // Keep localStorage in sync whenever items change
+  useEffect(() => {
+    saveToStorage(items);
+  }, [items]);
 
   const addItem = (item: CartItem) => {
     setItems((prev) => {
-      const key = getItemKey(item.id, item.color, item.size);
-      const existing = prev.find((cartItem) =>
-        getItemKey(cartItem.id, cartItem.color, cartItem.size) === key
-      );
-
+      const existing = prev.find((c) => c.variant_id === item.variant_id);
       if (!existing) {
         return [...prev, { ...item, quantity: Math.max(1, item.quantity) }];
       }
-
-      return prev.map((cartItem) =>
-        getItemKey(cartItem.id, cartItem.color, cartItem.size) === key
-          ? { ...cartItem, quantity: cartItem.quantity + Math.max(1, item.quantity) }
-          : cartItem
+      return prev.map((c) =>
+        c.variant_id === item.variant_id
+          ? { ...c, quantity: c.quantity + Math.max(1, item.quantity) }
+          : c
       );
     });
   };
 
-  const updateQuantity = (id: string, color: string, size: string, quantity: number) => {
-    setItems((prev) => {
-      const nextQuantity = Math.max(1, quantity);
-      return prev.map((cartItem) =>
-        getItemKey(cartItem.id, cartItem.color, cartItem.size) === getItemKey(id, color, size)
-          ? { ...cartItem, quantity: nextQuantity }
-          : cartItem
-      );
-    });
-  };
-
-  const removeItem = (id: string, color: string, size: string) => {
+  const updateQuantity = (variant_id: string, quantity: number) => {
     setItems((prev) =>
-      prev.filter(
-        (cartItem) =>
-          getItemKey(cartItem.id, cartItem.color, cartItem.size) !== getItemKey(id, color, size)
+      prev.map((c) =>
+        c.variant_id === variant_id ? { ...c, quantity: Math.max(1, quantity) } : c
       )
     );
   };
 
+  const removeItem = (variant_id: string) => {
+    setItems((prev) => prev.filter((c) => c.variant_id !== variant_id));
+  };
+
   const clearCart = () => {
     setItems([]);
+    try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
   };
 
   const itemCount = useMemo(
@@ -86,6 +88,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(
     () => ({ items, itemCount, subtotal, addItem, updateQuantity, removeItem, clearCart }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [items, itemCount, subtotal]
   );
 
@@ -94,8 +97,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
 export function useCart() {
   const context = useContext(CartContext);
-  if (!context) {
-    throw new Error("useCart must be used within a CartProvider");
-  }
+  if (!context) throw new Error("useCart must be used within a CartProvider");
   return context;
 }
+

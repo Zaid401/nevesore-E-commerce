@@ -14,8 +14,11 @@ interface ProductCardProps {
   category: string;
 }
 
+const FALLBACK_IMAGE = "/product/fallback.png";
+
 export default function ProductCard({ id, name, price, sale_price, image, category }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [imgSrc, setImgSrc] = useState(image || FALLBACK_IMAGE);
   const { isInWishlist, addItem } = useWishlist();
   const isFavorited = isInWishlist(id);
 
@@ -37,11 +40,12 @@ export default function ProductCard({ id, name, price, sale_price, image, catego
     >
       <div className="relative aspect-3/4 overflow-hidden bg-neutral-100">
         <Image
-          src={image}
+          src={imgSrc}
           alt={name}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
           sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+          onError={() => setImgSrc(FALLBACK_IMAGE)}
         />
         <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
       </div>

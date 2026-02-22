@@ -27,7 +27,7 @@ async function fetchCategoryProducts(slug: string): Promise<ProductRow[]> {
       "id, name, base_price, sale_price, product_images(image_url, is_primary, sort_order)"
     )
     .eq("category_id", category.id)
-    .eq("status", "active")
+    .eq("is_active", true)
     .order("created_at", { ascending: false });
 
   return (data as ProductRow[]) ?? [];

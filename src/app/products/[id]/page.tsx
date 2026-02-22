@@ -51,6 +51,8 @@ interface ProductData {
   sizesByColor: Record<string, SizeOption[]>;
 }
 
+const FALLBACK_IMAGE = "/product/fallback.png";
+
 export default function ProductDetailPage() {
   const params = useParams<{ id: string }>();
   const { addItem, itemCount, items, subtotal } = useCart();
@@ -64,6 +66,8 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [activeAccordion, setActiveAccordion] = useState("description");
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [imgErrors, setImgErrors] = useState<Set<number>>(new Set());
+  const [cartImgErrors, setCartImgErrors] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (!params?.id) return;
@@ -173,6 +177,9 @@ export default function ProductDetailPage() {
   const globalImages = product?.images.filter((img) => !img.color_id) ?? [];
   const displayImages = colorImages.length > 0 ? colorImages : globalImages;
 
+  // Reset image errors when color changes
+  // (inline reset in the setSelectedColorIdx call below handles most cases)
+
   const selectedVariant = availableSizes.find((s) => s.id === selectedSizeId) ?? null;
   const displayPrice = product
     ? resolvePrice(product.base_price, product.sale_price, selectedVariant?.price_override ?? null)
@@ -190,7 +197,7 @@ export default function ProductDetailPage() {
       color_hex: selectedColor.color_hex,
       size_label: selectedVariant.size_label,
       price: displayPrice,
-      image: displayImages[0]?.image_url ?? "/images/categories/active.png",
+      image: displayImages[0]?.image_url || FALLBACK_IMAGE,
       quantity,
     });
     setIsCartOpen(true);
@@ -247,7 +254,13 @@ export default function ProductDetailPage() {
                         : "border-transparent hover:border-gray-300"
                     }`}
                   >
-                    <Image src={img.image_url} alt="thumb" fill className="object-cover" />
+                    <Image
+                        src={imgErrors.has(index) ? FALLBACK_IMAGE : (img.image_url || FALLBACK_IMAGE)}
+                        alt="thumb"
+                        fill
+                        className="object-cover"
+                        onError={() => setImgErrors((p) => new Set(p).add(index))}
+                      />
                   </button>
                 ))}
               </div>
@@ -256,10 +269,11 @@ export default function ProductDetailPage() {
               <div className="bg-white rounded-sm overflow-hidden aspect-[4/5] shadow-sm relative flex-1">
                 {displayImages[selectedImageIdx] ? (
                   <Image
-                    src={displayImages[selectedImageIdx].image_url}
+                    src={imgErrors.has(selectedImageIdx) ? FALLBACK_IMAGE : (displayImages[selectedImageIdx].image_url || FALLBACK_IMAGE)}
                     alt={product.name}
                     fill
                     className="object-cover"
+                    onError={() => setImgErrors((p) => new Set(p).add(selectedImageIdx))}
                   />
                 ) : (
                   <div className="h-full w-full bg-gray-100 flex items-center justify-center text-gray-300 text-sm">
@@ -323,6 +337,7 @@ export default function ProductDetailPage() {
                       onClick={() => {
                         setSelectedColorIdx(index);
                         setSelectedImageIdx(0);
+                        setImgErrors(new Set());
                         const newSizes = product.sizesByColor[color.id] ?? [];
                         setSelectedSizeId(newSizes[0]?.id ?? null);
                       }}
@@ -463,7 +478,13 @@ export default function ProductDetailPage() {
                 {items.map((item) => (
                   <div key={item.variant_id} className="flex items-center gap-4 border-b border-gray-100 pb-4">
                     <div className="relative h-20 w-16 overflow-hidden rounded-md bg-gray-100">
-                      <Image src={item.image} alt={item.product_name} fill className="object-cover" />
+                      <Image
+                          src={cartImgErrors.has(item.variant_id) ? FALLBACK_IMAGE : (item.image || FALLBACK_IMAGE)}
+                          alt={item.product_name}
+                          fill
+                          className="object-cover"
+                          onError={() => setCartImgErrors((p) => new Set(p).add(item.variant_id))}
+                        />
                     </div>
                     <div className="flex-1">
                       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">{item.category}</p>

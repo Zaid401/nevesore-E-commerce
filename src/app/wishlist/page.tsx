@@ -15,6 +15,12 @@ export default function WishlistPage() {
     removeItem(id);
   };
 
+  const handleMoveAllToCart = () => {
+    // Move all wishlist items to cart functionality
+    // This would typically integrate with your cart context
+    console.log("Move all items to cart");
+  };
+
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-white">

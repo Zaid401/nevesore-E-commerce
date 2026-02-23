@@ -219,7 +219,7 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Right: Search Icon + Cart Icon */}
+          {/* Right: Search Icon + Cart Icon + Account Icon */}
           <div className="flex items-center gap-1">
             {/* Search Icon */}
             <button
@@ -239,7 +239,7 @@ export default function Navbar() {
             {/* Cart Icon */}
             <Link
               href="/cart"
-              className="relative rounded-full p-2.5 -mr-2.5 transition-all hover:bg-[#f3f3f3]"
+              className="relative rounded-full p-2.5 transition-all hover:bg-[#f3f3f3]"
               aria-label="Cart"
             >
               <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 text-[#111111]">
@@ -253,6 +253,20 @@ export default function Navbar() {
                   {itemCount}
                 </span>
               )}
+            </Link>
+
+            {/* Account Icon */}
+            <Link
+              href="/login"
+              className="relative rounded-full p-2.5 -mr-2.5 transition-all hover:bg-[#f3f3f3]"
+              aria-label="Account"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 text-[#111111]">
+                <path
+                  fill="currentColor"
+                  d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5m0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5"
+                />
+              </svg>
             </Link>
           </div>
         </div>

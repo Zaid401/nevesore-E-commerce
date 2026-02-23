@@ -4,50 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useWishlist } from "@/context/wishlist-context";
-import { useCart } from "@/context/cart-context";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
 export default function WishlistPage() {
   const { items, removeItem } = useWishlist();
-  const { addItem: addToCart } = useCart();
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-  const handleAddToCart = (item: any) => {
-    addToCart({
-      id: item.id,
-      category: item.category,
-      name: item.name,
-      price: item.price,
-      image: item.image,
-      quantity: 1,
-      color: "#000000",
-      size: "M",
-    });
-    
-    setSuccessMessage(`${item.name} added to cart!`);
-    setTimeout(() => setSuccessMessage(null), 3000);
-  };
+  const [removingId, setRemovingId] = useState<string | null>(null);
 
   const handleRemoveItem = (id: string) => {
     removeItem(id);
-  };
-
-  const handleMoveAllToCart = () => {
-    items.forEach((item) => {
-      addToCart({
-        id: item.id,
-        category: item.category,
-        name: item.name,
-        price: item.price,
-        image: item.image,
-        quantity: 1,
-        color: "#000000",
-        size: "M",
-      });
-    });
-    setSuccessMessage("All items moved to cart!");
-    setTimeout(() => setSuccessMessage(null), 3000);
   };
 
   if (items.length === 0) {
@@ -127,15 +92,19 @@ export default function WishlistPage() {
         </div>
 
         {/* Success Message */}
-        {successMessage && (
-          <div className="mb-4 rounded border border-green-200 bg-green-50 px-3 py-2 text-xs font-medium text-green-700 sm:mb-6 sm:px-4 sm:py-3 sm:text-sm lg:mb-6 lg:text-sm">
-            ✓ {successMessage}
+
+        {/* Items Count */}
+        {items.length > 2 && (
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-4 opacity-0 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+            <p className="text-sm font-medium text-[#555555]">
+              {items.length} items in your wishlist
+            </p>
           </div>
         )}
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 gap-4 sm:gap-5 sm:grid-cols-2 lg:gap-6 lg:grid-cols-4">
-          {items.map((item) => (
+        {/* Product Grid */}
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {items.map((item, index) => (
             <div
               key={item.id}
               className="group relative overflow-hidden border border-gray-100 bg-white transition hover:shadow-lg"
@@ -172,29 +141,21 @@ export default function WishlistPage() {
                   </h3>
                 </Link>
 
-                <p className="mt-1 text-sm font-bold text-red-600 sm:mt-2 sm:text-base lg:mt-2 lg:text-base">
-                  ${item.price.toFixed(2)}
+                <p className="mt-3 text-lg font-bold text-[#cc071e]">
+                  ₹{item.price.toLocaleString("en-IN")}
                 </p>
 
                 <p className="mt-1 text-xs font-medium uppercase tracking-wider text-green-600 sm:mt-2 lg:mt-2">
                   In Stock
                 </p>
 
-                {/* Add to Cart Button */}
-                <button
-                  onClick={() => handleAddToCart(item)}
-                  className="mt-3 w-full bg-red-600 py-2 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-red-700 sm:mt-4 sm:py-3 sm:text-sm lg:mt-4 lg:py-3 lg:text-base"
+                {/* View Product Button */}
+                <Link
+                  href={`/products/${item.id}`}
+                  className="mt-4 block w-full rounded-full bg-[#cc071e] py-3 text-center font-bold uppercase tracking-[0.1em] text-white transition-all duration-300 hover:shadow-[0_8px_16px_rgba(204,7,30,0.3)] hover:bg-red-700"
                 >
-                  Add to Cart
-                </button>
-
-                {/* Remove Button */}
-                <button
-                  onClick={() => handleRemoveItem(item.id)}
-                  className="mt-2 w-full border-t border-gray-100 py-2 text-center text-xs font-semibold uppercase tracking-wider text-gray-400 transition hover:text-slate-900 sm:mt-3 lg:mt-3"
-                >
-                  Remove from Wishlist
-                </button>
+                  Select Size &amp; Add to Cart
+                </Link>
               </div>
             </div>
           ))}

@@ -268,21 +268,33 @@ CREATE TABLE public.product_colors (
   product_id UUID NOT NULL REFERENCES public.products(id) ON DELETE CASCADE,
   color_name TEXT NOT NULL,         -- e.g., "Midnight Black"
   color_hex TEXT NOT NULL,          -- e.g., "#1a1a1a"
+  image_url TEXT,                   -- optional per-color hero image
   sort_order INT DEFAULT 0,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 ```
 
-### Step 4.7 — Product Sizes Table
+### Step 4.7 — Global Sizes Table
+
+> **Changed from per-product sizes to a global shared size catalogue.**
+> All products reference sizes from this single table. Seed it once.
 
 ```sql
-CREATE TABLE public.product_sizes (
+CREATE TABLE public.sizes (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  product_id UUID NOT NULL REFERENCES public.products(id) ON DELETE CASCADE,
-  size_label TEXT NOT NULL,         -- e.g., "S", "M", "L", "XL", "XXL"
+  size_label TEXT NOT NULL UNIQUE,  -- e.g., "S", "M", "L", "XL", "XXL", "XXXL"
   sort_order INT DEFAULT 0,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Seed the standard fitness clothing sizes (run once)
+INSERT INTO public.sizes (size_label, sort_order) VALUES
+  ('S',    1),
+  ('M',    2),
+  ('L',    3),
+  ('XL',   4),
+  ('XXL',  5),
+  ('XXXL', 6);
 ```
 
 ### Step 4.8 — Product Variants Table (Size × Color combinations)
@@ -292,7 +304,7 @@ CREATE TABLE public.product_variants (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   product_id UUID NOT NULL REFERENCES public.products(id) ON DELETE CASCADE,
   color_id UUID NOT NULL REFERENCES public.product_colors(id) ON DELETE CASCADE,
-  size_id UUID NOT NULL REFERENCES public.product_sizes(id) ON DELETE CASCADE,
+  size_id UUID NOT NULL REFERENCES public.sizes(id) ON DELETE RESTRICT,  -- references global sizes
   sku TEXT UNIQUE NOT NULL,
   price_override NUMERIC(10,2),    -- NULL means use product base_price
   stock_quantity INT NOT NULL DEFAULT 0 CHECK (stock_quantity >= 0),
@@ -489,10 +501,11 @@ CREATE TABLE public.return_items (
 CREATE TABLE public.inventory_logs (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   variant_id UUID NOT NULL REFERENCES public.product_variants(id) ON DELETE CASCADE,
-  change_quantity INT NOT NULL,       -- positive = restock, negative = sold/adjusted
+  change_type TEXT NOT NULL,          -- 'sale', 'restock', 'manual_adjustment', 'return'
+  quantity_change INT NOT NULL,       -- positive = added, negative = deducted
   previous_quantity INT NOT NULL,
   new_quantity INT NOT NULL,
-  reason TEXT NOT NULL,               -- 'order_placed', 'order_cancelled', 'return_received', 'manual_adjustment'
+  reason TEXT,                        -- human-readable note
   reference_id UUID,                  -- order_id, return_id, etc.
   performed_by UUID REFERENCES public.profiles(id),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -526,7 +539,7 @@ ALTER TABLE public.addresses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.product_colors ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.product_sizes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.sizes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.product_variants ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.product_images ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.wishlists ENABLE ROW LEVEL SECURITY;
@@ -643,13 +656,13 @@ CREATE POLICY "Admin manages product colors"
   ON public.product_colors FOR ALL
   USING (public.is_admin());
 
--- Product Sizes
-CREATE POLICY "Anyone can view product sizes"
-  ON public.product_sizes FOR SELECT
+-- Global Sizes (read-only for everyone, admin can manage)
+CREATE POLICY "Anyone can view sizes"
+  ON public.sizes FOR SELECT
   USING (true);
 
-CREATE POLICY "Admin manages product sizes"
-  ON public.product_sizes FOR ALL
+CREATE POLICY "Admin manages sizes"
+  ON public.sizes FOR ALL
   USING (public.is_admin());
 
 -- Product Variants

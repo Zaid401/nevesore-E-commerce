@@ -94,7 +94,8 @@ serve(async (req: Request) => {
 
       await supabaseAdmin.from('inventory_logs').insert({
         variant_id: item.variant_id,
-        change_quantity: -item.quantity,
+        change_type: 'sale',
+        quantity_change: -item.quantity,
         previous_quantity: previousQty,
         new_quantity: newQty,
         reason: 'order_placed',

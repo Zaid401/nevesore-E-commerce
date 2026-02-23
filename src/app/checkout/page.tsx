@@ -8,7 +8,7 @@ import Footer from "@/components/footer";
 import { useCart } from "@/context/cart-context";
 
 const SHIPPING_STANDARD = 0;
-const SHIPPING_EXPRESS = 12;
+const SHIPPING_EXPRESS = 149;
 
 export default function CheckoutPage() {
   const { items, subtotal } = useCart();
@@ -462,17 +462,17 @@ export default function CheckoutPage() {
                   <p className="text-sm text-[#555555]">Your cart is currently empty.</p>
                 ) : (
                   items.map((item) => (
-                    <div key={`${item.id}-${item.color}-${item.size}`} className="flex items-center gap-3 sm:gap-4 lg:gap-4">
-                      <div className="relative h-14 w-14 sm:h-16 sm:w-16 lg:h-16 lg:w-16 overflow-hidden rounded-xl bg-[#f1f1f1]">
-                        <Image src={item.image} alt={item.name} fill className="object-cover" />
+                    <div key={item.variant_id} className="flex items-center gap-4">
+                      <div className="relative h-16 w-16 overflow-hidden rounded-xl bg-[#f1f1f1]">
+                        <Image src={item.image} alt={item.product_name} fill className="object-cover" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-xs sm:text-sm lg:text-sm font-semibold">{item.name}</p>
+                        <p className="text-sm font-semibold">{item.product_name}</p>
                         <p className="text-xs text-[#555555]">
-                          {item.size} | Qty {item.quantity}
+                          {item.size_label} | Qty {item.quantity}
                         </p>
                       </div>
-                      <p className="text-xs sm:text-sm lg:text-sm font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="text-sm font-semibold">₹{(item.price * item.quantity).toLocaleString("en-IN")}</p>
                     </div>
                   ))
                 )}
@@ -483,11 +483,11 @@ export default function CheckoutPage() {
               <div className="space-y-2 sm:space-y-3 lg:space-y-3 text-xs sm:text-sm lg:text-sm text-[#555555]">
                 <div className="flex items-center justify-between">
                   <span>Subtotal</span>
-                  <span className="font-semibold text-[#111111]">${subtotal.toFixed(2)}</span>
+                  <span className="font-semibold text-[#111111]">₹{subtotal.toLocaleString("en-IN")}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Shipping</span>
-                  <span>{shippingCost === 0 ? "Free" : `$${shippingCost.toFixed(2)}`}</span>
+                  <span>{shippingCost === 0 ? "Free" : `₹${shippingCost.toLocaleString("en-IN")}`}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Tax</span>
@@ -495,7 +495,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Discount</span>
-                  <span>{discount > 0 ? `-$${discount.toFixed(2)}` : "-"}</span>
+                  <span>{discount > 0 ? `-₹${discount.toLocaleString("en-IN")}` : "-"}</span>
                 </div>
               </div>
 
@@ -503,7 +503,7 @@ export default function CheckoutPage() {
 
               <div className="flex items-center justify-between text-sm sm:text-base lg:text-base font-bold">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>₹{total.toLocaleString("en-IN")}</span>
               </div>
 
               <div className="mt-4 sm:mt-5 lg:mt-6 space-y-2 sm:space-y-3 lg:space-y-3">
@@ -544,7 +544,7 @@ export default function CheckoutPage() {
         <div className="fixed bottom-0 left-0 right-0 border-t border-[#e5e5e5] bg-white p-3 sm:p-4 lg:hidden shadow-[0_-10px_30px_rgba(0,0,0,0.08)]">
           <div className="flex items-center justify-between text-xs sm:text-sm lg:text-sm font-semibold">
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>₹{total.toLocaleString("en-IN")}</span>
           </div>
           <button type="submit" form="checkout-form" className="mt-2 sm:mt-3 lg:mt-3 w-full rounded-full bg-[#cc071e] py-2 sm:py-3 lg:py-3 text-xs font-bold uppercase tracking-[0.2em] text-white">
             Place Order

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import ProductRecommendations from "@/components/product-recommendations";
 import { useCart } from "@/context/cart-context";
 
 const product = {
@@ -279,6 +280,8 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
+
+      <ProductRecommendations currentProductId={product.id} />
 
       <Footer />
 

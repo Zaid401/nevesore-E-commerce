@@ -6,22 +6,23 @@ import { useState } from "react";
 import { useWishlist } from "@/context/wishlist-context";
 import { useCart } from "@/context/cart-context";
 import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
 
 export default function WishlistPage() {
   const { items, removeItem } = useWishlist();
   const { addItem: addToCart } = useCart();
-  const [removingId, setRemovingId] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleAddToCart = (item: any) => {
     addToCart({
       id: item.id,
+      category: item.category,
       name: item.name,
       price: item.price,
       image: item.image,
       quantity: 1,
-      selectedColor: "#000000",
-      selectedSize: "M",
+      color: "#000000",
+      size: "M",
     });
     
     setSuccessMessage(`${item.name} added to cart!`);
@@ -29,23 +30,20 @@ export default function WishlistPage() {
   };
 
   const handleRemoveItem = (id: string) => {
-    setRemovingId(id);
-    setTimeout(() => {
-      removeItem(id);
-      setRemovingId(null);
-    }, 300);
+    removeItem(id);
   };
 
   const handleMoveAllToCart = () => {
     items.forEach((item) => {
       addToCart({
         id: item.id,
+        category: item.category,
         name: item.name,
         price: item.price,
         image: item.image,
         quantity: 1,
-        selectedColor: "#000000",
-        selectedSize: "M",
+        color: "#000000",
+        size: "M",
       });
     });
     setSuccessMessage("All items moved to cart!");
@@ -54,338 +52,156 @@ export default function WishlistPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-[#f8f8f8]">
+      <div className="min-h-screen bg-white">
         <Navbar />
         
-        {/* Empty Wishlist Section */}
-        <div className="mx-auto max-w-7xl px-6 py-16 sm:px-10 lg:px-14">
-          <div className="rounded-[20px] bg-white p-8 shadow-[0_4px_12px_rgba(0,0,0,0.08)] sm:p-12">
-            <div className="mx-auto max-w-2xl text-center">
-              {/* Empty Heart Icon */}
-              <div className="mb-8 flex justify-center">
-                <div className="inline-block rounded-full bg-[#f1f1f1] p-8">
-                  <svg
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                    className="h-20 w-20 text-[#e5e5e5]"
-                  >
-                    <path
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                    />
-                  </svg>
-                </div>
-              </div>
-
-              <h1 className="text-3xl font-bold uppercase tracking-[0.2em] text-[#111111] sm:text-4xl">
-                Your Wishlist is Empty
-              </h1>
-              
-              <p className="mt-3 text-lg text-[#555555]">
-                Start building your collection of favorite gym outfits
-              </p>
-
-              <p className="mt-5 text-base text-[#777]">
-                Hover over any product and click the heart icon to save items you love. Build your perfect wishlist and move everything to cart with one click!
-              </p>
-
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-                <Link
-                  href="/"
-                  className="rounded-full bg-[#cc071e] px-8 py-4 font-bold uppercase tracking-[0.1em] text-white transition-all duration-300 hover:shadow-[0_8px_16px_rgba(204,7,30,0.3)] hover:bg-red-700"
-                >
-                  Start Shopping
-                </Link>
-                <Link
-                  href="/upper"
-                  className="rounded-full border-2 border-[#cc071e] px-8 py-3 font-semibold uppercase tracking-[0.1em] text-[#cc071e] transition-all duration-300 hover:bg-[#cc071e] hover:text-white"
-                >
-                  Browse Collections
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Featured Collections Section */}
-        <div className="mx-auto max-w-7xl px-6 py-16 sm:px-10 lg:px-14">
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold uppercase tracking-[0.2em] text-[#111111]">
-              Explore Our Collections
-            </h2>
-            <p className="mt-2 text-[#555555]">
-              Discover premium gym wear and start curating your wishlist
-            </p>
-          </div>
-
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { label: "Upper Body", href: "/upper", icon: "👕" },
-              { label: "Bottom Wear", href: "/bottom", icon: "👖" },
-              { label: "Active Wear", href: "/active", icon: "⚡" },
-              { label: "Casual Wear", href: "/casual", icon: "👟" },
-            ].map((collection) => (
-              <Link
-                key={collection.label}
-                href={collection.href}
-                className="group rounded-[16px] border border-[#e5e5e5] bg-white p-8 text-center transition-all duration-300 hover:border-[#cc071e] hover:shadow-[0_8px_24px_rgba(204,7,30,0.15)]"
-              >
-                <div className="mb-4 text-5xl">{collection.icon}</div>
-                <h3 className="font-bold uppercase tracking-[0.1em] text-[#111111] transition-colors group-hover:text-[#cc071e]">
-                  {collection.label}
-                </h3>
-                <p className="mt-2 text-sm text-[#555555]">
-                  Explore & Save to Wishlist
-                </p>
-                <div className="mt-4 inline-block rounded-full border border-[#cc071e] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-[#cc071e] transition-all group-hover:bg-[#cc071e] group-hover:text-white">
-                  Browse →
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Tips Section */}
-        <div className="mx-auto max-w-7xl px-6 py-16 sm:px-10 lg:px-14">
-          <div className="rounded-[20px] bg-[#f1f1f1] p-8 sm:p-12">
-            <h3 className="text-xl font-bold uppercase tracking-[0.2em] text-[#111111]">
-              💡 How to Use Your Wishlist
-            </h3>
-            <div className="mt-8 grid gap-6 sm:grid-cols-3">
-              <div>
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#cc071e] text-2xl font-bold text-white">
-                  1
-                </div>
-                <h4 className="font-bold text-[#111111]">Hover & Click</h4>
-                <p className="mt-2 text-sm text-[#555555]">
-                  Hover over any product and click the heart icon to add it to your wishlist
-                </p>
-              </div>
-              <div>
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#cc071e] text-2xl font-bold text-white">
-                  2
-                </div>
-                <h4 className="font-bold text-[#111111]">Save for Later</h4>
-                <p className="mt-2 text-sm text-[#555555]">
-                  Your wishlist saves automatically and you can access it anytime
-                </p>
-              </div>
-              <div>
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#cc071e] text-2xl font-bold text-white">
-                  3
-                </div>
-                <h4 className="font-bold text-[#111111]">Checkout Fast</h4>
-                <p className="mt-2 text-sm text-[#555555]">
-                  Move all items to cart with one click or add individually
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* CTA Section */}
-        <div className="mx-auto max-w-7xl px-6 py-16 text-center sm:px-10 lg:px-14">
-          <div className="rounded-[20px] bg-[#111111] p-10 sm:p-16">
-            <h2 className="text-2xl font-bold uppercase tracking-[0.2em] text-white sm:text-3xl">
-              Ready to Find Your Perfect Gym Look?
-            </h2>
-            <p className="mt-4 text-[#ddd]">
-              Explore our premium collection and start building your wishlist today
-            </p>
-            <Link
-              href="/"
-              className="mt-8 inline-block rounded-full bg-[#cc071e] px-8 py-4 font-bold uppercase tracking-[0.1em] text-white transition-all duration-300 hover:shadow-[0_8px_16px_rgba(204,7,30,0.5)] hover:bg-red-700"
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-16">
+          <div className="mx-auto max-w-2xl text-center">
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              className="mx-auto h-16 w-16 text-gray-300 sm:h-20 sm:w-20 lg:h-24 lg:w-24"
             >
-              Shop Now
-            </Link>
+              <path
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+              />
+            </svg>
+
+            <h1 className="mt-4 text-xl font-bold uppercase tracking-[0.2em] text-slate-900 sm:mt-6 sm:text-2xl lg:mt-8 lg:text-3xl xl:text-4xl">
+              Your Wishlist is Empty
+            </h1>
+            
+            <p className="mt-2 text-xs text-gray-600 sm:mt-3 sm:text-sm lg:mt-4 lg:text-base">
+              Start adding your favorite products to your wishlist
+            </p>
+
+            <div className="mt-4 flex flex-col gap-2 sm:mt-6 sm:gap-3 lg:mt-8">
+              <Link
+                href="/"
+                className="bg-slate-900 px-6 py-2 text-xs font-bold uppercase tracking-[0.1em] text-white transition hover:bg-slate-800 sm:px-8 sm:py-3 sm:text-sm lg:px-8 lg:py-3"
+              >
+                Continue Shopping
+              </Link>
+            </div>
           </div>
         </div>
+
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f8f8]">
+    <div className="min-h-screen bg-white">
       <Navbar />
-      <div className="mx-auto max-w-7xl px-6 py-12 sm:px-10 lg:px-14">
+
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-12 lg:px-8 lg:py-12">
         {/* Header Section */}
-        <div className="mb-12 opacity-0 animate-fade-in">
-          <h1 className="text-3xl font-bold uppercase tracking-[0.2em] text-[#111111] sm:text-4xl">
-            My Wishlist
-          </h1>
-          <p className="mt-2 text-base text-[#555555]">
-            Save your favorite items for later.
-          </p>
+        <div className="mb-8 flex flex-col justify-between gap-3 sm:mb-10 sm:gap-4 lg:mb-12 lg:flex-row lg:items-center">
+          <div>
+            <Link
+              href="/"
+              className="text-xs font-semibold uppercase tracking-[0.15em] text-gray-500 hover:text-gray-900"
+            >
+              Home /
+            </Link>
+            <h1 className="mt-1 text-xl font-extrabold uppercase tracking-[0.2em] text-slate-900 sm:mt-2 sm:text-2xl lg:mt-2 lg:text-4xl">
+              My Wishlist
+            </h1>
+            <p className="mt-1 text-xs font-medium uppercase tracking-widest text-red-600 sm:text-sm lg:text-sm">
+              {items.length} Premium Items Saved
+            </p>
+          </div>
+          <button
+            onClick={handleMoveAllToCart}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-slate-800 sm:w-auto sm:px-6 sm:py-3 sm:text-sm lg:px-6 lg:py-3 lg:text-base"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4 sm:h-5 sm:w-5 lg:h-5 lg:w-5" fill="currentColor">
+              <path d="M7 4h-2l-1 2v2h2l3 9h9l3-11H8.42zM10 20a1 1 0 1 1-2 0 1 1 0 0 1 2 0m8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
+            </svg>
+            Move All to Bag
+          </button>
         </div>
 
         {/* Success Message */}
         {successMessage && (
-          <div className="mb-6 rounded-[16px] border border-green-200 bg-green-50 px-6 py-3 text-sm font-medium text-green-700 animate-fade-in">
+          <div className="mb-4 rounded border border-green-200 bg-green-50 px-3 py-2 text-xs font-medium text-green-700 sm:mb-6 sm:px-4 sm:py-3 sm:text-sm lg:mb-6 lg:text-sm">
             ✓ {successMessage}
           </div>
         )}
 
-        {/* Items Count and Move All Button */}
-        {items.length > 2 && (
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-4 opacity-0 animate-fade-in" style={{ animationDelay: "0.1s" }}>
-            <p className="text-sm font-medium text-[#555555]">
-              {items.length} items in your wishlist
-            </p>
-            <button
-              onClick={handleMoveAllToCart}
-              className="rounded-full bg-[#cc071e] px-8 py-3 font-bold uppercase tracking-[0.1em] text-white transition-all duration-300 hover:shadow-[0_8px_16px_rgba(204,7,30,0.3)] hover:bg-red-700"
-            >
-              Move All to Cart
-            </button>
-          </div>
-        )}
-
-        {/* Product Grid */}
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {items.map((item, index) => (
+        {/* Products Grid */}
+        <div className="grid grid-cols-1 gap-4 sm:gap-5 sm:grid-cols-2 lg:gap-6 lg:grid-cols-4">
+          {items.map((item) => (
             <div
               key={item.id}
-              className={`group overflow-hidden rounded-[16px] border border-[#e5e5e5] bg-white transition-all duration-500 opacity-0 animate-fade-in hover:shadow-[0_12px_24px_rgba(0,0,0,0.1)] hover:-translate-y-1 ${
-                removingId === item.id ? "opacity-0" : "opacity-100"
-              }`}
-              style={{ animationDelay: `${0.05 * index}s` }}
+              className="group relative overflow-hidden border border-gray-100 bg-white transition hover:shadow-lg"
             >
               {/* Image Container */}
-              <div className="relative block overflow-hidden bg-[#f1f1f1]">
-                <Link href={`/products/${item.id}`} className="relative block aspect-3/4">
+              <div className="relative aspect-3/4 overflow-hidden bg-gray-50">
+                <Link href={`/products/${item.id}`}>
                   <Image
                     src={item.image}
                     alt={item.name}
                     fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover transition duration-300 group-hover:scale-105"
+                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                   />
                 </Link>
 
-                {/* Heart Icon - Top Right */}
-                <div className="absolute right-3 top-3">
-                  <div className="inline-block rounded-full bg-white/90 p-2 backdrop-blur-sm">
-                    <svg
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                      className="h-5 w-5 text-[#cc071e] animate-heart-beat"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-
-                {/* Remove Button - Top Left */}
-                <button
-                  onClick={() => handleRemoveItem(item.id)}
-                  className="group/btn absolute left-3 top-3 inline-flex items-center justify-center rounded-full bg-white/90 p-2 backdrop-blur-sm transition-all duration-300 hover:bg-[#cc071e]/90"
-                  aria-label="Remove from wishlist"
-                  title="Remove from wishlist"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                    className="h-5 w-5 text-neutral-700 transition-colors group-hover/btn:text-white"
-                  >
-                    <path
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      d="M19 6.4L5.4 20M5 6.4L18.6 20"
-                    />
+                {/* Heart Icon Badge - Top Right */}
+                <div className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white text-red-600 sm:right-3 sm:top-3 sm:h-8 sm:w-8 lg:right-3 lg:top-3 lg:h-8 lg:w-8">
+                  <svg viewBox="0 0 24 24" className="h-4 w-4 sm:h-5 sm:w-5 lg:h-5 lg:w-5" fill="currentColor">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                   </svg>
-                </button>
-
-                {/* Stock Status Badge */}
-                <div className="absolute bottom-3 left-3">
-                  <span className="inline-block rounded-full bg-green-500 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
-                    In Stock
-                  </span>
                 </div>
               </div>
 
               {/* Content Section */}
-              <div className="p-5">
-                <p className="text-xs font-medium uppercase tracking-[0.3em] text-[#555555]">
+              <div className="p-3 sm:p-4 lg:p-4">
+                <p className="text-xs font-medium uppercase tracking-[0.3em] text-gray-400">
                   {item.category}
                 </p>
 
-                <Link href={`/products/${item.id}`} className="block">
-                  <h3 className="mt-2 line-clamp-2 text-sm font-bold uppercase tracking-[0.15em] text-[#111111] transition-colors duration-300 group-hover:text-[#cc071e]">
+                <Link href={`/products/${item.id}`}>
+                  <h3 className="mt-1 line-clamp-2 text-xs font-bold uppercase tracking-[0.15em] text-slate-900 hover:text-red-600 sm:mt-2 sm:text-sm lg:mt-2 lg:text-sm">
                     {item.name}
                   </h3>
                 </Link>
 
-                <p className="mt-3 text-lg font-bold text-[#cc071e]">
+                <p className="mt-1 text-sm font-bold text-red-600 sm:mt-2 sm:text-base lg:mt-2 lg:text-base">
                   ${item.price.toFixed(2)}
+                </p>
+
+                <p className="mt-1 text-xs font-medium uppercase tracking-wider text-green-600 sm:mt-2 lg:mt-2">
+                  In Stock
                 </p>
 
                 {/* Add to Cart Button */}
                 <button
                   onClick={() => handleAddToCart(item)}
-                  className="mt-4 w-full rounded-full bg-[#cc071e] py-3 font-bold uppercase tracking-[0.1em] text-white transition-all duration-300 hover:shadow-[0_8px_16px_rgba(204,7,30,0.3)] hover:bg-red-700"
+                  className="mt-3 w-full bg-red-600 py-2 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-red-700 sm:mt-4 sm:py-3 sm:text-sm lg:mt-4 lg:py-3 lg:text-base"
                 >
                   Add to Cart
+                </button>
+
+                {/* Remove Button */}
+                <button
+                  onClick={() => handleRemoveItem(item.id)}
+                  className="mt-2 w-full border-t border-gray-100 py-2 text-center text-xs font-semibold uppercase tracking-wider text-gray-400 transition hover:text-slate-900 sm:mt-3 lg:mt-3"
+                >
+                  Remove from Wishlist
                 </button>
               </div>
             </div>
           ))}
         </div>
-
-        {/* Continue Shopping Link */}
-        <div className="mt-12 flex justify-center opacity-0 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-          <Link
-            href="/"
-            className="rounded-full border-2 border-[#111111] px-8 py-3 font-semibold uppercase tracking-[0.1em] text-[#111111] transition-all duration-300 hover:bg-[#111111] hover:text-white"
-          >
-            Continue Shopping
-          </Link>
-        </div>
       </div>
 
-      {/* Animations */}
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(4px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes heartBeat {
-          0%,
-          100% {
-            transform: scale(1);
-          }
-          25% {
-            transform: scale(1.1);
-          }
-          50% {
-            transform: scale(1.2);
-          }
-          75% {
-            transform: scale(1.1);
-          }
-        }
-
-        .animate-fade-in {
-          animation: fadeIn 0.6s ease-out forwards;
-        }
-
-        .animate-heart-beat {
-          animation: heartBeat 2s ease-in-out infinite;
-        }
-      `}</style>
+      <Footer />
     </div>
   );
 }

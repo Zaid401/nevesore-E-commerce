@@ -87,25 +87,25 @@ const legalLinks = [
 export default function Footer() {
   return (
     <footer className="bg-black text-neutral-300">
-      <div className="mx-auto flex max-w-6xl flex-col gap-16 px-6 py-16 sm:px-10 lg:px-16">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.6fr)_repeat(4,minmax(0,1fr))]">
-          <div className="flex flex-col gap-6">
-            <div className="flex items-center gap-4">
+      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-12 sm:px-10 sm:py-14 lg:px-16 lg:py-16 lg:gap-16">
+        <div className="grid grid-cols-2 gap-8 sm:gap-10 lg:grid-cols-[minmax(0,1.6fr)_repeat(4,minmax(0,1fr))]">
+          <div className="col-span-2 flex flex-col gap-5 sm:gap-6 lg:col-span-1">
+            <div className="flex items-center gap-3 sm:gap-4">
               <Link href="/" aria-label="Neversore Home">
-              <Image src="/logo.png" alt="Neversore logo" width={400} height={400} className="h-8 w-auto" />
+              <Image src="/darklogo.png" alt="Neversore logo" width={400} height={400} className="h-7 w-auto sm:h-8" />
               </Link>
             </div>
 
-            <p className="max-w-xs text-sm text-neutral-400">
+            <p className="max-w-xs text-xs text-neutral-400 sm:text-sm">
               The world isn&apos;t built for the weak. We build for the ones who keep going when it hurts.
             </p>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               {socialIcons.map((item) => (
                 <Link
                   key={item.label}
                   aria-label={item.label}
                   href={item.href}
-                  className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-colors hover:border-red-500/80 hover:text-red-400"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-colors hover:border-red-500/80 hover:text-red-400 sm:h-12 sm:w-12"
                 >
                   {item.icon}
                 </Link>
@@ -113,11 +113,22 @@ export default function Footer() {
             </div>
           </div>
           {footerColumns.map((column) => (
-            <div key={column.title} className="flex flex-col gap-4">
-              <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-white">
+            <div
+              key={column.title}
+              className={`flex flex-col gap-3 sm:gap-4 ${
+                column.title === "Shop"
+                  ? "order-1"
+                  : column.title === "Support"
+                    ? "order-2"
+                    : column.title === "Company"
+                      ? "order-3"
+                      : "order-4"
+              } sm:order-none`}
+            >
+              <h3 className="text-xs font-semibold uppercase tracking-[0.1em] text-white sm:text-sm">
                 {column.title}
               </h3>
-              <ul className="flex flex-col gap-3 text-sm text-neutral-400">
+              <ul className="flex flex-col gap-2 text-xs text-neutral-400 sm:gap-3 sm:text-sm">
                 {column.links.map((link) => (
                   <li key={link.label}>
                     <Link
@@ -133,9 +144,9 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="flex flex-col gap-6 border-t border-white/10 pt-6 text-xs uppercase tracking-[0.1em] text-neutral-500 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 border-t border-white/10 pt-5 text-center text-[10px] uppercase tracking-[0.1em] text-neutral-500 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:pt-6 sm:text-left sm:text-xs">
           <span>© {new Date().getFullYear()} Neversore Performance Apparel. All rights reserved.</span>
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-end sm:gap-4">
             {legalLinks.map((link) => (
               <Link key={link.label} href={link.href} className="transition-colors hover:text-white">
                 {link.label}

@@ -52,22 +52,22 @@ export default function CasualPage() {
     <main className="min-h-screen bg-neutral-50">
       <Navbar />
       
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-10">
+      <section className="py-12 sm:py-16 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-6 sm:mb-8 lg:mb-10">
             <span className="text-xs font-semibold uppercase tracking-[0.1em] text-red-600">
               Lifestyle
             </span>
-            <h1 className="mt-3 text-4xl font-black uppercase tracking-[0.08em] text-neutral-900">
+            <h1 className="mt-2 text-2xl font-black uppercase tracking-[0.08em] text-neutral-900 sm:mt-3 sm:text-3xl lg:text-4xl">
               Casual Collection
             </h1>
-            <div className="mt-3 h-1 w-16 bg-red-600" />
-            <p className="mt-4 max-w-2xl text-sm text-neutral-600">
+            <div className="mt-2 h-1 w-12 bg-red-600 sm:mt-3 sm:w-16" />
+            <p className="mt-3 max-w-2xl text-xs text-neutral-600 sm:text-sm">
               Comfortable everyday wear that blends athletic style with street fashion.
             </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-4 grid-cols-1 sm:gap-5 sm:grid-cols-2 lg:gap-6 lg:grid-cols-3 xl:grid-cols-4">
             {casualProducts.map((product) => (
               <ProductCard
                 key={product.id}

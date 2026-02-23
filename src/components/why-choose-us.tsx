@@ -55,48 +55,48 @@ export default function WhyChooseUs() {
   ];
 
   return (
-    <section className="relative overflow-hidden bg-white py-24 text-neutral-900">
+    <section className="relative overflow-hidden bg-white py-12 text-neutral-900 sm:py-16 lg:py-20 xl:py-24">
 
-      <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-10 px-6 text-center">
-        <div className="flex flex-col items-center gap-4">
+      <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 text-center sm:gap-8 sm:px-6 lg:gap-10 lg:px-14">
+        <div className="flex flex-col items-center gap-2 sm:gap-3 lg:gap-4">
           <span className="text-xs font-semibold uppercase tracking-[0.1em] text-red-600">
             Why Neversore
           </span>
-          <div className="space-y-2">
-            <h2 className="text-4xl font-black uppercase tracking-[0.08em] text-neutral-900 sm:text-5xl">
+          <div className="space-y-1 sm:space-y-2">
+            <h2 className="text-2xl font-black uppercase tracking-[0.08em] text-neutral-900 sm:text-3xl lg:text-4xl xl:text-5xl">
               Built for Performance.
             </h2>
-            <p className="text-3xl font-black uppercase tracking-[0.08em] text-red-600 sm:text-5xl">
+            <p className="text-xl font-black uppercase tracking-[0.08em] text-red-600 sm:text-2xl lg:text-3xl xl:text-5xl">
               Designed for Power.
             </p>
           </div>
           <div className="h-px w-16 bg-red-600" />
-          <p className="max-w-2xl text-sm text-neutral-600">
+          <p className="max-w-2xl text-xs text-neutral-600 sm:text-sm">
             Engineered gym wear that supports your strength, endurance, and intensity.
             No compromises. Just elite results.
           </p>
         </div>
 
-        <div className="grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid w-full gap-4 grid-cols-1 sm:gap-5 sm:grid-cols-2 lg:gap-6 lg:grid-cols-4">
           {highlights.map((item) => (
             <div
               key={item.title}
-              className="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-white p-6 text-left shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_25px_50px_rgba(0,0,0,0.12)]"
+              className="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-white p-4 text-left shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_25px_50px_rgba(0,0,0,0.12)] sm:p-6"
             >
-              <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-red-50 text-red-600">
+              <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-red-50 text-red-600 sm:h-12 sm:w-12">
                 {item.icon}
               </div>
-              <h3 className="relative mt-5 text-sm font-bold uppercase tracking-[0.1em] text-neutral-900">
+              <h3 className="relative mt-3 text-xs font-bold uppercase tracking-[0.1em] text-neutral-900 sm:mt-5 sm:text-sm">
                 {item.title}
               </h3>
-              <p className="relative mt-3 text-sm text-neutral-600">{item.description}</p>
+              <p className="relative mt-2 text-xs text-neutral-600 sm:mt-3 sm:text-sm">{item.description}</p>
             </div>
           ))}
         </div>
 
         <a
           href="#"
-          className="group inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.1em] text-red-600 transition-colors hover:text-red-700"
+          className="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.1em] text-red-600 transition-colors hover:text-red-700 sm:gap-3"
         >
           Experience the collection
           <span className="text-base transition-transform duration-200 group-hover:translate-x-1">→</span>

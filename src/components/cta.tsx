@@ -1,35 +1,59 @@
+import Link from "next/link";
+import { Inter, Montserrat } from "next/font/google";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["700"],
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  display: "swap",
+});
+
 export default function CallToAction() {
   return (
-    <section className="bg-neutral-100 px-6 py-16 sm:py-20">
-      <div className="mx-auto max-w-6xl overflow-hidden rounded-[32px] bg-white p-12 shadow-[0_20px_80px_rgba(204,7,30,0.15)] sm:p-16 lg:p-20">
-        <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-          <h2 className="text-4xl font-black uppercase tracking-[0.15em] text-neutral-900 sm:text-5xl lg:text-6xl">
-            Join the Movement
-          </h2>
-          <p className="mt-6 text-base text-neutral-600 sm:text-lg">
-            Become part of the elite. Get exclusive access to drops, workout protocols, and{" "}
-            <span className="font-bold text-red-600">10% off your first order.</span>
-          </p>
-          <form className="mt-10 flex w-full max-w-2xl flex-col gap-4 sm:flex-row sm:items-center sm:gap-3">
-            <label htmlFor="cta-email" className="sr-only">
-              Email address
-            </label>
-            <input
-              id="cta-email"
-              type="email"
-              placeholder="Enter your email address"
-              className="h-14 flex-1 rounded-full border border-neutral-200 bg-neutral-50 px-6 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-red-600 focus:outline-none focus:ring-2 focus:ring-red-100"
-            />
-            <button
-              type="submit"
-              className="h-14 min-w-[160px] rounded-full bg-red-600 px-8 text-sm font-bold uppercase tracking-[0.15em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-red-700 hover:shadow-lg"
-            >
-              Subscribe
-            </button>
-          </form>
-          <p className="mt-6 text-xs uppercase tracking-[0.15em] text-neutral-400">
-            Unsubscribe anytime. Premium Quality Guaranteed.
-          </p>
+    <section className="relative overflow-hidden border-y border-[#e5e5e5] bg-[#f8f8f8] py-12 sm:py-16 lg:py-20 xl:py-24">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-60"
+        aria-hidden
+      >
+        <div className="absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#cc071e]/[0.08] blur-3xl" />
+        <div className="absolute right-[-80px] top-[-120px] h-[260px] w-[260px] rounded-full bg-[#cc071e]/[0.05] blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto flex max-w-[1100px] flex-col items-center gap-4 px-4 text-center sm:gap-6 sm:px-6 lg:gap-8 lg:px-16">
+        <span
+          className={`${inter.className} text-xs font-semibold uppercase tracking-[0.4em] text-[#666666]`}
+        >
+          Premium Performance Wear
+        </span>
+        <h2
+          className={`${montserrat.className} text-xl font-bold uppercase tracking-[0.05em] text-[#111111] sm:text-2xl lg:text-4xl xl:text-5xl`}
+        >
+          Elevate Your Training. Upgrade Your Fit.
+        </h2>
+        <p
+          className={`${inter.className} max-w-2xl text-xs text-[#666666] sm:text-sm lg:text-base xl:text-lg`}
+        >
+          Discover performance-driven gym outfits engineered for strength,
+          comfort, and style.
+        </p>
+        <div className="flex w-full items-center justify-center gap-2 sm:gap-4">
+          <Link
+            href="/products"
+            className="inline-flex flex-1 items-center justify-center rounded-full bg-[#cc071e] px-2 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.15em] text-white shadow-[0_14px_30px_rgba(204,7,30,0.18)] transition-all duration-300 hover:bg-[#a70618] hover:shadow-[0_18px_34px_rgba(204,7,30,0.25)] sm:flex-initial sm:px-8 sm:py-4 sm:text-[0.75rem] sm:tracking-[0.2em] lg:text-sm"
+          >
+            Explore Collections
+          </Link>
+          <Link
+            href="/best-sellers"
+            className="inline-flex flex-1 items-center justify-center rounded-full border border-[#cc071e] px-2 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.15em] text-[#111111] transition-all duration-300 hover:bg-[#cc071e] hover:text-white sm:flex-initial sm:px-8 sm:py-4 sm:text-[0.75rem] sm:tracking-[0.2em] lg:text-sm"
+          >
+            Shop Best Sellers
+          </Link>
         </div>
       </div>
     </section>

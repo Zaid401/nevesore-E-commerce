@@ -1,5 +1,7 @@
 import CategoryGrid from "@/components/category";
 import CallToAction from "@/components/cta";
+import BestSellerProducts from "@/components/best-seller-products";
+import FeaturedProducts from "@/components/featured-products";
 import FaqSection from "@/components/faq";
 import Hero from "@/components/hero";
 import Navbar from "@/components/navbar";
@@ -12,6 +14,8 @@ export default function Home() {
       <Navbar />
       <Hero />
       <CategoryGrid />
+      <BestSellerProducts />
+      <FeaturedProducts />
       <WhyChooseUs />
       <FaqSection />
       <CallToAction />

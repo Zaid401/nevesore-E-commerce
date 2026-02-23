@@ -39,17 +39,17 @@ export default function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="bg-white py-20">
-      <div className="mx-auto flex max-w-4xl flex-col gap-10 px-6">
+    <section className="bg-white py-12 sm:py-16 lg:py-20">
+      <div className="mx-auto flex max-w-4xl flex-col gap-6 px-4 sm:gap-8 sm:px-6 lg:gap-10 lg:px-8">
         <div className="text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.6em] text-red-600">
             FAQ
           </span>
-          <h2 className="mt-3 text-3xl font-black uppercase tracking-[0.08em] text-neutral-900 sm:text-4xl">
+          <h2 className="mt-2 text-2xl font-black uppercase tracking-[0.08em] text-neutral-900 sm:mt-3 sm:text-3xl lg:text-4xl">
             Frequently Asked Questions
           </h2>
-          <div className="mx-auto mt-3 h-1 w-12 bg-red-600" />
-          <p className="mx-auto mt-4 max-w-2xl text-sm text-neutral-500">
+          <div className="mx-auto mt-2 h-1 w-12 bg-red-600 sm:mt-3" />
+          <p className="mx-auto mt-3 max-w-2xl text-xs text-neutral-500 sm:text-sm">
             Everything you need to know about our products, shipping, and returns.
           </p>
         </div>
@@ -64,13 +64,13 @@ export default function FaqSection() {
                   type="button"
                   aria-expanded={isOpen}
                   onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="group flex w-full items-center justify-between gap-6 py-6 text-left"
+                  className="group flex w-full items-center justify-between gap-3 py-4 text-left sm:gap-6 sm:py-6"
                 >
-                  <span className="relative text-sm font-semibold uppercase tracking-[0.2em] text-neutral-900 transition-colors duration-200 group-hover:text-red-600 after:absolute after:-bottom-2 after:left-0 after:h-px after:w-0 after:bg-red-600 after:transition-all after:duration-200 group-hover:after:w-10">
+                  <span className="relative text-xs font-semibold uppercase tracking-[0.2em] text-neutral-900 transition-colors duration-200 group-hover:text-red-600 after:absolute after:-bottom-2 after:left-0 after:h-px after:w-0 after:bg-red-600 after:transition-all after:duration-200 group-hover:after:w-8 sm:text-sm sm:group-hover:after:w-10">
                     {item.question}
                   </span>
                   <span
-                    className={`flex h-8 w-8 items-center justify-center text-red-600 transition-transform duration-200 ${
+                    className={`flex h-6 w-6 flex-shrink-0 items-center justify-center text-red-600 transition-transform duration-200 sm:h-8 sm:w-8 ${
                       isOpen ? "rotate-180" : "rotate-0"
                     }`}
                     aria-hidden="true"
@@ -87,7 +87,7 @@ export default function FaqSection() {
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <p className="pb-6 text-sm text-neutral-600">{item.answer}</p>
+                    <p className="pb-4 text-xs text-neutral-600 sm:pb-6 sm:text-sm">{item.answer}</p>
                   </div>
                 </div>
               </div>

@@ -462,7 +462,7 @@ export default function Navbar() {
           >
             {/* Drawer Header with Close Button - Fixed at top */}
             <div className="flex-shrink-0 bg-white border-b border-[#f3f3f3] p-4 flex items-center justify-between" >
-              <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-[#666666]">Menu</h3>
+              <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-[#666666]">SHOP</h3>
               <button
                 onClick={handleCloseMenu}
                 className="rounded-full p-2 transition-all hover:bg-[#f3f3f3]"

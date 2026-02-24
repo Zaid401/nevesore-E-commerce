@@ -69,7 +69,7 @@ export default function WishlistPage() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-12 lg:px-8 lg:py-12">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-12 lg:px-8 lg:py-12">
         {/* Header Section */}
         <div className="mb-8 flex flex-col justify-between gap-3 sm:mb-10 sm:gap-4 lg:mb-12 lg:flex-row lg:items-center">
           <div>
@@ -109,11 +109,11 @@ export default function WishlistPage() {
         )}
 
         {/* Product Grid */}
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((item, index) => (
             <div
               key={item.id}
-              className="group relative overflow-hidden border border-gray-100 bg-white transition hover:shadow-lg"
+              className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white transition-all duration-200 hover:-translate-y-1 hover:border-neutral-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)]"
             >
               {/* Image Container */}
               <div className="relative aspect-3/4 overflow-hidden bg-gray-50">
@@ -128,37 +128,35 @@ export default function WishlistPage() {
                 </Link>
 
                 {/* Heart Icon Badge - Top Right */}
-                <div className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white text-red-600 sm:right-3 sm:top-3 sm:h-8 sm:w-8 lg:right-3 lg:top-3 lg:h-8 lg:w-8">
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 sm:h-5 sm:w-5 lg:h-5 lg:w-5" fill="currentColor">
+                <div className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-red-600 shadow-md">
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                   </svg>
                 </div>
               </div>
 
               {/* Content Section */}
-              <div className="p-3 sm:p-4 lg:p-4">
-                <p className="text-xs font-medium uppercase tracking-[0.3em] text-gray-400">
+              <div className="p-4">
+                <p className="text-xs font-medium uppercase tracking-[0.3em] text-neutral-500">
                   {item.category}
                 </p>
 
                 <Link href={`/products/${item.id}`}>
-                  <h3 className="mt-1 line-clamp-2 text-xs font-bold uppercase tracking-[0.15em] text-slate-900 hover:text-red-600 sm:mt-2 sm:text-sm lg:mt-2 lg:text-sm">
+                  <h3 className="mt-1 line-clamp-2 text-sm font-semibold uppercase tracking-[0.2em] text-neutral-900 hover:text-red-600">
                     {item.name}
                   </h3>
                 </Link>
 
-                <p className="mt-3 text-lg font-bold text-[#cc071e]">
-                  ₹{item.price.toLocaleString("en-IN")}
-                </p>
-
-                <p className="mt-1 text-xs font-medium uppercase tracking-wider text-green-600 sm:mt-2 lg:mt-2">
-                  In Stock
-                </p>
+                <div className="mt-2 flex items-center gap-2">
+                  <p className="text-base font-bold text-red-600">
+                    ₹{item.price.toLocaleString("en-IN")}
+                  </p>
+                </div>
 
                 {/* View Product Button */}
                 <Link
                   href={`/products/${item.id}`}
-                  className="mt-4 block w-full rounded-full bg-[#cc071e] py-3 text-center font-bold uppercase tracking-[0.1em] text-white transition-all duration-300 hover:shadow-[0_8px_16px_rgba(204,7,30,0.3)] hover:bg-red-700"
+                  className="mt-3 block w-full rounded-lg bg-slate-900 py-3 text-center text-xs font-bold uppercase tracking-[0.1em] text-white transition-all duration-300 hover:bg-slate-800"
                 >
                   Select Size &amp; Add to Cart
                 </Link>

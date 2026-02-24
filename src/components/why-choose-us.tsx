@@ -95,7 +95,7 @@ export default function WhyChooseUs() {
         </div>
 
         <a
-          href="#"
+          href="/best-sellers"
           className="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.1em] text-red-600 transition-colors hover:text-red-700 sm:gap-3"
         >
           Experience the collection

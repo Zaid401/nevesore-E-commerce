@@ -66,7 +66,7 @@ export default function FaqSection() {
                   onClick={() => setOpenIndex(isOpen ? null : index)}
                   className="group flex w-full items-center justify-between gap-3 py-4 text-left sm:gap-6 sm:py-6"
                 >
-                  <span className="relative text-xs font-semibold uppercase tracking-[0.2em] text-neutral-900 transition-colors duration-200 group-hover:text-red-600 after:absolute after:-bottom-2 after:left-0 after:h-px after:w-0 after:bg-red-600 after:transition-all after:duration-200 group-hover:after:w-8 sm:text-sm sm:group-hover:after:w-10">
+                  <span className="relative text-xs font-semibold uppercase tracking-[0.1em] text-neutral-900 transition-colors duration-200 group-hover:text-red-600 after:absolute after:-bottom-2 after:left-0 after:h-px after:w-0 after:bg-red-600 after:transition-all after:duration-200 group-hover:after:w-8 sm:text-sm sm:group-hover:after:w-10">
                     {item.question}
                   </span>
                   <span

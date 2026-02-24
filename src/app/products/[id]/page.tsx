@@ -100,8 +100,7 @@ export default function ProductDetailPage() {
         .from("product_variants")
         .select("id,color_id,size_id,price_override,stock_quantity,is_active,product_sizes(id,size_label,sort_order)")
         .eq("product_id", id)
-        .eq("is_active", true)
-        .gt("stock_quantity", 0);
+        .eq("is_active", true);
 
       // Fetch images
       const { data: images } = await supabase
@@ -250,20 +249,19 @@ export default function ProductDetailPage() {
                   <button
                     key={img.id}
                     onClick={() => setSelectedImageIdx(index)}
-                    className={`relative h-20 w-20 flex-none border-2 lg:h-24 lg:w-24 ${
-                      selectedImageIdx === index
+                    className={`relative h-20 w-20 flex-none border-2 lg:h-24 lg:w-24 ${selectedImageIdx === index
                         ? "border-[#cc071e]"
                         : "border-transparent hover:border-gray-300"
-                    }`}
+                      }`}
                   >
                     <Image
-                        src={imgErrors.has(index) ? FALLBACK_IMAGE : (img.image_url || FALLBACK_IMAGE)}
-                        alt="thumb"
-                        fill
-                        sizes="(max-width: 1024px) 80px, 96px"
-                        className="object-cover"
-                        onError={() => setImgErrors((p) => new Set(p).add(index))}
-                      />
+                      src={imgErrors.has(index) ? FALLBACK_IMAGE : (img.image_url || FALLBACK_IMAGE)}
+                      alt="thumb"
+                      fill
+                      sizes="(max-width: 1024px) 80px, 96px"
+                      className="object-cover"
+                      onError={() => setImgErrors((p) => new Set(p).add(index))}
+                    />
                   </button>
                 ))}
               </div>
@@ -346,11 +344,10 @@ export default function ProductDetailPage() {
                         const newSizes = product.sizesByColor[color.id] ?? [];
                         setSelectedSizeId(newSizes[0]?.id ?? null);
                       }}
-                      className={`w-8 h-8 rounded-full transition-all ${
-                        selectedColorIdx === index
+                      className={`w-8 h-8 rounded-full transition-all ${selectedColorIdx === index
                           ? "ring-2 ring-[#cc071e] ring-offset-2"
                           : "hover:ring-2 hover:ring-gray-300 hover:ring-offset-1"
-                      }`}
+                        }`}
                       style={{ backgroundColor: color.color_hex }}
                       title={color.color_name}
                     />
@@ -364,19 +361,24 @@ export default function ProductDetailPage() {
               <div>
                 <span className="text-sm font-bold uppercase tracking-wider">Select Size</span>
                 <div className="grid grid-cols-5 gap-2 mt-3">
-                  {availableSizes.map((size) => (
-                    <button
-                      key={size.id}
-                      onClick={() => setSelectedSizeId(size.id)}
-                      className={`py-3 border text-sm font-bold uppercase transition ${
-                        selectedSizeId === size.id
-                          ? "border-[#cc071e] text-[#cc071e]"
-                          : "border-gray-200 hover:border-[#cc071e]"
-                      }`}
-                    >
-                      {size.size_label}
-                    </button>
-                  ))}
+                  {availableSizes.map((size) => {
+                    const isOutOfStock = size.stock_quantity <= 0;
+                    return (
+                      <button
+                        key={size.id}
+                        onClick={() => !isOutOfStock && setSelectedSizeId(size.id)}
+                        disabled={isOutOfStock}
+                        className={`py-3 border text-sm font-bold uppercase transition relative ${isOutOfStock
+                            ? "border-gray-100 text-gray-300 cursor-not-allowed line-through"
+                            : selectedSizeId === size.id
+                              ? "border-[#cc071e] text-[#cc071e]"
+                              : "border-gray-200 hover:border-[#cc071e]"
+                          }`}
+                      >
+                        {size.size_label}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -386,10 +388,14 @@ export default function ProductDetailPage() {
               <div className="flex items-center border border-gray-200 rounded">
                 <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-4 py-2">-</button>
                 <span className="px-4 font-bold">{quantity}</span>
-                <button onClick={() => setQuantity(quantity + 1)} className="px-4 py-2">+</button>
+                <button onClick={() => setQuantity(Math.min((selectedVariant?.stock_quantity ?? 1), quantity + 1))} className="px-4 py-2">+</button>
               </div>
               {selectedVariant ? (
-                <p className="text-sm text-green-600 font-medium">In Stock â€¢ Ready to ship</p>
+                selectedVariant.stock_quantity > 0 ? (
+                  <p className="text-sm text-green-600 font-medium">In Stock — {selectedVariant.stock_quantity} available</p>
+                ) : (
+                  <p className="text-sm text-red-500 font-medium">Out of Stock</p>
+                )
               ) : (
                 <p className="text-sm text-red-500 font-medium">Select a size</p>
               )}
@@ -399,15 +405,15 @@ export default function ProductDetailPage() {
             <div className="space-y-3">
               <button
                 onClick={handleAddToCart}
-                disabled={!selectedVariant}
+                disabled={!selectedVariant || selectedVariant.stock_quantity <= 0}
                 className="w-full bg-[#cc071e] text-white py-4 font-extrabold tracking-widest hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                ADD TO CART
+                {selectedVariant && selectedVariant.stock_quantity <= 0 ? 'OUT OF STOCK' : 'ADD TO CART'}
               </button>
 
               <button
                 onClick={() => { handleAddToCart(); router.push("/checkout"); }}
-                disabled={!selectedVariant}
+                disabled={!selectedVariant || selectedVariant.stock_quantity <= 0}
                 className="w-full border-2 border-slate-900 py-4 font-extrabold tracking-widest hover:bg-slate-900 hover:text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 BUY IT NOW
@@ -462,9 +468,8 @@ export default function ProductDetailPage() {
         />
       )}
       <aside
-        className={`fixed right-0 top-0 z-50 h-full w-full max-w-md transform bg-white shadow-2xl transition-transform duration-300 ${
-          isCartOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed right-0 top-0 z-50 h-full w-full max-w-md transform bg-white shadow-2xl transition-transform duration-300 ${isCartOpen ? "translate-x-0" : "translate-x-full"
+          }`}
         aria-hidden={!isCartOpen}
       >
         <div className="flex h-full flex-col">
@@ -486,13 +491,13 @@ export default function ProductDetailPage() {
                   <div key={item.variant_id} className="flex items-center gap-4 border-b border-gray-100 pb-4">
                     <div className="relative h-20 w-16 overflow-hidden rounded-md bg-gray-100">
                       <Image
-                          src={cartImgErrors.has(item.variant_id) ? FALLBACK_IMAGE : (item.image || FALLBACK_IMAGE)}
-                          alt={item.product_name}
-                          fill
-                          sizes="64px"
-                          className="object-cover"
-                          onError={() => setCartImgErrors((p) => new Set(p).add(item.variant_id))}
-                        />
+                        src={cartImgErrors.has(item.variant_id) ? FALLBACK_IMAGE : (item.image || FALLBACK_IMAGE)}
+                        alt={item.product_name}
+                        fill
+                        sizes="64px"
+                        className="object-cover"
+                        onError={() => setCartImgErrors((p) => new Set(p).add(item.variant_id))}
+                      />
                     </div>
                     <div className="flex-1">
                       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">{item.category}</p>

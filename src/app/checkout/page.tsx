@@ -6,18 +6,21 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { useCart } from "@/context/cart-context";
+import { supabase } from "@/lib/supabase";
 
 const SHIPPING_STANDARD = 0;
 const SHIPPING_EXPRESS = 149;
 
 export default function CheckoutPage() {
-  const { items, subtotal } = useCart();
+  const { items, subtotal, clearCart } = useCart();
   const router = useRouter();
   const [shippingMethod, setShippingMethod] = useState<"standard" | "express">("standard");
   const [paymentMethod, setPaymentMethod] = useState<"card" | "upi" | "cod">("card");
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderError, setOrderError] = useState<string | null>(null);
 
   const discount = useMemo(() => {
     if (!couponApplied) {
@@ -35,7 +38,7 @@ export default function CheckoutPage() {
     setCouponApplied(normalized === "NEVER10");
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const form = event.currentTarget;
@@ -78,7 +81,101 @@ export default function CheckoutPage() {
     setErrors(nextErrors);
 
     if (Object.keys(nextErrors).length === 0) {
-      router.push("/confirmation");
+      await placeOrder(form);
+    }
+  };
+
+  const placeOrder = async (form: HTMLFormElement) => {
+    setIsSubmitting(true);
+    setOrderError(null);
+
+    try {
+      if (items.length === 0) {
+        setOrderError("Your cart is empty.");
+        return;
+      }
+
+      // 1. Validate stock for all items
+      const variantIds = items.map(i => i.variant_id);
+      const { data: stockData, error: stockErr } = await supabase
+        .from("product_variants")
+        .select("id,stock_quantity")
+        .in("id", variantIds);
+
+      if (stockErr) throw new Error("Failed to check stock availability.");
+
+      const stockMap = new Map((stockData || []).map(v => [v.id, v.stock_quantity]));
+      for (const item of items) {
+        const available = stockMap.get(item.variant_id) ?? 0;
+        if (available < item.quantity) {
+          setOrderError(`Insufficient stock for ${item.product_name} (${item.color_name} / ${item.size_label}). Available: ${available}`);
+          return;
+        }
+      }
+
+      // 2. Generate order number
+      const orderNumber = `NVS-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+
+      const getVal = (name: string) => (form.elements.namedItem(name) as HTMLInputElement | null)?.value?.trim() || "";
+
+      // 3. Create order
+      const { data: order, error: orderErr } = await supabase
+        .from("orders")
+        .insert({
+          order_number: orderNumber,
+          user_id: (await supabase.auth.getUser()).data.user?.id || null,
+          status: paymentMethod === "cod" ? "confirmed" : "pending",
+          shipping_full_name: getVal("fullName"),
+          shipping_phone: getVal("phone"),
+          shipping_address_line_1: getVal("address1"),
+          shipping_address_line_2: getVal("address2") || null,
+          shipping_city: getVal("city"),
+          shipping_state: getVal("state"),
+          shipping_postal_code: getVal("postal"),
+          shipping_country: getVal("country") || "India",
+          subtotal,
+          discount_amount: discount,
+          shipping_cost: shippingCost,
+          tax_amount: tax,
+          total_amount: total,
+          coupon_code: couponApplied ? couponCode.trim().toUpperCase() : null,
+          payment_status: paymentMethod === "cod" ? "pending" : "pending",
+        })
+        .select("id,order_number")
+        .single();
+
+      if (orderErr || !order) throw new Error(orderErr?.message || "Failed to create order.");
+
+      // 4. Insert order items (triggers stock decrement)
+      const orderItems = items.map(item => ({
+        order_id: order.id,
+        variant_id: item.variant_id,
+        product_name: item.product_name,
+        color_name: item.color_name,
+        size_label: item.size_label,
+        sku: item.sku,
+        quantity: item.quantity,
+        unit_price: item.price,
+        total_price: item.price * item.quantity,
+      }));
+
+      const { error: itemsErr } = await supabase
+        .from("order_items")
+        .insert(orderItems);
+
+      if (itemsErr) {
+        // Rollback the order if items insertion fails
+        await supabase.from("orders").delete().eq("id", order.id);
+        throw new Error(itemsErr.message || "Failed to add order items. Stock may be insufficient.");
+      }
+
+      // 5. Clear the cart and redirect
+      clearCart();
+      router.push(`/confirmation?order=${order.order_number}`);
+    } catch (err) {
+      setOrderError(err instanceof Error ? err.message : "An unexpected error occurred.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -124,9 +221,8 @@ export default function CheckoutPage() {
                     name="email"
                     type="email"
                     onChange={() => clearError("email")}
-                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${
-                      errors.email ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                    }`}
+                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${errors.email ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                      }`}
                     placeholder="you@neversore.com"
                   />
                   {errors.email && <p className="mt-1 text-xs text-[#cc071e]">{errors.email}</p>}
@@ -140,9 +236,8 @@ export default function CheckoutPage() {
                     name="phone"
                     type="tel"
                     onChange={() => clearError("phone")}
-                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${
-                      errors.phone ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                    }`}
+                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${errors.phone ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                      }`}
                     placeholder="+1 555 234 8821"
                   />
                   {errors.phone && <p className="mt-1 text-xs text-[#cc071e]">{errors.phone}</p>}
@@ -162,9 +257,8 @@ export default function CheckoutPage() {
                     name="fullName"
                     type="text"
                     onChange={() => clearError("fullName")}
-                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${
-                      errors.fullName ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                    }`}
+                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${errors.fullName ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                      }`}
                     placeholder="Jordan Brooks"
                   />
                   {errors.fullName && <p className="mt-1 text-xs text-[#cc071e]">{errors.fullName}</p>}
@@ -178,9 +272,8 @@ export default function CheckoutPage() {
                     name="address1"
                     type="text"
                     onChange={() => clearError("address1")}
-                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${
-                      errors.address1 ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                    }`}
+                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${errors.address1 ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                      }`}
                     placeholder="123 Performance Blvd"
                   />
                   {errors.address1 && <p className="mt-1 text-xs text-[#cc071e]">{errors.address1}</p>}
@@ -206,9 +299,8 @@ export default function CheckoutPage() {
                     name="city"
                     type="text"
                     onChange={() => clearError("city")}
-                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${
-                      errors.city ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                    }`}
+                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${errors.city ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                      }`}
                     placeholder="Los Angeles"
                   />
                   {errors.city && <p className="mt-1 text-xs text-[#cc071e]">{errors.city}</p>}
@@ -222,9 +314,8 @@ export default function CheckoutPage() {
                     name="state"
                     type="text"
                     onChange={() => clearError("state")}
-                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${
-                      errors.state ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                    }`}
+                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${errors.state ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                      }`}
                     placeholder="CA"
                   />
                   {errors.state && <p className="mt-1 text-xs text-[#cc071e]">{errors.state}</p>}
@@ -238,9 +329,8 @@ export default function CheckoutPage() {
                     name="postal"
                     type="text"
                     onChange={() => clearError("postal")}
-                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${
-                      errors.postal ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                    }`}
+                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${errors.postal ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                      }`}
                     placeholder="90028"
                   />
                   {errors.postal && <p className="mt-1 text-xs text-[#cc071e]">{errors.postal}</p>}
@@ -253,9 +343,8 @@ export default function CheckoutPage() {
                     id="country"
                     name="country"
                     onChange={() => clearError("country")}
-                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${
-                      errors.country ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                    }`}
+                    className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${errors.country ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                      }`}
                   >
                     <option value="">Select country</option>
                     <option value="US">United States</option>
@@ -311,9 +400,8 @@ export default function CheckoutPage() {
             <section className="rounded-2xl border border-[#e5e5e5] bg-white p-4 sm:p-5 lg:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
               <h2 className="text-xs sm:text-sm lg:text-sm font-bold uppercase tracking-[0.2em]">Payment Method</h2>
               <div className="mt-4 sm:mt-5 lg:mt-5 space-y-3 sm:space-y-4 lg:space-y-4">
-                <label className={`block rounded-2xl border p-3 sm:p-4 lg:p-4 transition-all ${
-                  paymentMethod === "card" ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                }`}>
+                <label className={`block rounded-2xl border p-3 sm:p-4 lg:p-4 transition-all ${paymentMethod === "card" ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                  }`}>
                   <div className="flex items-center justify-between">
                     <span className="text-xs sm:text-sm lg:text-sm font-semibold">Credit / Debit Card</span>
                     <input
@@ -325,9 +413,8 @@ export default function CheckoutPage() {
                       className="accent-[#cc071e]"
                     />
                   </div>
-                  <div className={`mt-3 sm:mt-4 lg:mt-4 grid gap-3 sm:gap-4 lg:gap-4 sm:grid-cols-2 lg:grid-cols-2 transition-all ${
-                    paymentMethod === "card" ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0 overflow-hidden"
-                  }`}>
+                  <div className={`mt-3 sm:mt-4 lg:mt-4 grid gap-3 sm:gap-4 lg:gap-4 sm:grid-cols-2 lg:grid-cols-2 transition-all ${paymentMethod === "card" ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0 overflow-hidden"
+                    }`}>
                     <div className="sm:col-span-2 lg:col-span-2">
                       <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="cardNumber">
                         Card Number
@@ -337,9 +424,8 @@ export default function CheckoutPage() {
                         name="cardNumber"
                         type="text"
                         onChange={() => clearError("cardNumber")}
-                        className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${
-                          errors.cardNumber ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                        }`}
+                        className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${errors.cardNumber ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                          }`}
                         placeholder="1234 5678 9012 3456"
                       />
                       {errors.cardNumber && <p className="mt-1 text-xs text-[#cc071e]">{errors.cardNumber}</p>}
@@ -353,9 +439,8 @@ export default function CheckoutPage() {
                         name="expiry"
                         type="text"
                         onChange={() => clearError("expiry")}
-                        className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${
-                          errors.expiry ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                        }`}
+                        className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${errors.expiry ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                          }`}
                         placeholder="MM/YY"
                       />
                       {errors.expiry && <p className="mt-1 text-xs text-[#cc071e]">{errors.expiry}</p>}
@@ -369,9 +454,8 @@ export default function CheckoutPage() {
                         name="cvv"
                         type="password"
                         onChange={() => clearError("cvv")}
-                        className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${
-                          errors.cvv ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                        }`}
+                        className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${errors.cvv ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                          }`}
                         placeholder="123"
                       />
                       {errors.cvv && <p className="mt-1 text-xs text-[#cc071e]">{errors.cvv}</p>}
@@ -385,9 +469,8 @@ export default function CheckoutPage() {
                         name="cardName"
                         type="text"
                         onChange={() => clearError("cardName")}
-                        className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${
-                          errors.cardName ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                        }`}
+                        className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${errors.cardName ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                          }`}
                         placeholder="Jordan Brooks"
                       />
                       {errors.cardName && <p className="mt-1 text-xs text-[#cc071e]">{errors.cardName}</p>}
@@ -395,9 +478,8 @@ export default function CheckoutPage() {
                   </div>
                 </label>
 
-                <label className={`block rounded-2xl border p-3 sm:p-4 lg:p-4 transition-all ${
-                  paymentMethod === "upi" ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                }`}>
+                <label className={`block rounded-2xl border p-3 sm:p-4 lg:p-4 transition-all ${paymentMethod === "upi" ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                  }`}>
                   <div className="flex items-center justify-between">
                     <span className="text-xs sm:text-sm lg:text-sm font-semibold">UPI</span>
                     <input
@@ -409,9 +491,8 @@ export default function CheckoutPage() {
                       className="accent-[#cc071e]"
                     />
                   </div>
-                  <div className={`mt-3 sm:mt-4 lg:mt-4 transition-all ${
-                    paymentMethod === "upi" ? "max-h-[120px] opacity-100" : "max-h-0 opacity-0 overflow-hidden"
-                  }`}>
+                  <div className={`mt-3 sm:mt-4 lg:mt-4 transition-all ${paymentMethod === "upi" ? "max-h-[120px] opacity-100" : "max-h-0 opacity-0 overflow-hidden"
+                    }`}>
                     <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="upiId">
                       UPI ID
                     </label>
@@ -420,18 +501,16 @@ export default function CheckoutPage() {
                       name="upiId"
                       type="text"
                       onChange={() => clearError("upiId")}
-                      className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${
-                        errors.upiId ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                      }`}
+                      className={`mt-2 h-10 sm:h-11 lg:h-12 w-full rounded-full border px-4 text-xs sm:text-sm lg:text-sm focus:border-[#cc071e] focus:outline-none ${errors.upiId ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                        }`}
                       placeholder="name@bank"
                     />
                     {errors.upiId && <p className="mt-1 text-xs text-[#cc071e]">{errors.upiId}</p>}
                   </div>
                 </label>
 
-                <label className={`block rounded-2xl border p-3 sm:p-4 lg:p-4 transition-all ${
-                  paymentMethod === "cod" ? "border-[#cc071e]" : "border-[#e5e5e5]"
-                }`}>
+                <label className={`block rounded-2xl border p-3 sm:p-4 lg:p-4 transition-all ${paymentMethod === "cod" ? "border-[#cc071e]" : "border-[#e5e5e5]"
+                  }`}>
                   <div className="flex items-center justify-between">
                     <span className="text-xs sm:text-sm lg:text-sm font-semibold">Cash on Delivery (COD)</span>
                     <input
@@ -527,12 +606,19 @@ export default function CheckoutPage() {
                 )}
               </div>
 
+              {orderError && (
+                <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+                  {orderError}
+                </div>
+              )}
+
               <button
                 type="submit"
                 form="checkout-form"
-                className="mt-4 sm:mt-5 lg:mt-6 w-full rounded-full bg-[#cc071e] py-3 sm:py-4 lg:py-4 text-xs font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-red-700 hover:shadow-[0_12px_30px_rgba(204,7,30,0.3)]"
+                disabled={isSubmitting || items.length === 0}
+                className="mt-4 sm:mt-5 lg:mt-6 w-full rounded-full bg-[#cc071e] py-3 sm:py-4 lg:py-4 text-xs font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-red-700 hover:shadow-[0_12px_30px_rgba(204,7,30,0.3)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Place Order
+                {isSubmitting ? 'Placing Order...' : 'Place Order'}
               </button>
               <p className="mt-2 sm:mt-3 lg:mt-3 text-center text-xs text-[#555555]">Secure and encrypted payment.</p>
             </div>
@@ -546,8 +632,8 @@ export default function CheckoutPage() {
             <span>Total</span>
             <span>₹{total.toLocaleString("en-IN")}</span>
           </div>
-          <button type="submit" form="checkout-form" className="mt-2 sm:mt-3 lg:mt-3 w-full rounded-full bg-[#cc071e] py-2 sm:py-3 lg:py-3 text-xs font-bold uppercase tracking-[0.2em] text-white">
-            Place Order
+          <button type="submit" form="checkout-form" disabled={isSubmitting || items.length === 0} className="mt-2 sm:mt-3 lg:mt-3 w-full rounded-full bg-[#cc071e] py-2 sm:py-3 lg:py-3 text-xs font-bold uppercase tracking-[0.2em] text-white disabled:opacity-50 disabled:cursor-not-allowed">
+            {isSubmitting ? 'Placing Order...' : 'Place Order'}
           </button>
           <p className="mt-2 text-center text-xs text-[#555555]">Secure and encrypted payment.</p>
         </div>

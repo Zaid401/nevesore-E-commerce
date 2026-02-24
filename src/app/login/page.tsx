@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import { useAuth } from "@/context/auth-context";
@@ -145,7 +146,10 @@ export default function LoginPage() {
               </button>
 
               <p className="text-center text-xs uppercase tracking-widest text-neutral-500">
-                Don&apos;t have an account? <a href="#" className="text-red-600 transition-colors hover:text-red-700">Create Account</a>
+                Don&apos;t have an account?{" "}
+                <Link href="/signup" className="text-red-600 transition-colors hover:text-red-700">
+                  Create Account
+                </Link>
               </p>
             </div>
           </div>

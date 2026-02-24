@@ -92,7 +92,7 @@ export default function Navbar() {
                 >
                   Products
                 </button>
-                <div className="absolute left-0 top-full z-50 w-[520px] translate-y-2 rounded-2xl border border-[#e5e5e5] bg-white p-6 text-left shadow-[0_12px_30px_rgba(0,0,0,0.08)] opacity-0 transition-all duration-200 ease-out pointer-events-none group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                <div className="absolute left-0 top-full z-50 w-130 translate-y-2 rounded-2xl border border-[#e5e5e5] bg-white p-6 text-left shadow-[0_12px_30px_rgba(0,0,0,0.08)] opacity-0 transition-all duration-200 ease-out pointer-events-none group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
                   <ul className="grid grid-cols-2 gap-4 text-xs font-bold uppercase tracking-[0.2em] text-[#666666]">
                     {navLinks.map((link) => (
                       <li key={link.label}>
@@ -461,7 +461,7 @@ export default function Navbar() {
             }}
           >
             {/* Drawer Header with Close Button - Fixed at top */}
-            <div className="flex-shrink-0 bg-white border-b border-[#f3f3f3] p-4 flex items-center justify-between" >
+            <div className="shrink-0 bg-white border-b border-[#f3f3f3] p-4 flex items-center justify-between" >
               <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-[#666666]">SHOP</h3>
               <button
                 onClick={handleCloseMenu}
@@ -546,7 +546,7 @@ export default function Navbar() {
       )}
 
       {/* Spacer for fixed navbar */}
-      <div className={`md:hidden transition-all duration-300 ${searchOpen ? "h-[140px]" : "h-[10px]"}`} />
+      <div className={`md:hidden transition-all duration-300 ${searchOpen ? "h-35" : "h-2.5"}`} />
     </>
   );
 }

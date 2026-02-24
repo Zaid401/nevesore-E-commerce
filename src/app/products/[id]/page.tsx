@@ -15,13 +15,13 @@ interface ProductColor {
   id: string;
   color_name: string;
   color_hex: string;
-  image_url: string | null;
   sort_order: number;
 }
 
 interface SizeOption {
-  id: string;       // sizes.id
+  id: string;       // product_sizes.id
   size_label: string;
+  sort_order: number;
   variant_id: string;
   stock_quantity: number;
   price_override: number | null;
@@ -91,14 +91,14 @@ export default function ProductDetailPage() {
       // Fetch colors
       const { data: colors } = await supabase
         .from("product_colors")
-        .select("id,color_name,color_hex,image_url,sort_order")
+        .select("id,color_name,color_hex,sort_order")
         .eq("product_id", id)
         .order("sort_order");
 
       // Fetch all variants with size info
       const { data: variants } = await supabase
         .from("product_variants")
-        .select("id,color_id,size_id,price_override,stock_quantity,is_active,sizes(id,size_label,sort_order)")
+        .select("id,color_id,size_id,price_override,stock_quantity,is_active,product_sizes(id,size_label,sort_order)")
         .eq("product_id", id)
         .eq("is_active", true)
         .gt("stock_quantity", 0);
@@ -125,20 +125,21 @@ export default function ProductDetailPage() {
       // Build sizesByColor map
       const sizesByColor: Record<string, SizeOption[]> = {};
       for (const v of (variants || [])) {
-        const sizeData = Array.isArray(v.sizes) ? v.sizes[0] : v.sizes;
+        const sizeData = Array.isArray(v.product_sizes) ? v.product_sizes[0] : v.product_sizes;
         if (!sizeData) continue;
         if (!sizesByColor[v.color_id]) sizesByColor[v.color_id] = [];
         sizesByColor[v.color_id].push({
           id: sizeData.id,
           size_label: sizeData.size_label,
+          sort_order: sizeData.sort_order ?? 0,
           variant_id: v.id,
           stock_quantity: v.stock_quantity,
           price_override: v.price_override,
         });
       }
-      // Sort sizes by sort_order
+      // Sort sizes by sort_order (S, M, L, XL, XXL, XXXL)
       for (const key of Object.keys(sizesByColor)) {
-        sizesByColor[key].sort((a, b) => a.size_label.localeCompare(b.size_label));
+        sizesByColor[key].sort((a, b) => a.sort_order - b.sort_order);
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -213,7 +214,7 @@ export default function ProductDetailPage() {
       <main className="bg-[#f8f8f8] min-h-screen text-slate-900">
         <Navbar />
         <div className="max-w-7xl mx-auto px-4 py-24 text-center text-gray-400 text-sm">
-          Loading productâ€¦
+          Loading product
         </div>
         <Footer />
       </main>
@@ -259,6 +260,7 @@ export default function ProductDetailPage() {
                         src={imgErrors.has(index) ? FALLBACK_IMAGE : (img.image_url || FALLBACK_IMAGE)}
                         alt="thumb"
                         fill
+                        sizes="(max-width: 1024px) 80px, 96px"
                         className="object-cover"
                         onError={() => setImgErrors((p) => new Set(p).add(index))}
                       />
@@ -267,12 +269,14 @@ export default function ProductDetailPage() {
               </div>
 
               {/* Main Image */}
-              <div className="bg-white rounded-sm overflow-hidden aspect-[4/5] shadow-sm relative flex-1">
+              <div className="bg-white rounded-sm overflow-hidden aspect-4/5 shadow-sm relative flex-1">
                 {displayImages[selectedImageIdx] ? (
                   <Image
                     src={imgErrors.has(selectedImageIdx) ? FALLBACK_IMAGE : (displayImages[selectedImageIdx].image_url || FALLBACK_IMAGE)}
                     alt={product.name}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 42vw"
+                    priority
                     className="object-cover"
                     onError={() => setImgErrors((p) => new Set(p).add(selectedImageIdx))}
                   />
@@ -298,7 +302,7 @@ export default function ProductDetailPage() {
                 {product.name}
               </h1>
 
-              <div className="h-[2px] w-1/3 bg-gradient-to-r from-[#cc071e] to-transparent mb-4" />
+              <div className="h-0.5 w-1/3 bg-linear-to-r from-[#cc071e] to-transparent mb-4" />
 
               <div className="flex items-center space-x-4 mb-4">
                 <span className="text-2xl font-semibold text-[#cc071e]">
@@ -485,6 +489,7 @@ export default function ProductDetailPage() {
                           src={cartImgErrors.has(item.variant_id) ? FALLBACK_IMAGE : (item.image || FALLBACK_IMAGE)}
                           alt={item.product_name}
                           fill
+                          sizes="64px"
                           className="object-cover"
                           onError={() => setCartImgErrors((p) => new Set(p).add(item.variant_id))}
                         />

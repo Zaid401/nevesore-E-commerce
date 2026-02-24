@@ -12,11 +12,12 @@ interface ProductCardProps {
   sale_price?: number | null;
   image: string;
   category: string;
+  short_description?: string | null;
 }
 
 const FALLBACK_IMAGE = "/product/fallback.png";
 
-export default function ProductCard({ id, name, price, sale_price, image, category }: ProductCardProps) {
+export default function ProductCard({ id, name, price, sale_price, image, category, short_description }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [imgSrc, setImgSrc] = useState(image || FALLBACK_IMAGE);
   const { isInWishlist, addItem } = useWishlist();
@@ -56,6 +57,11 @@ export default function ProductCard({ id, name, price, sale_price, image, catego
         <h3 className="mt-1 text-sm font-semibold uppercase tracking-[0.2em] text-neutral-900">
           {name}
         </h3>
+        {short_description && (
+          <p className="mt-1 text-xs text-neutral-500 line-clamp-2 leading-relaxed">
+            {short_description}
+          </p>
+        )}
         <div className="mt-2 flex items-center gap-2">
           <p className="text-base font-bold text-red-600">₹{displayPrice.toLocaleString("en-IN")}</p>
           {hasDiscount && (

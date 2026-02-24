@@ -38,10 +38,21 @@ function saveToStorage(items: CartItem[]): void {
 }
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(loadFromStorage);
+  const [items, setItems] = useState<CartItem[]>([]);
+
+  // Initialize from storage on mount
+  useEffect(() => {
+    const saved = loadFromStorage();
+    if (saved.length > 0) {
+      setItems(saved);
+    }
+  }, []);
 
   // Keep localStorage in sync whenever items change
   useEffect(() => {
+    // Only save if we have items or after initialization to avoid clearing on first empty render
+    // However, saving [] is fine if it was purposefully cleared.
+    // The main issue is the initial load.
     saveToStorage(items);
   }, [items]);
 

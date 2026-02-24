@@ -20,8 +20,8 @@ const drawerLinks = [
   { label: "Categories", href: "/" },
   { label: "Best Sellers", href: "/best-sellers" },
   { label: "Wishlist", href: "/wishlist" },
-  { label: "My Account", href: "/login" },
-  { label: "Track Order", href: "/track-order" },
+  { label: "My Account", href: "/account" },
+  { label: "Track Order", href: "/account?tab=orders" },
   { label: "Contact Us", href: "/" },
 ];
 
@@ -35,6 +35,11 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -149,7 +154,7 @@ export default function Navbar() {
                   d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
                 />
               </svg>
-              {wishlistCount > 0 && (
+              {mounted && wishlistCount > 0 && (
                 <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#cc071e] px-1 text-[10px] font-bold text-white">
                   {wishlistCount}
                 </span>
@@ -166,14 +171,14 @@ export default function Navbar() {
                   d="M7 4h-2l-1 2v2h2l3 9h9l3-11H8.42zM10 20a1 1 0 1 1-2 0 1 1 0 0 1 2 0m8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"
                 />
               </svg>
-              {itemCount > 0 && (
+              {mounted && itemCount > 0 && (
                 <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#cc071e] px-1 text-[10px] font-bold text-white">
                   {itemCount}
                 </span>
               )}
             </Link>
             {/* Auth: Login Button or Avatar */}
-            {user ? (
+            {mounted && user ? (
               <div className="relative">
                 <button
                   onClick={() => setProfileMenuOpen(!profileMenuOpen)}
@@ -212,14 +217,14 @@ export default function Navbar() {
                         </p>
                       </div>
                       <Link
-                        href="/login"
+                        href="/account"
                         className="block px-4 py-3 text-sm text-[#111111] hover:bg-[#f3f3f3] transition-colors"
                         onClick={() => setProfileMenuOpen(false)}
                       >
                         My Account
                       </Link>
                       <Link
-                        href="/track-order"
+                        href="/account?tab=orders"
                         className="block px-4 py-3 text-sm text-[#111111] hover:bg-[#f3f3f3] transition-colors"
                         onClick={() => setProfileMenuOpen(false)}
                       >
@@ -323,7 +328,7 @@ export default function Navbar() {
                   d="M7 4h-2l-1 2v2h2l3 9h9l3-11H8.42zM10 20a1 1 0 1 1-2 0 1 1 0 0 1 2 0m8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"
                 />
               </svg>
-              {itemCount > 0 && (
+              {mounted && itemCount > 0 && (
                 <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#cc071e] px-1.5 text-xs font-bold text-white">
                   {itemCount}
                 </span>
@@ -331,7 +336,7 @@ export default function Navbar() {
             </Link>
 
             {/* Auth: Login Button or Avatar (Mobile) */}
-            {user ? (
+            {mounted && user ? (
               <div className="relative">
                 <button
                   onClick={() => setProfileMenuOpen(!profileMenuOpen)}
@@ -370,14 +375,14 @@ export default function Navbar() {
                         </p>
                       </div>
                       <Link
-                        href="/login"
+                        href="/account"
                         className="block px-4 py-3 text-sm text-[#111111] hover:bg-[#f3f3f3] transition-colors"
                         onClick={() => setProfileMenuOpen(false)}
                       >
                         My Account
                       </Link>
                       <Link
-                        href="/track-order"
+                        href="/account?tab=orders"
                         className="block px-4 py-3 text-sm text-[#111111] hover:bg-[#f3f3f3] transition-colors"
                         onClick={() => setProfileMenuOpen(false)}
                       >
@@ -442,7 +447,7 @@ export default function Navbar() {
           <div
             className="fixed inset-0 bg-black/30 z-30 md:hidden"
             onClick={handleCloseMenu}
-            style={{ 
+            style={{
               top: searchOpen ? "170px" : "10px",
               opacity: mobileMenuOpen ? 1 : 0,
               transition: "opacity 300ms ease-out",
@@ -451,7 +456,7 @@ export default function Navbar() {
           />
 
           {/* Drawer */}
-          <div 
+          <div
             className="fixed left-0 top-0 bottom-0 bg-white z-40 w-72 max-w-[85vw] shadow-lg md:hidden flex flex-col border-r border-[#e5e5e5]"
             style={{
               paddingTop: searchOpen ? "170px" : "10px",
@@ -533,7 +538,7 @@ export default function Navbar() {
                     />
                   </svg>
                   Wishlist
-                  {wishlistCount > 0 && (
+                  {mounted && wishlistCount > 0 && (
                     <span className="ml-auto bg-[#cc071e] text-white text-xs font-bold px-2.5 py-1 rounded-full">
                       {wishlistCount}
                     </span>

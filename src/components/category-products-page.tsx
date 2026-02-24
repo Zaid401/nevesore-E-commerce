@@ -8,6 +8,7 @@ interface ProductRow {
   name: string;
   base_price: number;
   sale_price: number | null;
+  short_description: string | null;
   product_images: { image_url: string; is_primary: boolean; sort_order: number }[];
 }
 
@@ -24,7 +25,7 @@ async function fetchCategoryProducts(slug: string): Promise<ProductRow[]> {
   const { data } = await supabase
     .from("products")
     .select(
-      "id, name, base_price, sale_price, product_images(image_url, is_primary, sort_order)"
+      "id, name, base_price, sale_price, short_description, product_images(image_url, is_primary, sort_order)"
     )
     .eq("category_id", category.id)
     .eq("is_active", true)
@@ -89,6 +90,7 @@ export default async function CategoryProductsPage({
                   sale_price={product.sale_price}
                   image={getProductImage(product)}
                   category={title}
+                  short_description={product.short_description}
                 />
               ))}
             </div>

@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { useCart } from "@/context/cart-context";
+import { useAuth } from "@/context/auth-context";
 import { supabase } from "@/lib/supabase";
 
 const SHIPPING_STANDARD = 0;
@@ -13,6 +14,7 @@ const SHIPPING_EXPRESS = 149;
 
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
+  const { user } = useAuth();
   const router = useRouter();
   const [shippingMethod, setShippingMethod] = useState<"standard" | "express">("standard");
   const [paymentMethod, setPaymentMethod] = useState<"card" | "upi" | "cod">("card");
@@ -21,6 +23,39 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderError, setOrderError] = useState<string | null>(null);
+  const [saveAddress, setSaveAddress] = useState(true);
+
+  // Auto-fill from saved address
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      const { data } = await supabase
+        .from("addresses")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("is_default", { ascending: false })
+        .order("updated_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (!data) return;
+      // Pre-fill the form fields
+      const setVal = (name: string, val: string) => {
+        const el = document.querySelector<HTMLInputElement>(`[name="${name}"]`);
+        if (el && !el.value) { el.value = val; }
+      };
+      setTimeout(() => {
+        setVal("fullName", data.full_name || "");
+        setVal("phone", data.phone || "");
+        setVal("email", user.email || "");
+        setVal("address1", data.address_line_1 || "");
+        setVal("address2", data.address_line_2 || "");
+        setVal("city", data.city || "");
+        setVal("state", data.state || "");
+        setVal("postal", data.postal_code || "");
+        setVal("country", data.country || "India");
+      }, 100);
+    })();
+  }, [user]);
 
   const discount = useMemo(() => {
     if (!couponApplied) {
@@ -169,7 +204,36 @@ export default function CheckoutPage() {
         throw new Error(itemsErr.message || "Failed to add order items. Stock may be insufficient.");
       }
 
-      // 5. Clear the cart and redirect
+      // 5. Save address if checked
+      if (saveAddress && user) {
+        const addressData = {
+          user_id: user.id,
+          full_name: getVal("fullName"),
+          phone: getVal("phone"),
+          address_line_1: getVal("address1"),
+          address_line_2: getVal("address2") || null,
+          city: getVal("city"),
+          state: getVal("state"),
+          postal_code: getVal("postal"),
+          country: getVal("country") || "India",
+          is_default: true,
+          label: "Home",
+        };
+        // Check if user already has a default address
+        const { data: existing } = await supabase
+          .from("addresses")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("is_default", true)
+          .maybeSingle();
+        if (existing) {
+          await supabase.from("addresses").update(addressData).eq("id", existing.id);
+        } else {
+          await supabase.from("addresses").insert(addressData);
+        }
+      }
+
+      // 6. Clear the cart and redirect
       clearCart();
       router.push(`/confirmation?order=${order.order_number}`);
     } catch (err) {
@@ -347,6 +411,7 @@ export default function CheckoutPage() {
                       }`}
                   >
                     <option value="">Select country</option>
+                    <option value="India">India</option>
                     <option value="US">United States</option>
                     <option value="CA">Canada</option>
                     <option value="UK">United Kingdom</option>
@@ -355,6 +420,13 @@ export default function CheckoutPage() {
                   {errors.country && <p className="mt-1 text-xs text-[#cc071e]">{errors.country}</p>}
                 </div>
               </div>
+              {user && (
+                <label className="mt-4 flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" checked={saveAddress} onChange={(e) => setSaveAddress(e.target.checked)}
+                    className="h-4 w-4 rounded border-[#e5e5e5] text-[#cc071e] focus:ring-[#cc071e]" />
+                  <span className="text-xs text-[#555555]">Save this address for future orders</span>
+                </label>
+              )}
             </section>
 
             <section className="rounded-2xl border border-[#e5e5e5] bg-white p-4 sm:p-5 lg:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">

@@ -14,6 +14,7 @@ interface Product {
   sale_price: number | null;
   category: string;
   image: string;
+  short_description: string | null;
 }
 
 export default function FeaturedProductsPage() {
@@ -27,7 +28,7 @@ export default function FeaturedProductsPage() {
       let query = supabase
         .from("products")
         .select(
-          "id, name, base_price, sale_price, categories(name), product_images(image_url, sort_order, is_primary)"
+          "id, name, base_price, sale_price, short_description, categories(name), product_images(image_url, sort_order, is_primary)"
         )
         .eq("is_featured", true)
         .eq("is_active", true);
@@ -55,6 +56,7 @@ export default function FeaturedProductsPage() {
               name: p.name,
               base_price: p.base_price,
               sale_price: p.sale_price,
+              short_description: p.short_description,
               category: p.categories?.name ?? "",
               image: imgs[0]?.image_url ?? "/product/fallback.png",
             };
@@ -136,6 +138,7 @@ export default function FeaturedProductsPage() {
                 sale_price={product.sale_price}
                 image={product.image}
                 category={product.category}
+                short_description={product.short_description}
               />
             ))}
           </div>

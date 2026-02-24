@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 export type WishlistItem = {
   id: string;
@@ -21,8 +21,28 @@ type WishlistContextValue = {
 
 const WishlistContext = createContext<WishlistContextValue | undefined>(undefined);
 
+const STORAGE_KEY = "neversore_wishlist";
+
 export function WishlistProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<WishlistItem[]>([]);
+
+  // Initialize from storage on mount
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw) as WishlistItem[];
+        if (saved.length > 0) setItems(saved);
+      }
+    } catch (e) {
+      console.error("Wishlist initialization error:", e);
+    }
+  }, []);
+
+  // Save to storage
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  }, [items]);
 
   const addItem = (item: WishlistItem) => {
     setItems((prev) => {

@@ -250,8 +250,8 @@ export default function ProductDetailPage() {
                     key={img.id}
                     onClick={() => setSelectedImageIdx(index)}
                     className={`relative h-20 w-20 flex-none border-2 lg:h-24 lg:w-24 ${selectedImageIdx === index
-                        ? "border-[#cc071e]"
-                        : "border-transparent hover:border-gray-300"
+                      ? "border-[#cc071e]"
+                      : "border-transparent hover:border-gray-300"
                       }`}
                   >
                     <Image
@@ -345,8 +345,8 @@ export default function ProductDetailPage() {
                         setSelectedSizeId(newSizes[0]?.id ?? null);
                       }}
                       className={`w-8 h-8 rounded-full transition-all ${selectedColorIdx === index
-                          ? "ring-2 ring-[#cc071e] ring-offset-2"
-                          : "hover:ring-2 hover:ring-gray-300 hover:ring-offset-1"
+                        ? "ring-2 ring-[#cc071e] ring-offset-2"
+                        : "hover:ring-2 hover:ring-gray-300 hover:ring-offset-1"
                         }`}
                       style={{ backgroundColor: color.color_hex }}
                       title={color.color_name}
@@ -369,10 +369,10 @@ export default function ProductDetailPage() {
                         onClick={() => !isOutOfStock && setSelectedSizeId(size.id)}
                         disabled={isOutOfStock}
                         className={`py-3 border text-sm font-bold uppercase transition relative ${isOutOfStock
-                            ? "border-gray-100 text-gray-300 cursor-not-allowed line-through"
-                            : selectedSizeId === size.id
-                              ? "border-[#cc071e] text-[#cc071e]"
-                              : "border-gray-200 hover:border-[#cc071e]"
+                          ? "border-gray-100 text-gray-300 cursor-not-allowed line-through"
+                          : selectedSizeId === size.id
+                            ? "border-[#cc071e] text-[#cc071e]"
+                            : "border-gray-200 hover:border-[#cc071e]"
                           }`}
                       >
                         {size.size_label}
@@ -420,37 +420,15 @@ export default function ProductDetailPage() {
               </button>
             </div>
 
-            {/* Accordion */}
-            <div className="border-t border-gray-100 pt-4 space-y-4">
-              <div className="border-b border-gray-100 py-4">
-                <button
-                  onClick={() => toggleAccordion("description")}
-                  className="w-full text-left font-bold text-sm uppercase tracking-widest flex justify-between"
-                >
-                  Description
-                  {activeAccordion === "description" ? "-" : "+"}
-                </button>
-                {activeAccordion === "description" && (
-                  <div className="mt-4 text-sm text-gray-600">
-                    {product.description ?? "High-performance fitness clothing engineered for your toughest sessions."}
-                  </div>
-                )}
+            {/* Description */}
+            {product.description && (
+              <div className="border-t border-gray-100 pt-6">
+                <h3 className="font-bold text-sm uppercase tracking-widest mb-3">Description</h3>
+                <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+                  {product.description}
+                </p>
               </div>
-              <div className="border-b border-gray-100 py-4">
-                <button
-                  onClick={() => toggleAccordion("fabric")}
-                  className="w-full text-left font-bold text-sm uppercase tracking-widest flex justify-between"
-                >
-                  Fabric &amp; Care
-                  {activeAccordion === "fabric" ? "-" : "+"}
-                </button>
-                {activeAccordion === "fabric" && (
-                  <div className="mt-4 text-sm text-gray-600">
-                    88% Polyester, 12% Spandex. Machine wash cold. Do not bleach.
-                  </div>
-                )}
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

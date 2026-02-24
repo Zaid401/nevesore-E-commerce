@@ -12,6 +12,7 @@ interface Product {
   sale_price: number | null;
   category: string;
   image: string;
+  short_description: string | null;
 }
 
 interface ProductImage {
@@ -25,6 +26,7 @@ interface SupabaseProduct {
   name: string;
   base_price: number;
   sale_price: number | null;
+  short_description: string | null;
   categories: { name: string }[] | null;
   product_images: ProductImage[] | null;
 }
@@ -98,6 +100,7 @@ function FeaturedCarousel({ products }: { products: Product[] }) {
                 sale_price={product.sale_price}
                 image={product.image}
                 category={product.category}
+                short_description={product.short_description}
               />
             </div>
           ))}
@@ -121,9 +124,8 @@ function FeaturedCarousel({ products }: { products: Product[] }) {
             <button
               key={i}
               onClick={() => setCurrentIndex(i)}
-              className={`h-1.5 rounded-full transition-all duration-200 ${
-                i === clampedIndex ? "w-6 bg-neutral-900" : "w-1.5 bg-neutral-300"
-              }`}
+              className={`h-1.5 rounded-full transition-all duration-200 ${i === clampedIndex ? "w-6 bg-neutral-900" : "w-1.5 bg-neutral-300"
+                }`}
               aria-label={`Go to slide ${i + 1}`}
             />
           ))}
@@ -139,10 +141,10 @@ function StaticGrid({ products }: { products: Product[] }) {
     products.length <= 1
       ? "lg:grid-cols-1"
       : products.length === 2
-      ? "lg:grid-cols-2"
-      : products.length === 3
-      ? "lg:grid-cols-3"
-      : "lg:grid-cols-4";
+        ? "lg:grid-cols-2"
+        : products.length === 3
+          ? "lg:grid-cols-3"
+          : "lg:grid-cols-4";
 
   return (
     <div className={`grid grid-cols-2 gap-3 sm:gap-6 ${colClass}`}>
@@ -155,6 +157,7 @@ function StaticGrid({ products }: { products: Product[] }) {
           sale_price={product.sale_price}
           image={product.image}
           category={product.category}
+          short_description={product.short_description}
         />
       ))}
     </div>
@@ -186,7 +189,7 @@ export default function FeaturedProducts() {
       const { data, error } = await supabase
         .from("products")
         .select(
-          "id, name, base_price, sale_price, categories(name), product_images(image_url, sort_order, is_primary)"
+          "id, name, base_price, sale_price, short_description, categories(name), product_images(image_url, sort_order, is_primary)"
         )
         .eq("is_featured", true)
         .eq("is_active", true)
@@ -205,6 +208,7 @@ export default function FeaturedProducts() {
               name: p.name,
               base_price: p.base_price,
               sale_price: p.sale_price,
+              short_description: p.short_description,
               category: p.categories?.[0]?.name ?? "",
               image: imgs[0]?.image_url ?? "/product/fallback.png",
             };

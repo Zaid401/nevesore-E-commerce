@@ -14,6 +14,21 @@ interface Product {
   image: string;
 }
 
+interface ProductImage {
+  image_url: string;
+  sort_order: number;
+  is_primary: boolean;
+}
+
+interface SupabaseProduct {
+  id: string;
+  name: string;
+  base_price: number;
+  sale_price: number | null;
+  categories: { name: string }[] | null;
+  product_images: ProductImage[] | null;
+}
+
 const GAP = 16; // px gap between cards
 
 // ─── Multi-card carousel (used when > 4 featured products) ───────────────────
@@ -39,12 +54,10 @@ function FeaturedCarousel({ products }: { products: Product[] }) {
     return () => ro.disconnect();
   }, [measure]);
 
-  useEffect(() => {
-    setCurrentIndex(0);
-  }, [products.length, visibleCount]);
-
   const maxIndex = Math.max(0, products.length - visibleCount);
-  const offset = -(currentIndex * (cardWidth + GAP));
+  // Clamp current index to valid range when layout or products change
+  const clampedIndex = Math.min(currentIndex, maxIndex);
+  const offset = -(clampedIndex * (cardWidth + GAP));
 
   const prev = () => setCurrentIndex((i) => Math.max(0, i - 1));
   const next = () => setCurrentIndex((i) => Math.min(maxIndex, i + 1));
@@ -54,7 +67,7 @@ function FeaturedCarousel({ products }: { products: Product[] }) {
       {/* Prev arrow */}
       <button
         onClick={prev}
-        disabled={currentIndex === 0}
+        disabled={clampedIndex === 0}
         className="absolute left-0 top-1/2 z-10 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md border border-neutral-200 text-lg text-neutral-700 transition hover:bg-neutral-900 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed sm:h-10 sm:w-10"
         aria-label="Previous"
       >
@@ -70,7 +83,7 @@ function FeaturedCarousel({ products }: { products: Product[] }) {
           {products.map((product) => (
             <div
               key={product.id}
-              className="flex-shrink-0"
+              className="shrink-0"
               style={{
                 width:
                   cardWidth > 0
@@ -94,7 +107,7 @@ function FeaturedCarousel({ products }: { products: Product[] }) {
       {/* Next arrow */}
       <button
         onClick={next}
-        disabled={currentIndex >= maxIndex}
+        disabled={clampedIndex >= maxIndex}
         className="absolute right-0 top-1/2 z-10 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md border border-neutral-200 text-lg text-neutral-700 transition hover:bg-neutral-900 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed sm:h-10 sm:w-10"
         aria-label="Next"
       >
@@ -109,7 +122,7 @@ function FeaturedCarousel({ products }: { products: Product[] }) {
               key={i}
               onClick={() => setCurrentIndex(i)}
               className={`h-1.5 rounded-full transition-all duration-200 ${
-                i === currentIndex ? "w-6 bg-neutral-900" : "w-1.5 bg-neutral-300"
+                i === clampedIndex ? "w-6 bg-neutral-900" : "w-1.5 bg-neutral-300"
               }`}
               aria-label={`Go to slide ${i + 1}`}
             />
@@ -163,7 +176,7 @@ function SkeletonGrid() {
   );
 }
 
-// ─── Main exported component ──────────────────────────────────────────────────
+// ─── Main exported component ──────────
 export default function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -181,11 +194,9 @@ export default function FeaturedProducts() {
 
       if (!error && data) {
         setProducts(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          data.map((p: any) => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          data.map((p: SupabaseProduct) => {
             const imgs = [...(p.product_images ?? [])].sort(
-              (a: any, b: any) =>
+              (a: ProductImage, b: ProductImage) =>
                 (b.is_primary ? 1 : 0) - (a.is_primary ? 1 : 0) ||
                 a.sort_order - b.sort_order
             );
@@ -194,7 +205,7 @@ export default function FeaturedProducts() {
               name: p.name,
               base_price: p.base_price,
               sale_price: p.sale_price,
-              category: p.categories?.name ?? "",
+              category: p.categories?.[0]?.name ?? "",
               image: imgs[0]?.image_url ?? "/product/fallback.png",
             };
           })
@@ -214,7 +225,7 @@ export default function FeaturedProducts() {
             <h2 className="text-xl font-bold uppercase tracking-[0.2em] text-neutral-900 sm:text-2xl">
               Featured Products
             </h2>
-            <div className="mt-2 h-0.5 w-16 bg-gradient-to-r from-[#cc071e] to-transparent sm:w-20" />
+            <div className="mt-2 h-0.5 w-16 bg-linear-to-r from-[#cc071e] to-transparent sm:w-20" />
           </div>
           <Link
             href="/featured-products"

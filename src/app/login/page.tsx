@@ -1,11 +1,35 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
+import { useAuth } from "@/context/auth-context";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    const { error: loginError } = await login(email, password);
+
+    if (loginError) {
+      setError(loginError.message || "Failed to login. Please check your credentials.");
+      setLoading(false);
+    } else {
+      // Redirect to home page after successful login
+      router.push("/");
+    }
+  };
 
   return (
     <main className="min-h-screen bg-neutral-50 text-neutral-900">
@@ -24,15 +48,24 @@ export default function LoginPage() {
                 </p>
               </header>
 
-              <form className="flex flex-col gap-6">
+              {error && (
+                <div className="rounded-2xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
+                  {error}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2 text-xs font-semibold uppercase tracking-widest text-neutral-600">
                   <label htmlFor="login-email">Email Address</label>
                   <input
                     id="login-email"
                     type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="enter your email address"
                     className="h-12 rounded-2xl border border-neutral-300 bg-neutral-50 px-5 text-sm font-medium tracking-normal text-neutral-900 placeholder:text-neutral-400 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
                     required
+                    disabled={loading}
                   />
                 </div>
 
@@ -47,9 +80,12 @@ export default function LoginPage() {
                     <input
                       id="login-password"
                       type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
                       className="h-12 w-full rounded-2xl border border-neutral-300 bg-neutral-50 px-5 pr-12 text-sm font-medium tracking-widest text-neutral-900 placeholder:text-neutral-400 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
                       required
+                      disabled={loading}
                     />
                     <button
                       type="button"
@@ -70,9 +106,10 @@ export default function LoginPage() {
 
                 <button
                   type="submit"
-                  className="h-12 rounded-2xl bg-red-600 text-sm font-bold uppercase tracking-widest text-white transition-transform duration-150 hover:-translate-y-0.5 hover:bg-red-700"
+                  disabled={loading}
+                  className="h-12 rounded-2xl bg-red-600 text-sm font-bold uppercase tracking-widest text-white transition-transform duration-150 hover:-translate-y-0.5 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                 >
-                  Sign In
+                  {loading ? "Signing In..." : "Sign In"}
                 </button>
               </form>
 

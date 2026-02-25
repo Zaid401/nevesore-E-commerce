@@ -8,6 +8,34 @@ interface OrderItem {
   quantity: number;
 }
 
+// HMAC-SHA256 signature verification using Web Crypto API (available in Deno runtime)
+async function verifyRazorpaySignature(
+  razorpay_order_id: string,
+  razorpay_payment_id: string,
+  razorpay_signature: string,
+  secret: string
+): Promise<boolean> {
+  const message = `${razorpay_order_id}|${razorpay_payment_id}`;
+  const encoder = new TextEncoder();
+  const keyData = encoder.encode(secret);
+  const msgData = encoder.encode(message);
+
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+
+  const signatureBuffer = await crypto.subtle.sign('HMAC', cryptoKey, msgData);
+  const signatureHex = Array.from(new Uint8Array(signatureBuffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+
+  return signatureHex === razorpay_signature;
+}
+
 serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });

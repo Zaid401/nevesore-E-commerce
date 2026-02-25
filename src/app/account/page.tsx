@@ -118,7 +118,7 @@ function AccountPageInner() {
                         <div className="rounded-2xl border border-[#e5e5e5] bg-white p-4 shadow-sm">
                             {/* Profile summary */}
                             <div className="flex items-center gap-3 border-b border-[#f3f3f3] pb-4 mb-4">
-                                <div className="h-12 w-12 rounded-full bg-[#cc071e] flex items-center justify-center text-white text-lg font-bold flex-shrink-0">
+                                <div className="h-12 w-12 rounded-full bg-[#cc071e] flex items-center justify-center text-white text-lg font-bold shrink-0">
                                     {(profile?.full_name || user.email || "U")[0].toUpperCase()}
                                 </div>
                                 <div className="min-w-0">
@@ -307,30 +307,35 @@ function AddressesTab({ userId }: { userId: string }) {
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState<Address | null>(null);
     const [showForm, setShowForm] = useState(false);
+    const [refreshKey, setRefreshKey] = useState(0);
+    const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
 
-    const fetchAddresses = useCallback(async () => {
-        const { data } = await supabase
+    useEffect(() => {
+        let cancelled = false;
+        supabase
             .from("addresses")
             .select("*")
             .eq("user_id", userId)
             .order("is_default", { ascending: false })
-            .order("updated_at", { ascending: false });
-        setAddresses((data as Address[]) || []);
-        setLoading(false);
-    }, [userId]);
-
-    useEffect(() => { fetchAddresses(); }, [fetchAddresses]);
+            .order("updated_at", { ascending: false })
+            .then(({ data }) => {
+                if (!cancelled) {
+                    setAddresses((data as Address[]) || []);
+                    setLoading(false);
+                }
+            });
+        return () => { cancelled = true; };
+    }, [userId, refreshKey]);
 
     const handleDelete = async (id: string) => {
         await supabase.from("addresses").delete().eq("id", id);
-        fetchAddresses();
+        refresh();
     };
 
     const handleSetDefault = async (id: string) => {
-        // Unset current default
         await supabase.from("addresses").update({ is_default: false }).eq("user_id", userId);
         await supabase.from("addresses").update({ is_default: true }).eq("id", id);
-        fetchAddresses();
+        refresh();
     };
 
     const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -356,7 +361,7 @@ function AddressesTab({ userId }: { userId: string }) {
         }
         setEditing(null);
         setShowForm(false);
-        fetchAddresses();
+        refresh();
     };
 
     if (loading) return <div className="text-center py-16 text-sm text-[#999]">Loading addresses...</div>;
@@ -455,11 +460,6 @@ function SettingsTab() {
     const [newPassword, setNewPassword] = useState("");
     const [pwMsg, setPwMsg] = useState("");
     const [pwSaving, setPwSaving] = useState(false);
-
-    useEffect(() => {
-        setName(profile?.full_name || "");
-        setPhone(profile?.phone || "");
-    }, [profile]);
 
     const handleProfileSave = async () => {
         if (!user) return;

@@ -35,11 +35,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const [mounted, setMounted] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {

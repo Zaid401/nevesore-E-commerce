@@ -9,7 +9,7 @@ import { useAuth } from "@/context/auth-context";
 
 export default function SignupPage() {
   const router = useRouter();
-  const { signUp } = useAuth();
+  const { signUp, signInWithGoogle } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [fullName, setFullName] = useState("");
@@ -222,6 +222,7 @@ export default function SignupPage() {
               <button
                 type="button"
                 disabled={loading}
+                onClick={signInWithGoogle}
                 className="flex h-12 items-center justify-center gap-3 rounded-2xl border border-neutral-300 bg-neutral-50 text-sm font-semibold uppercase tracking-widest text-neutral-900 transition-transform duration-150 hover:-translate-y-0.5 hover:border-neutral-400 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">

@@ -9,7 +9,7 @@ import { useAuth } from "@/context/auth-context";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, signInWithGoogle } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -122,6 +122,7 @@ export default function LoginPage() {
 
               <button
                 type="button"
+                onClick={signInWithGoogle}
                 className="flex h-12 items-center justify-center gap-3 rounded-2xl border border-neutral-300 bg-neutral-50 text-sm font-semibold uppercase tracking-widest text-neutral-900 transition-transform duration-150 hover:-translate-y-0.5 hover:border-neutral-400"
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">

@@ -56,7 +56,7 @@ function CategoryCard({
       </div>
 
       <div className="relative flex h-full w-full flex-col justify-end p-6">
-        <h3 className="text-xl font-black uppercase tracking-[0.2em] text-white">
+        <h3 className="text-xl font-black uppercase  text-white">
           {category.name}
         </h3>
         {category.description && (
@@ -65,7 +65,7 @@ function CategoryCard({
           </p>
         )}
         <div className="mt-4 flex items-center gap-2">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-white">
+          <span className="text-xs font-bold uppercase  text-white">
             Shop Now
           </span>
           <div className="h-px w-8 bg-red-500 transition-all duration-300 group-hover:w-14" />
@@ -362,10 +362,10 @@ export default function CategoryGrid() {
       <div className="mx-auto max-w-6xl px-6">
         {/* Section header */}
         <div className="mb-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-red-600 mb-2">
+          <p className="text-xs font-semibold uppercase  text-red-600 mb-2">
             Collections
           </p>
-          <h2 className="text-2xl font-black uppercase tracking-[0.15em] text-neutral-900 sm:text-3xl">
+          <h2 className="text-2xl font-black uppercase  text-neutral-900 sm:text-3xl">
             Shop by Category
           </h2>
         </div>

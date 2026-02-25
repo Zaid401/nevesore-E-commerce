@@ -108,7 +108,7 @@ function AccountPageInner() {
             <div className="mx-auto max-w-7xl px-4 py-8 sm:py-10 lg:py-12 lg:px-8">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-2xl font-extrabold uppercase tracking-[0.2em] sm:text-3xl">My Account</h1>
+                    <h1 className="text-2xl font-extrabold uppercase sm:text-3xl">My Account</h1>
                     <p className="mt-1 text-sm text-[#555555]">Welcome back, {profile?.full_name || user.email}</p>
                 </div>
 
@@ -193,7 +193,7 @@ function OrdersTab({ userId }: { userId: string }) {
             <div className="rounded-2xl border border-[#e5e5e5] bg-white p-10 text-center">
                 <p className="text-lg font-bold">No orders yet</p>
                 <p className="mt-2 text-sm text-[#666]">Start shopping to see your orders here.</p>
-                <Link href="/upper" className="mt-4 inline-block rounded-full bg-[#cc071e] px-6 py-2 text-sm font-bold uppercase tracking-wider text-white hover:bg-red-700 transition">
+                <Link href="/upper" className="mt-4 inline-block rounded-full bg-[#cc071e] px-6 py-2 text-sm font-bold uppercase text-white hover:bg-red-700 transition">
                     Shop Now
                 </Link>
             </div>
@@ -201,7 +201,7 @@ function OrdersTab({ userId }: { userId: string }) {
 
     return (
         <div className="space-y-4">
-            <h2 className="text-sm font-bold uppercase tracking-[0.2em]">Order History</h2>
+            <h2 className="text-sm font-bold uppercase">Order History</h2>
             {orders.map((o) => (
                 <div key={o.id} className="rounded-2xl border border-[#e5e5e5] bg-white overflow-hidden shadow-sm">
                     <button
@@ -224,7 +224,7 @@ function OrdersTab({ userId }: { userId: string }) {
                         <div className="border-t border-[#f3f3f3] px-5 py-4">
                             <table className="w-full text-xs">
                                 <thead>
-                                    <tr className="text-[#999] uppercase tracking-wider border-b border-[#f3f3f3]">
+                                    <tr className="text-[#999] uppercase border-b border-[#f3f3f3]">
                                         <th className="text-left py-2">Product</th>
                                         <th className="text-left py-2">Variant</th>
                                         <th className="text-center py-2">Qty</th>
@@ -259,7 +259,7 @@ function WishlistTab() {
             <div className="rounded-2xl border border-[#e5e5e5] bg-white p-10 text-center">
                 <p className="text-lg font-bold">Your wishlist is empty</p>
                 <p className="mt-2 text-sm text-[#666]">Save products you love to find them later.</p>
-                <Link href="/upper" className="mt-4 inline-block rounded-full bg-[#cc071e] px-6 py-2 text-sm font-bold uppercase tracking-wider text-white hover:bg-red-700 transition">
+                <Link href="/upper" className="mt-4 inline-block rounded-full bg-[#cc071e] px-6 py-2 text-sm font-bold uppercase text-white hover:bg-red-700 transition">
                     Browse Products
                 </Link>
             </div>
@@ -267,7 +267,7 @@ function WishlistTab() {
 
     return (
         <div className="space-y-4">
-            <h2 className="text-sm font-bold uppercase tracking-[0.2em]">My Wishlist ({wishlistItems.length})</h2>
+            <h2 className="text-sm font-bold uppercase">My Wishlist ({wishlistItems.length})</h2>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-3">
                 {wishlistItems.map((item) => (
                     <div key={item.id} className="group relative rounded-xl border border-[#e5e5e5] bg-white overflow-hidden shadow-sm hover:shadow-md transition">
@@ -282,8 +282,8 @@ function WishlistTab() {
                                 />
                             </div>
                             <div className="p-3">
-                                <p className="text-[10px] font-medium uppercase tracking-wider text-[#999]">{item.category}</p>
-                                <p className="mt-1 text-xs font-bold uppercase tracking-wider truncate">{item.name}</p>
+                                <p className="text-[10px] font-medium uppercase  text-[#999]">{item.category}</p>
+                                <p className="mt-1 text-xs font-bold uppercase  truncate">{item.name}</p>
                                 <p className="mt-1 text-sm font-bold text-[#cc071e]">₹{item.price.toLocaleString("en-IN")}</p>
                             </div>
                         </Link>
@@ -364,10 +364,10 @@ function AddressesTab({ userId }: { userId: string }) {
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between">
-                <h2 className="text-sm font-bold uppercase tracking-[0.2em]">Saved Addresses</h2>
+                <h2 className="text-sm font-bold uppercase">Saved Addresses</h2>
                 <button
                     onClick={() => { setEditing(null); setShowForm(true); }}
-                    className="rounded-full bg-[#cc071e] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-red-700 transition"
+                    className="rounded-full bg-[#cc071e] px-4 py-2 text-xs font-bold uppercase text-white hover:bg-red-700 transition"
                 >
                     + Add Address
                 </button>
@@ -376,7 +376,7 @@ function AddressesTab({ userId }: { userId: string }) {
             {/* Address form modal */}
             {(showForm || editing) && (
                 <div className="rounded-2xl border border-[#e5e5e5] bg-white p-5 shadow-sm">
-                    <h3 className="text-sm font-bold uppercase tracking-[0.15em] mb-4">{editing ? "Edit Address" : "New Address"}</h3>
+                    <h3 className="text-sm font-bold uppercase  mb-4">{editing ? "Edit Address" : "New Address"}</h3>
                     <form onSubmit={handleSave} className="grid gap-3 sm:grid-cols-2">
                         <input name="label" defaultValue={editing?.label || "Home"} placeholder="Label (e.g. Home, Office)"
                             className="rounded-full border border-[#e5e5e5] px-4 py-2.5 text-sm focus:border-[#cc071e] focus:outline-none" />
@@ -397,11 +397,11 @@ function AddressesTab({ userId }: { userId: string }) {
                         <input name="country" required defaultValue={editing?.country || "India"} placeholder="Country"
                             className="rounded-full border border-[#e5e5e5] px-4 py-2.5 text-sm focus:border-[#cc071e] focus:outline-none" />
                         <div className="sm:col-span-2 flex gap-3 mt-2">
-                            <button type="submit" className="rounded-full bg-[#cc071e] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-red-700 transition">
+                            <button type="submit" className="rounded-full bg-[#cc071e] px-6 py-2.5 text-xs font-bold uppercase text-white hover:bg-red-700 transition">
                                 {editing ? "Update" : "Save"} Address
                             </button>
                             <button type="button" onClick={() => { setEditing(null); setShowForm(false); }}
-                                className="rounded-full border border-[#e5e5e5] px-6 py-2.5 text-xs font-bold uppercase tracking-wider hover:bg-[#f3f3f3] transition">
+                                className="rounded-full border border-[#e5e5e5] px-6 py-2.5 text-xs font-bold uppercase  hover:bg-[#f3f3f3] transition">
                                 Cancel
                             </button>
                         </div>
@@ -419,9 +419,9 @@ function AddressesTab({ userId }: { userId: string }) {
                     {addresses.map((a) => (
                         <div key={a.id} className={`rounded-2xl border bg-white p-5 shadow-sm relative ${a.is_default ? "border-[#cc071e]" : "border-[#e5e5e5]"}`}>
                             {a.is_default && (
-                                <span className="absolute top-3 right-3 bg-[#cc071e] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Default</span>
+                                <span className="absolute top-3 right-3 bg-[#cc071e] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ">Default</span>
                             )}
-                            <p className="text-xs font-bold uppercase tracking-wider text-[#999] mb-2">{a.label || "Address"}</p>
+                            <p className="text-xs font-bold uppercase text-[#999] mb-2">{a.label || "Address"}</p>
                             <p className="text-sm font-semibold">{a.full_name}</p>
                             <p className="text-xs text-[#666] mt-1">{a.address_line_1}{a.address_line_2 ? `, ${a.address_line_2}` : ""}</p>
                             <p className="text-xs text-[#666]">{a.city}, {a.state} {a.postal_code}</p>
@@ -492,51 +492,51 @@ function SettingsTab() {
         <div className="space-y-6">
             {/* Profile */}
             <div className="rounded-2xl border border-[#e5e5e5] bg-white p-5 shadow-sm">
-                <h2 className="text-sm font-bold uppercase tracking-[0.2em] mb-4">Profile</h2>
+                <h2 className="text-sm font-bold uppercasemb-4">Profile</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                     <div>
-                        <label className="text-xs font-semibold uppercase tracking-[0.15em] text-[#555]">Email</label>
+                        <label className="text-xs font-semibold uppercase text-[#555]">Email</label>
                         <input value={user?.email || ""} disabled
                             className="mt-1 w-full rounded-full border border-[#e5e5e5] bg-[#f9f9f9] px-4 py-2.5 text-sm text-[#999]" />
                     </div>
                     <div>
-                        <label className="text-xs font-semibold uppercase tracking-[0.15em] text-[#555]">Full Name</label>
+                        <label className="text-xs font-semibold uppercase text-[#555]">Full Name</label>
                         <input value={name} onChange={(e) => setName(e.target.value)}
                             className="mt-1 w-full rounded-full border border-[#e5e5e5] px-4 py-2.5 text-sm focus:border-[#cc071e] focus:outline-none" />
                     </div>
                     <div>
-                        <label className="text-xs font-semibold uppercase tracking-[0.15em] text-[#555]">Phone</label>
+                        <label className="text-xs font-semibold uppercase text-[#555]">Phone</label>
                         <input value={phone} onChange={(e) => setPhone(e.target.value)}
                             className="mt-1 w-full rounded-full border border-[#e5e5e5] px-4 py-2.5 text-sm focus:border-[#cc071e] focus:outline-none" />
                     </div>
                 </div>
                 <div className="mt-4 flex items-center gap-3">
                     <button onClick={handleProfileSave} disabled={saving}
-                        className="rounded-full bg-[#cc071e] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-red-700 transition disabled:opacity-50">
+                        className="rounded-full bg-[#cc071e] px-6 py-2.5 text-xs font-bold uppercase text-white hover:bg-red-700 transition disabled:opacity-50">
                         {saving ? "Saving..." : "Save Changes"}
                     </button>
                     {saved && <span className="text-xs text-green-600 font-semibold">✓ Saved</span>}
                 </div>
             </div>
-
+        
             {/* Change Password */}
             <div className="rounded-2xl border border-[#e5e5e5] bg-white p-5 shadow-sm">
-                <h2 className="text-sm font-bold uppercase tracking-[0.2em] mb-4">Change Password</h2>
+                <h2 className="text-sm font-bold uppercase mb-4">Change Password</h2>
                 <div className="grid gap-3 sm:grid-cols-2 max-w-md">
                     <div className="sm:col-span-2">
-                        <label className="text-xs font-semibold uppercase tracking-[0.15em] text-[#555]">Current Password</label>
+                        <label className="text-xs font-semibold uppercase text-[#555]">Current Password</label>
                         <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)}
                             className="mt-1 w-full rounded-full border border-[#e5e5e5] px-4 py-2.5 text-sm focus:border-[#cc071e] focus:outline-none" />
                     </div>
                     <div className="sm:col-span-2">
-                        <label className="text-xs font-semibold uppercase tracking-[0.15em] text-[#555]">New Password</label>
+                        <label className="text-xs font-semibold uppercase text-[#555]">New Password</label>
                         <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}
                             className="mt-1 w-full rounded-full border border-[#e5e5e5] px-4 py-2.5 text-sm focus:border-[#cc071e] focus:outline-none" />
                     </div>
                 </div>
                 <div className="mt-4 flex items-center gap-3">
                     <button onClick={handlePasswordChange} disabled={pwSaving}
-                        className="rounded-full bg-[#111] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#333] transition disabled:opacity-50">
+                        className="rounded-full bg-[#111] px-6 py-2.5 text-xs font-bold uppercase  text-white hover:bg-[#333] transition disabled:opacity-50">
                         {pwSaving ? "Updating..." : "Update Password"}
                     </button>
                     {pwMsg && <span className={`text-xs font-semibold ${pwMsg.includes("success") ? "text-green-600" : "text-[#cc071e]"}`}>{pwMsg}</span>}

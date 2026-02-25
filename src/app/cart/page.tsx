@@ -36,7 +36,7 @@ export default function CartPage() {
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:py-10 lg:py-12 lg:px-8">
         <div className="mb-6 sm:mb-8 lg:mb-10">
-          <h1 className="text-2xl font-extrabold uppercase tracking-[0.2em] sm:text-3xl lg:text-3xl">Your Cart</h1>
+          <h1 className="text-2xl font-extrabold uppercase  sm:text-3xl lg:text-3xl">Your Cart</h1>
           <p className="mt-1 text-xs text-[#555555] sm:mt-2 sm:text-sm lg:text-sm">Premium essentials curated for peak performance.</p>
         </div>
 
@@ -46,7 +46,7 @@ export default function CartPage() {
             <p className="mt-1 text-xs text-[#555555] sm:mt-2 sm:text-sm lg:text-sm">Explore our latest drops and find your next set.</p>
             <Link
               href="/"
-              className="mt-4 inline-flex items-center justify-center rounded-full border border-[#cc071e] px-6 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white sm:mt-6 sm:px-8 sm:py-3 lg:px-8 lg:py-3"
+              className="mt-4 inline-flex items-center justify-center rounded-full border border-[#cc071e] px-6 py-2 text-xs font-bold uppercase text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white sm:mt-6 sm:px-8 sm:py-3 lg:px-8 lg:py-3"
             >
               Continue Shopping
             </Link>
@@ -92,7 +92,7 @@ export default function CartPage() {
                       <button
                         type="button"
                         onClick={() => removeItem(item.variant_id)}
-                        className="text-xs font-semibold uppercase tracking-[0.2em] text-[#cc071e]"
+                        className="text-xs font-semibold uppercase  text-[#cc071e]"
                       >
                         Remove
                       </button>
@@ -129,7 +129,7 @@ export default function CartPage() {
                   )}
                 </div>
 
-                <h2 className="text-base font-bold uppercase tracking-[0.15em] sm:text-lg lg:text-lg">Order Summary</h2>
+                <h2 className="text-base font-bold uppercase sm:text-lg lg:text-lg">Order Summary</h2>
                 <div className="mt-3 space-y-2 text-xs text-[#555555] sm:mt-4 sm:space-y-3 sm:text-sm lg:mt-4">
                   <div className="flex items-center justify-between">
                     <span>Subtotal</span>
@@ -167,7 +167,7 @@ export default function CartPage() {
                     <button
                       type="button"
                       onClick={applyCoupon}
-                      className="h-10 rounded-full border border-[#cc071e] px-3 text-xs font-bold uppercase tracking-[0.2em] text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white sm:h-12 sm:px-4 sm:text-sm lg:h-12"
+                      className="h-10 rounded-full border border-[#cc071e] px-3 text-xs font-bold uppercase text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white sm:h-12 sm:px-4 sm:text-sm lg:h-12"
                     >
                       Apply
                     </button>
@@ -180,13 +180,13 @@ export default function CartPage() {
                 <div className="mt-4 space-y-2 sm:mt-6 sm:space-y-3 lg:mt-6">
                   <Link
                     href="/checkout"
-                    className="block w-full rounded-full bg-[#cc071e] py-3 text-center text-xs font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-red-700 hover:shadow-[0_12px_30px_rgba(204,7,30,0.3)] sm:py-4 sm:text-xs lg:py-4 lg:text-xs"
+                    className="block w-full rounded-full bg-[#cc071e] py-3 text-center text-xs font-bold uppercase  text-white transition-all hover:bg-red-700 hover:shadow-[0_12px_30px_rgba(204,7,30,0.3)] sm:py-4 sm:text-xs lg:py-4 lg:text-xs"
                   >
                     Proceed to Checkout
                   </Link>
                   <Link
                     href="/"
-                    className="block w-full rounded-full border border-[#cc071e] py-3 text-center text-xs font-bold uppercase tracking-[0.25em] text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white sm:py-4 sm:text-xs lg:py-4 lg:text-xs"
+                    className="block w-full rounded-full border border-[#cc071e] py-3 text-center text-xs font-bold uppercase  text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white sm:py-4 sm:text-xs lg:py-4 lg:text-xs"
                   >
                     Continue Shopping
                   </Link>
@@ -205,7 +205,7 @@ export default function CartPage() {
           </div>
           <Link
             href="/checkout"
-            className="mt-2 block w-full rounded-full bg-[#cc071e] py-2 text-center text-xs font-bold uppercase tracking-[0.2em] text-white sm:mt-3 sm:py-3 sm:text-xs"
+            className="mt-2 block w-full rounded-full bg-[#cc071e] py-2 text-center text-xs font-bold uppercase text-white sm:mt-3 sm:py-3 sm:text-xs"
           >
             Proceed to Checkout
           </Link>

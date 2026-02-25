@@ -65,10 +65,10 @@ export default async function CategoryProductsPage({
       <section className="py-14 sm:py-14 lg:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-6">
           <div className="mb-8 sm:mb-10 lg:mb-10">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-red-600 sm:text-xs">
+            <span className="text-[10px] font-semibold uppercase  text-red-600 sm:text-xs">
               {label}
             </span>
-            <h1 className="mt-2 text-2xl font-black uppercase tracking-[0.08em] text-neutral-900 sm:mt-3 sm:text-3xl lg:mt-3 lg:text-4xl">
+            <h1 className="mt-2 text-2xl font-black uppercase text-neutral-900 sm:mt-3 sm:text-3xl lg:mt-3 lg:text-4xl">
               {title}
             </h1>
             <div className="mt-3 h-1 w-16 bg-red-600" />

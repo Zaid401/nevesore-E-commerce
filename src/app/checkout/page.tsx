@@ -260,24 +260,24 @@ export default function CheckoutPage() {
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:py-10 lg:py-12 lg:px-8">
         <div className="mb-4 sm:mb-6 lg:mb-8">
-          <div className="mb-4 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.3em] text-[#555555]">
+          <div className="mb-4 flex items-center gap-3 text-xs font-semibold uppercase  text-[#555555]">
             <span className="text-[#555555]">Cart</span>
             <span className="h-px w-6 bg-[#e5e5e5]" />
             <span className="text-[#cc071e]">Checkout</span>
             <span className="h-px w-6 bg-[#e5e5e5]" />
             <span className="text-[#555555]">Confirmation</span>
           </div>
-          <h1 className="text-2xl sm:text-2xl lg:text-3xl font-extrabold uppercase tracking-[0.2em]">Checkout</h1>
+          <h1 className="text-2xl sm:text-2xl lg:text-3xl font-extrabold uppercase ">Checkout</h1>
           <p className="mt-2 text-xs sm:text-sm lg:text-sm text-[#555555]">Finalize your order in a few quick steps.</p>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-12">
           <form id="checkout-form" className="lg:col-span-8 space-y-8" onSubmit={handleSubmit}>
             <section className="rounded-2xl border border-[#e5e5e5] bg-white p-4 sm:p-5 lg:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
-              <h2 className="text-xs sm:text-sm lg:text-sm font-bold uppercase tracking-[0.2em]">Contact Information</h2>
+              <h2 className="text-xs sm:text-sm lg:text-sm font-bold uppercase ">Contact Information</h2>
               <div className="mt-4 sm:mt-5 lg:mt-5 grid gap-3 sm:gap-4 lg:gap-4 sm:grid-cols-2 lg:grid-cols-2">
                 <div>
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="email">
+                  <label className="text-xs font-semibold uppercase  text-[#555555]" htmlFor="email">
                     Email Address
                   </label>
                   <input
@@ -292,7 +292,7 @@ export default function CheckoutPage() {
                   {errors.email && <p className="mt-1 text-xs text-[#cc071e]">{errors.email}</p>}
                 </div>
                 <div>
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="phone">
+                  <label className="text-xs font-semibold uppercase text-[#555555]" htmlFor="phone">
                     Phone Number
                   </label>
                   <input
@@ -310,10 +310,10 @@ export default function CheckoutPage() {
             </section>
 
             <section className="rounded-2xl border border-[#e5e5e5] bg-white p-4 sm:p-5 lg:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
-              <h2 className="text-xs sm:text-sm lg:text-sm font-bold uppercase tracking-[0.2em]">Shipping Address</h2>
+              <h2 className="text-xs sm:text-sm lg:text-sm font-bold uppercase ">Shipping Address</h2>
               <div className="mt-4 sm:mt-5 lg:mt-5 grid gap-3 sm:gap-4 lg:gap-4 sm:grid-cols-2 lg:grid-cols-2">
                 <div className="sm:col-span-2 lg:col-span-2">
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="fullName">
+                  <label className="text-xs font-semibold uppercase text-[#555555]" htmlFor="fullName">
                     Full Name
                   </label>
                   <input
@@ -328,7 +328,7 @@ export default function CheckoutPage() {
                   {errors.fullName && <p className="mt-1 text-xs text-[#cc071e]">{errors.fullName}</p>}
                 </div>
                 <div className="sm:col-span-2 lg:col-span-2">
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="address1">
+                  <label className="text-xs font-semibold uppercase  text-[#555555]" htmlFor="address1">
                     Address Line 1
                   </label>
                   <input
@@ -343,7 +343,7 @@ export default function CheckoutPage() {
                   {errors.address1 && <p className="mt-1 text-xs text-[#cc071e]">{errors.address1}</p>}
                 </div>
                 <div className="sm:col-span-2 lg:col-span-2">
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="address2">
+                  <label className="text-xs font-semibold uppercase text-[#555555]" htmlFor="address2">
                     Address Line 2 (optional)
                   </label>
                   <input
@@ -355,7 +355,7 @@ export default function CheckoutPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="city">
+                  <label className="text-xs font-semibold uppercase text-[#555555]" htmlFor="city">
                     City
                   </label>
                   <input
@@ -370,7 +370,7 @@ export default function CheckoutPage() {
                   {errors.city && <p className="mt-1 text-xs text-[#cc071e]">{errors.city}</p>}
                 </div>
                 <div>
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="state">
+                  <label className="text-xs font-semibold uppercase  text-[#555555]" htmlFor="state">
                     State
                   </label>
                   <input
@@ -385,7 +385,7 @@ export default function CheckoutPage() {
                   {errors.state && <p className="mt-1 text-xs text-[#cc071e]">{errors.state}</p>}
                 </div>
                 <div>
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="postal">
+                  <label className="text-xs font-semibold uppercase  text-[#555555]" htmlFor="postal">
                     Postal Code
                   </label>
                   <input
@@ -400,7 +400,7 @@ export default function CheckoutPage() {
                   {errors.postal && <p className="mt-1 text-xs text-[#cc071e]">{errors.postal}</p>}
                 </div>
                 <div>
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="country">
+                  <label className="text-xs font-semibold uppercase text-[#555555]" htmlFor="country">
                     Country
                   </label>
                   <select
@@ -430,7 +430,7 @@ export default function CheckoutPage() {
             </section>
 
             <section className="rounded-2xl border border-[#e5e5e5] bg-white p-4 sm:p-5 lg:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
-              <h2 className="text-xs sm:text-sm lg:text-sm font-bold uppercase tracking-[0.2em]">Shipping Method</h2>
+              <h2 className="text-xs sm:text-sm lg:text-sm font-bold uppercase ">Shipping Method</h2>
               <div className="mt-4 sm:mt-5 lg:mt-5 space-y-2 sm:space-y-3 lg:space-y-3">
                 <label className="flex items-center justify-between rounded-2xl border border-[#e5e5e5] p-3 sm:p-4 lg:p-4 transition-all hover:border-[#cc071e]">
                   <div>
@@ -470,7 +470,7 @@ export default function CheckoutPage() {
             </section>
 
             <section className="rounded-2xl border border-[#e5e5e5] bg-white p-4 sm:p-5 lg:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
-              <h2 className="text-xs sm:text-sm lg:text-sm font-bold uppercase tracking-[0.2em]">Payment Method</h2>
+              <h2 className="text-xs sm:text-sm lg:text-sm font-bold uppercase">Payment Method</h2>
               <div className="mt-4 sm:mt-5 lg:mt-5 space-y-3 sm:space-y-4 lg:space-y-4">
                 <label className={`block rounded-2xl border p-3 sm:p-4 lg:p-4 transition-all ${paymentMethod === "card" ? "border-[#cc071e]" : "border-[#e5e5e5]"
                   }`}>
@@ -488,7 +488,7 @@ export default function CheckoutPage() {
                   <div className={`mt-3 sm:mt-4 lg:mt-4 grid gap-3 sm:gap-4 lg:gap-4 sm:grid-cols-2 lg:grid-cols-2 transition-all ${paymentMethod === "card" ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0 overflow-hidden"
                     }`}>
                     <div className="sm:col-span-2 lg:col-span-2">
-                      <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="cardNumber">
+                      <label className="text-xs font-semibold uppercase text-[#555555]" htmlFor="cardNumber">
                         Card Number
                       </label>
                       <input
@@ -503,7 +503,7 @@ export default function CheckoutPage() {
                       {errors.cardNumber && <p className="mt-1 text-xs text-[#cc071e]">{errors.cardNumber}</p>}
                     </div>
                     <div>
-                      <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="expiry">
+                      <label className="text-xs font-semibold uppercase text-[#555555]" htmlFor="expiry">
                         Expiry Date
                       </label>
                       <input
@@ -518,7 +518,7 @@ export default function CheckoutPage() {
                       {errors.expiry && <p className="mt-1 text-xs text-[#cc071e]">{errors.expiry}</p>}
                     </div>
                     <div>
-                      <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="cvv">
+                      <label className="text-xs font-semibold uppercase text-[#555555]" htmlFor="cvv">
                         CVV
                       </label>
                       <input
@@ -533,7 +533,7 @@ export default function CheckoutPage() {
                       {errors.cvv && <p className="mt-1 text-xs text-[#cc071e]">{errors.cvv}</p>}
                     </div>
                     <div className="sm:col-span-2 lg:col-span-2">
-                      <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="cardName">
+                      <label className="text-xs font-semibold uppercase text-[#555555]" htmlFor="cardName">
                         Name on Card
                       </label>
                       <input
@@ -565,7 +565,7 @@ export default function CheckoutPage() {
                   </div>
                   <div className={`mt-3 sm:mt-4 lg:mt-4 transition-all ${paymentMethod === "upi" ? "max-h-[120px] opacity-100" : "max-h-0 opacity-0 overflow-hidden"
                     }`}>
-                    <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="upiId">
+                    <label className="text-xs font-semibold uppercase text-[#555555]" htmlFor="upiId">
                       UPI ID
                     </label>
                     <input
@@ -606,7 +606,7 @@ export default function CheckoutPage() {
 
           <aside className="lg:col-span-4">
             <div className="rounded-2xl border border-[#e5e5e5] bg-white p-4 sm:p-5 lg:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.06)] lg:sticky lg:top-24">
-              <h2 className="text-sm sm:text-base lg:text-lg font-bold uppercase tracking-[0.15em]">Order Summary</h2>
+              <h2 className="text-sm sm:text-base lg:text-lg font-bold uppercase ">Order Summary</h2>
 
               <div className="mt-4 sm:mt-5 lg:mt-6 space-y-3 sm:space-y-4 lg:space-y-4">
                 {items.length === 0 ? (
@@ -668,7 +668,7 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={applyCoupon}
-                    className="h-10 sm:h-11 lg:h-12 rounded-full border border-[#cc071e] px-3 sm:px-4 lg:px-4 text-xs font-bold uppercase tracking-[0.2em] text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white"
+                    className="h-10 sm:h-11 lg:h-12 rounded-full border border-[#cc071e] px-3 sm:px-4 lg:px-4 text-xs font-bold uppercase text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white"
                   >
                     Apply
                   </button>
@@ -688,7 +688,7 @@ export default function CheckoutPage() {
                 type="submit"
                 form="checkout-form"
                 disabled={isSubmitting || items.length === 0}
-                className="mt-4 sm:mt-5 lg:mt-6 w-full rounded-full bg-[#cc071e] py-3 sm:py-4 lg:py-4 text-xs font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-red-700 hover:shadow-[0_12px_30px_rgba(204,7,30,0.3)] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="mt-4 sm:mt-5 lg:mt-6 w-full rounded-full bg-[#cc071e] py-3 sm:py-4 lg:py-4 text-xs font-bold uppercase text-white transition-all hover:bg-red-700 hover:shadow-[0_12px_30px_rgba(204,7,30,0.3)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? 'Placing Order...' : 'Place Order'}
               </button>
@@ -704,7 +704,7 @@ export default function CheckoutPage() {
             <span>Total</span>
             <span>₹{total.toLocaleString("en-IN")}</span>
           </div>
-          <button type="submit" form="checkout-form" disabled={isSubmitting || items.length === 0} className="mt-2 sm:mt-3 lg:mt-3 w-full rounded-full bg-[#cc071e] py-2 sm:py-3 lg:py-3 text-xs font-bold uppercase tracking-[0.2em] text-white disabled:opacity-50 disabled:cursor-not-allowed">
+          <button type="submit" form="checkout-form" disabled={isSubmitting || items.length === 0} className="mt-2 sm:mt-3 lg:mt-3 w-full rounded-full bg-[#cc071e] py-2 sm:py-3 lg:py-3 text-xs font-bold uppercase text-white disabled:opacity-50 disabled:cursor-not-allowed">
             {isSubmitting ? 'Placing Order...' : 'Place Order'}
           </button>
           <p className="mt-2 text-center text-xs text-[#555555]">Secure and encrypted payment.</p>

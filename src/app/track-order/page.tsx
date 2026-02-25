@@ -77,7 +77,7 @@ export default function TrackOrderPage() {
 
       <div className="mx-auto max-w-4xl px-4 py-8 sm:py-10 lg:py-12">
         <div className="mb-6 sm:mb-8 lg:mb-8 text-center">
-          <h1 className="text-2xl sm:text-3xl lg:text-3xl font-extrabold uppercase tracking-[0.2em]">Track Your Order</h1>
+          <h1 className="text-2xl sm:text-3xl lg:text-3xl font-extrabold uppercase">Track Your Order</h1>
           <p className="mt-2 text-xs sm:text-sm lg:text-sm text-[#555555]">
             Enter your order number and email to view order status.
           </p>
@@ -89,7 +89,7 @@ export default function TrackOrderPage() {
         >
           <div className="grid gap-3 sm:gap-4 lg:gap-4 sm:grid-cols-2 lg:grid-cols-2">
             <div>
-              <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="orderNumber">
+              <label className="text-xs font-semibold uppercase text-[#555555]" htmlFor="orderNumber">
                 Order Number
               </label>
               <input
@@ -101,7 +101,7 @@ export default function TrackOrderPage() {
               />
             </div>
             <div>
-              <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]" htmlFor="email">
+              <label className="text-xs font-semibold uppercase  text-[#555555]" htmlFor="email">
                 Email Address
               </label>
               <input
@@ -114,7 +114,7 @@ export default function TrackOrderPage() {
               />
             </div>
           </div>
-          <button className="mt-4 sm:mt-5 lg:mt-5 w-full rounded-full bg-[#cc071e] py-2 sm:py-3 lg:py-3 text-xs font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-red-700">
+          <button className="mt-4 sm:mt-5 lg:mt-5 w-full rounded-full bg-[#cc071e] py-2 sm:py-3 lg:py-3 text-xs font-bold uppercase text-white transition-all hover:bg-red-700">
             Track Order
           </button>
         </form>
@@ -124,28 +124,28 @@ export default function TrackOrderPage() {
             <section className="rounded-2xl border border-[#e5e5e5] bg-white p-4 sm:p-5 lg:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
               <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 lg:gap-4">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]">Order Number</p>
+                  <p className="text-xs font-semibold uppercase  text-[#555555]">Order Number</p>
                   <p className="text-base sm:text-lg lg:text-lg font-bold">#{mockOrder.orderNumber}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]">Order Date</p>
+                  <p className="text-xs font-semibold uppercase text-[#555555]">Order Date</p>
                   <p className="text-xs sm:text-sm lg:text-sm font-semibold">{mockOrder.orderDate}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]">Payment Status</p>
+                  <p className="text-xs font-semibold uppercase  text-[#555555]">Payment Status</p>
                   <span className="inline-flex items-center rounded-full bg-[#16a34a]/10 px-2 sm:px-3 lg:px-3 py-1 text-xs font-semibold text-[#16a34a]">
                     {mockOrder.paymentStatus}
                   </span>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]">Estimated Delivery</p>
+                  <p className="text-xs font-semibold uppercase  text-[#555555]">Estimated Delivery</p>
                   <p className="text-xs sm:text-sm lg:text-sm font-semibold">{mockOrder.estimatedDelivery}</p>
                 </div>
               </div>
             </section>
 
             <section className="rounded-2xl border border-[#e5e5e5] bg-white p-4 sm:p-5 lg:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
-              <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]">Order Status</h2>
+              <h2 className="text-xs font-semibold uppercase text-[#555555]">Order Status</h2>
 
               <div className="mt-4 sm:mt-6 lg:mt-6 hidden md:block">
                 <div className="relative flex items-center justify-between">
@@ -171,7 +171,7 @@ export default function TrackOrderPage() {
                         <div className={`flex h-12 w-12 items-center justify-center rounded-full ${colorClass}`}>
                           <span className="text-xs font-bold">{index + 1}</span>
                         </div>
-                        <p className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]">
+                        <p className="mt-3 text-xs font-semibold uppercase text-[#555555]">
                           {step.label}
                         </p>
                       </div>
@@ -210,14 +210,14 @@ export default function TrackOrderPage() {
             </section>
 
             <section className="rounded-2xl border border-[#e5e5e5] bg-white p-4 sm:p-5 lg:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
-              <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]">Shipping Details</h2>
+              <h2 className="text-xs font-semibold uppercase  text-[#555555]">Shipping Details</h2>
               <div className="mt-3 sm:mt-4 lg:mt-4 grid gap-3 sm:gap-4 lg:gap-4 sm:grid-cols-2 lg:grid-cols-2">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]">Courier</p>
+                  <p className="text-xs font-semibold uppercase text-[#555555]">Courier</p>
                   <p className="text-xs sm:text-sm lg:text-sm font-semibold">{mockOrder.courier}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]">Tracking ID</p>
+                  <p className="text-xs font-semibold uppercase text-[#555555]">Tracking ID</p>
                   <button
                     type="button"
                     onClick={handleCopy}
@@ -228,22 +228,22 @@ export default function TrackOrderPage() {
                   </button>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]">Shipping Method</p>
+                  <p className="text-xs font-semibold uppercase  text-[#555555]">Shipping Method</p>
                   <p className="text-xs sm:text-sm lg:text-sm font-semibold">{mockOrder.shippingMethod}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]">Phone</p>
+                  <p className="text-xs font-semibold uppercase  text-[#555555]">Phone</p>
                   <p className="text-xs sm:text-sm lg:text-sm font-semibold">{mockOrder.phone}</p>
                 </div>
                 <div className="sm:col-span-2 lg:col-span-2">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]">Delivery Address</p>
+                  <p className="text-xs font-semibold uppercase text-[#555555]">Delivery Address</p>
                   <p className="text-xs sm:text-sm lg:text-sm font-semibold">{mockOrder.address}</p>
                 </div>
               </div>
             </section>
 
             <section className="rounded-2xl border border-[#e5e5e5] bg-white p-4 sm:p-5 lg:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
-              <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]">Product Summary</h2>
+              <h2 className="text-xs font-semibold uppercase text-[#555555]">Product Summary</h2>
               <div className="mt-3 sm:mt-4 lg:mt-4 space-y-3 sm:space-y-4 lg:space-y-4">
                 {mockOrder.items.map((item) => (
                   <div key={item.id} className="flex items-center gap-3 sm:gap-4 lg:gap-4">
@@ -269,7 +269,7 @@ export default function TrackOrderPage() {
 
             <section className="rounded-2xl border border-[#e5e5e5] bg-white p-4 sm:p-5 lg:p-6 text-center shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
               <p className="text-xs sm:text-sm lg:text-sm text-[#555555]">Need help with your order?</p>
-              <button className="mt-2 sm:mt-3 lg:mt-3 w-full rounded-full border border-[#cc071e] py-2 sm:py-3 lg:py-3 text-xs font-bold uppercase tracking-[0.25em] text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white">
+              <button className="mt-2 sm:mt-3 lg:mt-3 w-full rounded-full border border-[#cc071e] py-2 sm:py-3 lg:py-3 text-xs font-bold uppercase text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white">
                 Contact Support
               </button>
               <p className="mt-2 sm:mt-3 lg:mt-3 text-xs text-[#555555]">support@neversore.com</p>

@@ -37,7 +37,7 @@ export default function ConfirmationPage() {
                 />
               </svg>
             </div>
-            <h1 className="mt-3 sm:mt-4 lg:mt-4 text-xl sm:text-2xl lg:text-2xl font-extrabold uppercase tracking-[0.2em]">
+            <h1 className="mt-3 sm:mt-4 lg:mt-4 text-xl sm:text-2xl lg:text-2xl font-extrabold uppercase">
               Order Confirmed!
             </h1>
             <p className="mt-2 text-xs sm:text-sm lg:text-sm text-[#555555]">
@@ -53,7 +53,7 @@ export default function ConfirmationPage() {
 
           <div className="mt-6 sm:mt-8 lg:mt-8 space-y-4 sm:space-y-5 lg:space-y-6">
             <section className="rounded-2xl border border-[#e5e5e5] bg-white p-4 sm:p-5 lg:p-6">
-              <h2 className="text-xs sm:text-xs lg:text-xs font-bold uppercase tracking-[0.2em] text-[#555555]">
+              <h2 className="text-xs sm:text-xs lg:text-xs font-bold uppercase  text-[#555555]">
                 Order Details
               </h2>
               <div className="mt-3 sm:mt-4 lg:mt-4 space-y-3 sm:space-y-4 lg:space-y-4">
@@ -107,7 +107,7 @@ export default function ConfirmationPage() {
             </section>
 
             <section className="rounded-2xl border border-[#e5e5e5] bg-white p-4 sm:p-5 lg:p-6">
-              <h2 className="text-xs sm:text-xs lg:text-xs font-bold uppercase tracking-[0.2em] text-[#555555]">
+              <h2 className="text-xs sm:text-xs lg:text-xs font-bold uppercase text-[#555555]">
                 Shipping Address
               </h2>
               <div className="mt-3 text-sm text-[#555555]">
@@ -124,13 +124,13 @@ export default function ConfirmationPage() {
             <div className="space-y-2 sm:space-y-3 lg:space-y-3">
               <Link
                 href="/track-order"
-                className="block w-full rounded-full bg-[#cc071e] py-3 sm:py-4 lg:py-4 text-center text-xs font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-red-700 hover:shadow-[0_12px_30px_rgba(204,7,30,0.3)]"
+                className="block w-full rounded-full bg-[#cc071e] py-3 sm:py-4 lg:py-4 text-center text-xs font-bold uppercase text-white transition-all hover:bg-red-700 hover:shadow-[0_12px_30px_rgba(204,7,30,0.3)]"
               >
                 Track Order
               </Link>
               <Link
                 href="/"
-                className="block w-full rounded-full border border-[#cc071e] py-3 sm:py-4 lg:py-4 text-center text-xs font-bold uppercase tracking-[0.25em] text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white"
+                className="block w-full rounded-full border border-[#cc071e] py-3 sm:py-4 lg:py-4 text-center text-xs font-bold uppercase text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white"
               >
                 Continue Shopping
               </Link>

@@ -51,10 +51,10 @@ export default function ProductCard({ id, name, price, sale_price, image, catego
         <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
       </div>
       <div className="p-4">
-        <p className="text-xs font-medium uppercase tracking-[0.3em] text-neutral-500">
+        <p className="text-xs font-medium uppercase  text-neutral-500">
           {category}
         </p>
-        <h3 className="mt-1 text-sm font-semibold uppercase tracking-[0.2em] text-neutral-900">
+        <h3 className="mt-1 text-sm font-semibold uppercase  text-neutral-900">
           {name}
         </h3>
         {short_description && (

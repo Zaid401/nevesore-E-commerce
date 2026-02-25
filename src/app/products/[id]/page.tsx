@@ -292,11 +292,11 @@ export default function ProductDetailPage() {
 
             {/* Header */}
             <div>
-              <p className="text-xs font-bold tracking-[0.2em] text-gray-400 mb-2 uppercase">
+              <p className="text-xs font-bold text-gray-400 mb-2 uppercase">
                 {product.category_name}
               </p>
 
-              <h1 className="text-4xl font-extrabold tracking-tight mb-2 uppercase">
+              <h1 className="text-4xl font-extrabold mb-2 uppercase">
                 {product.name}
               </h1>
 
@@ -328,7 +328,7 @@ export default function ProductDetailPage() {
             {/* Color Selection */}
             {product.colors.length > 0 && (
               <div>
-                <span className="text-sm font-bold uppercase tracking-wider">
+                <span className="text-sm font-bold uppercase">
                   Select Color:{" "}
                   <span className="font-normal text-gray-500">{selectedColor?.color_name}</span>
                 </span>
@@ -359,7 +359,7 @@ export default function ProductDetailPage() {
             {/* Size Selection */}
             {availableSizes.length > 0 && (
               <div>
-                <span className="text-sm font-bold uppercase tracking-wider">Select Size</span>
+                <span className="text-sm font-bold uppercase">Select Size</span>
                 <div className="grid grid-cols-5 gap-2 mt-3">
                   {availableSizes.map((size) => {
                     const isOutOfStock = size.stock_quantity <= 0;
@@ -406,7 +406,7 @@ export default function ProductDetailPage() {
               <button
                 onClick={handleAddToCart}
                 disabled={!selectedVariant || selectedVariant.stock_quantity <= 0}
-                className="w-full bg-[#cc071e] text-white py-4 font-extrabold tracking-widest hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-[#cc071e] text-white py-4 font-extrabold hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {selectedVariant && selectedVariant.stock_quantity <= 0 ? 'OUT OF STOCK' : 'ADD TO CART'}
               </button>
@@ -414,7 +414,7 @@ export default function ProductDetailPage() {
               <button
                 onClick={() => { handleAddToCart(); router.push("/checkout"); }}
                 disabled={!selectedVariant || selectedVariant.stock_quantity <= 0}
-                className="w-full border-2 border-slate-900 py-4 font-extrabold tracking-widest hover:bg-slate-900 hover:text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full border-2 border-slate-900 py-4 font-extrabold hover:bg-slate-900 hover:text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 BUY IT NOW
               </button>
@@ -423,7 +423,7 @@ export default function ProductDetailPage() {
             {/* Description */}
             {product.description && (
               <div className="border-t border-gray-100 pt-6">
-                <h3 className="font-bold text-sm uppercase tracking-widest mb-3">Description</h3>
+                <h3 className="font-bold text-sm uppercase mb-3">Description</h3>
                 <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
                   {product.description}
                 </p>
@@ -452,7 +452,7 @@ export default function ProductDetailPage() {
       >
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between border-b border-gray-100 p-6">
-            <h2 className="text-sm font-extrabold uppercase tracking-[0.2em] text-slate-900">
+            <h2 className="text-sm font-extrabold uppercase text-slate-900">
               Your Cart ({itemCount})
             </h2>
             <button type="button" onClick={() => setIsCartOpen(false)} className="text-sm font-semibold text-gray-500 hover:text-slate-900">
@@ -478,7 +478,7 @@ export default function ProductDetailPage() {
                       />
                     </div>
                     <div className="flex-1">
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">{item.category}</p>
+                      <p className="text-xs font-semibold uppercase text-gray-400">{item.category}</p>
                       <p className="mt-1 text-sm font-bold text-slate-900">{item.product_name}</p>
                       <p className="mt-1 text-xs text-gray-500">{item.color_name} â€¢ {item.size_label}</p>
                     </div>
@@ -499,12 +499,12 @@ export default function ProductDetailPage() {
             </div>
             <Link
               href="/checkout"
-              className="mt-4 block w-full bg-[#cc071e] py-3 text-center text-sm font-extrabold uppercase tracking-[0.2em] text-white hover:bg-red-700 transition"
+              className="mt-4 block w-full bg-[#cc071e] py-3 text-center text-sm font-extrabold uppercase  text-white hover:bg-red-700 transition"
             >
               Checkout
             </Link>
             <button
-              className="mt-3 w-full border-2 border-slate-900 py-3 text-sm font-extrabold uppercase tracking-[0.2em] text-slate-900 hover:bg-slate-900 hover:text-white transition"
+              className="mt-3 w-full border-2 border-slate-900 py-3 text-sm font-extrabold uppercase text-slate-900 hover:bg-slate-900 hover:text-white transition"
               onClick={() => setIsCartOpen(false)}
             >
               Continue Shopping

@@ -61,14 +61,14 @@ export default function BestSellerProducts() {
       <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 sm:gap-8 sm:px-6 lg:px-8">
         <div className="flex flex-row items-center justify-between gap-2 sm:gap-4">
           <div>
-            <h2 className="text-xl font-bold uppercase tracking-[0.2em] text-neutral-900 sm:text-2xl">
+            <h2 className="text-xl font-bold uppercase text-neutral-900 sm:text-2xl">
               Best Seller Collection
             </h2>
             <div className="mt-2 h-[2px] w-16 bg-gradient-to-r from-[#cc071e] to-transparent sm:w-20" />
           </div>
           <Link
             href="/best-sellers"
-            className="whitespace-nowrap px-3 py-2 sm:px-6 border-2 border-neutral-900 font-bold uppercase tracking-[0.15em] text-xs sm:text-base text-neutral-900 hover:bg-neutral-900 hover:text-white transition-all duration-200"
+            className="whitespace-nowrap px-3 py-2 sm:px-6 border-2 border-neutral-900 font-bold uppercase  text-xs sm:text-base text-neutral-900 hover:bg-neutral-900 hover:text-white transition-all duration-200"
           >
             View All
           </Link>

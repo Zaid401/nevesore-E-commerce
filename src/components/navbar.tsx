@@ -93,12 +93,12 @@ export default function Navbar() {
               <div className="group relative inline-flex items-center">
                 <button
                   type="button"
-                  className="text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-[#111111] transition-colors hover:text-[#cc071e]"
+                  className="text-xs sm:text-sm font-bold uppercase  text-[#111111] transition-colors hover:text-[#cc071e]"
                 >
                   Products
                 </button>
                 <div className="absolute left-0 top-full z-50 w-130 translate-y-2 rounded-2xl border border-[#e5e5e5] bg-white p-6 text-left shadow-[0_12px_30px_rgba(0,0,0,0.08)] opacity-0 transition-all duration-200 ease-out pointer-events-none group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                  <ul className="grid grid-cols-2 gap-4 text-xs font-bold uppercase tracking-[0.2em] text-[#666666]">
+                  <ul className="grid grid-cols-2 gap-4 text-xs font-bold uppercase text-[#666666]">
                     {navLinks.map((link) => (
                       <li key={link.label}>
                         <Link
@@ -106,7 +106,7 @@ export default function Navbar() {
                           className="inline-flex w-full items-center justify-between rounded-xl border border-transparent px-4 py-3 transition-all hover:border-[#e5e5e5] hover:text-[#cc071e] hover:bg-[#f9f9f9]"
                         >
                           {link.label}
-                          <span className="text-[0.6rem] tracking-[0.3em] text-[#666666]">→</span>
+                          <span className="text-[0.6rem] text-[#666666]">→</span>
                         </Link>
                       </li>
                     ))}
@@ -246,7 +246,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-2 rounded-full px-4 py-2 bg-[#cc071e] text-white font-bold text-xs uppercase tracking-[0.15em] hover:bg-[#a80618] transition-colors shadow-sm"
+                className="flex items-center gap-2 rounded-full px-4 py-2 bg-[#cc071e] text-white font-bold text-xs uppercase hover:bg-[#a80618] transition-colors shadow-sm"
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4">
                   <path
@@ -404,7 +404,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-2 rounded-full px-3 py-2 -mr-2.5 bg-[#cc071e] text-white font-bold text-xs uppercase tracking-[0.15em] hover:bg-[#a80618] transition-colors"
+                className="flex items-center gap-2 rounded-full px-3 py-2 -mr-2.5 bg-[#cc071e] text-white font-bold text-xs uppercase hover:bg-[#a80618] transition-colors"
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
                   <path
@@ -467,7 +467,7 @@ export default function Navbar() {
           >
             {/* Drawer Header with Close Button - Fixed at top */}
             <div className="shrink-0 bg-white border-b border-[#f3f3f3] p-4 flex items-center justify-between" >
-              <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-[#666666]">SHOP</h3>
+              <h3 className="text-xs font-bold uppercase  text-[#666666]">SHOP</h3>
               <button
                 onClick={handleCloseMenu}
                 className="rounded-full p-2 transition-all hover:bg-[#f3f3f3]"
@@ -487,7 +487,7 @@ export default function Navbar() {
               <div className="p-6 space-y-2">
                 {/* Categories Section */}
                 <div className="mb-6">
-                  <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-[#666666] mb-4">Categories</h3>
+                  <h3 className="text-xs font-bold uppercase text-[#666666] mb-4">Categories</h3>
                   <div className="space-y-1">
                     {navLinks.map((link) => (
                       <Link
@@ -507,7 +507,7 @@ export default function Navbar() {
 
                 {/* Main Menu Section */}
                 <div className="mb-6">
-                  <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-[#666666] mb-4">Menu</h3>
+                  <h3 className="text-xs font-bold uppercase text-[#666666] mb-4">Menu</h3>
                   <div className="space-y-1">
                     {drawerLinks.map((link) => (
                       <Link

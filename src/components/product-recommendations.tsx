@@ -62,7 +62,7 @@ export default function ProductRecommendations({
       <div className="max-w-7xl mx-auto px-4">
         {/* Section Header */}
         <div className="mb-12">
-          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 mb-2">
+          <h2 className="text-3xl font-extrabold  text-slate-900 mb-2">
             You Might Also Like
           </h2>
           <div className="h-[2px] w-20 bg-gradient-to-r from-[#cc071e] to-transparent"></div>
@@ -87,7 +87,7 @@ export default function ProductRecommendations({
 
         {/* View All Button */}
         <div className="mt-12 text-center">
-          <button className="px-8 py-3 border-2 border-slate-900 font-extrabold tracking-widest hover:bg-slate-900 hover:text-white transition">
+          <button className="px-8 py-3 border-2 border-slate-900 font-extrabold  hover:bg-slate-900 hover:text-white transition">
             SHOP ALL PRODUCTS
           </button>
         </div>

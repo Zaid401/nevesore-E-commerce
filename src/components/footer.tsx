@@ -125,7 +125,7 @@ export default function Footer() {
                       : "order-4"
               } sm:order-none`}
             >
-              <h3 className="text-xs font-semibold uppercase tracking-[0.1em] text-white sm:text-sm">
+              <h3 className="text-xs font-semibold uppercase  text-white sm:text-sm">
                 {column.title}
               </h3>
               <ul className="flex flex-col gap-2 text-xs text-neutral-400 sm:gap-3 sm:text-sm">
@@ -144,7 +144,7 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="flex flex-col gap-4 border-t border-white/10 pt-5 text-center text-[10px] uppercase tracking-[0.1em] text-neutral-500 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:pt-6 sm:text-left sm:text-xs">
+        <div className="flex flex-col gap-4 border-t border-white/10 pt-5 text-center text-[10px] uppercase text-neutral-500 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:pt-6 sm:text-left sm:text-xs">
           <span>© {new Date().getFullYear()} Neversore Performance Apparel. All rights reserved.</span>
           <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-end sm:gap-4">
             {legalLinks.map((link) => (

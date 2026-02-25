@@ -26,12 +26,12 @@ export default function CallToAction() {
 
       <div className="relative mx-auto flex max-w-[1100px] flex-col items-center gap-4 px-4 text-center sm:gap-6 sm:px-6 lg:gap-8 lg:px-16">
         <span
-          className={`${inter.className} text-xs font-semibold uppercase tracking-[0.4em] text-[#666666]`}
+          className={`${inter.className} text-xs font-semibold uppercase text-[#666666]`}
         >
           Premium Performance Wear
         </span>
         <h2
-          className={`${montserrat.className} text-xl font-bold uppercase tracking-[0.05em] text-[#111111] sm:text-2xl lg:text-4xl xl:text-5xl`}
+          className={`${montserrat.className} text-xl font-bold uppercase text-[#111111] sm:text-2xl lg:text-4xl xl:text-5xl`}
         >
           Elevate Your Training. Upgrade Your Fit.
         </h2>
@@ -44,13 +44,13 @@ export default function CallToAction() {
         <div className="flex w-full items-center justify-center gap-2 sm:gap-4">
           <Link
             href="/products"
-            className="inline-flex flex-1 items-center justify-center rounded-full bg-[#cc071e] px-2 py-2 text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-white shadow-[0_14px_30px_rgba(204,7,30,0.18)] transition-all duration-300 hover:bg-[#a70618] hover:shadow-[0_18px_34px_rgba(204,7,30,0.25)] sm:flex-initial sm:px-8 sm:py-4 sm:text-[0.75rem] sm:tracking-[0.1em] lg:text-sm"
+            className="inline-flex flex-1 items-center justify-center rounded-full bg-[#cc071e] px-2 py-2 text-[0.6rem] font-semibold uppercase  text-white shadow-[0_14px_30px_rgba(204,7,30,0.18)] transition-all duration-300 hover:bg-[#a70618] hover:shadow-[0_18px_34px_rgba(204,7,30,0.25)] sm:flex-initial sm:px-8 sm:py-4 sm:text-[0.75rem]  lg:text-sm"
           >
             Explore Collections
           </Link>
           <Link
             href="/best-sellers"
-            className="inline-flex flex-1 items-center justify-center rounded-full border border-[#cc071e] px-2 py-2 text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-[#111111] transition-all duration-300 hover:bg-[#cc071e] hover:text-white sm:flex-initial sm:px-8 sm:py-4 sm:text-[0.75rem] sm:tracking-[0.2em] lg:text-sm"
+            className="inline-flex flex-1 items-center justify-center rounded-full border border-[#cc071e] px-2 py-2 text-[0.6rem] font-semibold uppercase  text-[#111111] transition-all duration-300 hover:bg-[#cc071e] hover:text-white sm:flex-initial sm:px-8 sm:py-4 sm:text-[0.75rem]  lg:text-sm"
           >
             Shop Best Sellers
           </Link>

@@ -41,7 +41,7 @@ export default function WishlistPage() {
               />
             </svg>
 
-            <h1 className="mt-4 text-xl font-bold uppercase tracking-[0.2em] text-slate-900 sm:mt-6 sm:text-2xl lg:mt-8 lg:text-3xl xl:text-4xl">
+            <h1 className="mt-4 text-xl font-bold uppercase text-slate-900 sm:mt-6 sm:text-2xl lg:mt-8 lg:text-3xl xl:text-4xl">
               Your Wishlist is Empty
             </h1>
             
@@ -52,7 +52,7 @@ export default function WishlistPage() {
             <div className="mt-4 flex flex-col gap-2 sm:mt-6 sm:gap-3 lg:mt-8">
               <Link
                 href="/"
-                className="bg-slate-900 px-6 py-2 text-xs font-bold uppercase tracking-[0.1em] text-white transition hover:bg-slate-800 sm:px-8 sm:py-3 sm:text-sm lg:px-8 lg:py-3"
+                className="bg-slate-900 px-6 py-2 text-xs font-bold uppercase text-white transition hover:bg-slate-800 sm:px-8 sm:py-3 sm:text-sm lg:px-8 lg:py-3"
               >
                 Continue Shopping
               </Link>
@@ -75,20 +75,20 @@ export default function WishlistPage() {
           <div>
             <Link
               href="/"
-              className="text-xs font-semibold uppercase tracking-[0.15em] text-gray-500 hover:text-gray-900"
+              className="text-xs font-semibold uppercase  text-gray-500 hover:text-gray-900"
             >
               Home /
             </Link>
-            <h1 className="mt-1 text-xl font-extrabold uppercase tracking-[0.2em] text-slate-900 sm:mt-2 sm:text-2xl lg:mt-2 lg:text-4xl">
+            <h1 className="mt-1 text-xl font-extrabold uppercase  text-slate-900 sm:mt-2 sm:text-2xl lg:mt-2 lg:text-4xl">
               My Wishlist
             </h1>
-            <p className="mt-1 text-xs font-medium uppercase tracking-widest text-red-600 sm:text-sm lg:text-sm">
+            <p className="mt-1 text-xs font-medium uppercase  text-red-600 sm:text-sm lg:text-sm">
               {items.length} Premium Items Saved
             </p>
           </div>
           <button
             onClick={handleMoveAllToCart}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-slate-800 sm:w-auto sm:px-6 sm:py-3 sm:text-sm lg:px-6 lg:py-3 lg:text-base"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-bold uppercase text-white transition hover:bg-slate-800 sm:w-auto sm:px-6 sm:py-3 sm:text-sm lg:px-6 lg:py-3 lg:text-base"
           >
             <svg viewBox="0 0 24 24" className="h-4 w-4 sm:h-5 sm:w-5 lg:h-5 lg:w-5" fill="currentColor">
               <path d="M7 4h-2l-1 2v2h2l3 9h9l3-11H8.42zM10 20a1 1 0 1 1-2 0 1 1 0 0 1 2 0m8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
@@ -137,12 +137,12 @@ export default function WishlistPage() {
 
               {/* Content Section */}
               <div className="p-4">
-                <p className="text-xs font-medium uppercase tracking-[0.3em] text-neutral-500">
+                <p className="text-xs font-medium uppercase  text-neutral-500">
                   {item.category}
                 </p>
 
                 <Link href={`/products/${item.id}`}>
-                  <h3 className="mt-1 line-clamp-2 text-sm font-semibold uppercase tracking-[0.2em] text-neutral-900 hover:text-red-600">
+                  <h3 className="mt-1 line-clamp-2 text-sm font-semibold uppercase text-neutral-900 hover:text-red-600">
                     {item.name}
                   </h3>
                 </Link>
@@ -156,7 +156,7 @@ export default function WishlistPage() {
                 {/* View Product Button */}
                 <Link
                   href={`/products/${item.id}`}
-                  className="mt-3 block w-full rounded-lg bg-slate-900 py-3 text-center text-xs font-bold uppercase tracking-[0.1em] text-white transition-all duration-300 hover:bg-slate-800"
+                  className="mt-3 block w-full rounded-lg bg-slate-900 py-3 text-center text-xs font-bold uppercase  text-white transition-all duration-300 hover:bg-slate-800"
                 >
                   Select Size &amp; Add to Cart
                 </Link>

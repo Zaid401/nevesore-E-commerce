@@ -42,10 +42,10 @@ export default function FaqSection() {
     <section className="bg-white py-12 sm:py-16 lg:py-20">
       <div className="mx-auto flex max-w-4xl flex-col gap-6 px-4 sm:gap-8 sm:px-6 lg:gap-10 lg:px-8">
         <div className="text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.6em] text-red-600">
+          <span className="text-xs font-semibold uppercase  text-red-600">
             FAQ
           </span>
-          <h2 className="mt-2 text-2xl font-black uppercase tracking-[0.08em] text-neutral-900 sm:mt-3 sm:text-3xl lg:text-4xl">
+          <h2 className="mt-2 text-2xl font-black uppercase text-neutral-900 sm:mt-3 sm:text-3xl lg:text-4xl">
             Frequently Asked Questions
           </h2>
           <div className="mx-auto mt-2 h-1 w-12 bg-red-600 sm:mt-3" />
@@ -66,7 +66,7 @@ export default function FaqSection() {
                   onClick={() => setOpenIndex(isOpen ? null : index)}
                   className="group flex w-full items-center justify-between gap-3 py-4 text-left sm:gap-6 sm:py-6"
                 >
-                  <span className="relative text-xs font-semibold uppercase tracking-[0.1em] text-neutral-900 transition-colors duration-200 group-hover:text-red-600 after:absolute after:-bottom-2 after:left-0 after:h-px after:w-0 after:bg-red-600 after:transition-all after:duration-200 group-hover:after:w-8 sm:text-sm sm:group-hover:after:w-10">
+                  <span className="relative text-xs font-semibold uppercase  text-neutral-900 transition-colors duration-200 group-hover:text-red-600 after:absolute after:-bottom-2 after:left-0 after:h-px after:w-0 after:bg-red-600 after:transition-all after:duration-200 group-hover:after:w-8 sm:text-sm sm:group-hover:after:w-10">
                     {item.question}
                   </span>
                   <span

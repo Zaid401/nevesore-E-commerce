@@ -59,14 +59,14 @@ export default function WhyChooseUs() {
 
       <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 text-center sm:gap-8 sm:px-6 lg:gap-10 lg:px-14">
         <div className="flex flex-col items-center gap-2 sm:gap-3 lg:gap-4">
-          <span className="text-xs font-semibold uppercase tracking-[0.1em] text-red-600">
+          <span className="text-xs font-semibold uppercase text-red-600">
             Why Neversore
           </span>
           <div className="space-y-1 sm:space-y-2">
-            <h2 className="text-2xl font-black uppercase tracking-[0.08em] text-neutral-900 sm:text-3xl lg:text-4xl xl:text-5xl">
+            <h2 className="text-2xl font-black uppercase text-neutral-900 sm:text-3xl lg:text-4xl xl:text-5xl">
               Built for Performance.
             </h2>
-            <p className="text-xl font-black uppercase tracking-[0.08em] text-red-600 sm:text-2xl lg:text-3xl xl:text-5xl">
+            <p className="text-xl font-black uppercase text-red-600 sm:text-2xl lg:text-3xl xl:text-5xl">
               Designed for Power.
             </p>
           </div>
@@ -86,7 +86,7 @@ export default function WhyChooseUs() {
               <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-red-50 text-red-600 sm:h-12 sm:w-12">
                 {item.icon}
               </div>
-              <h3 className="relative mt-3 text-xs font-bold uppercase tracking-[0.1em] text-neutral-900 sm:mt-5 sm:text-sm">
+              <h3 className="relative mt-3 text-xs font-bold uppercase text-neutral-900 sm:mt-5 sm:text-sm">
                 {item.title}
               </h3>
               <p className="relative mt-2 text-xs text-neutral-600 sm:mt-3 sm:text-sm">{item.description}</p>
@@ -96,7 +96,7 @@ export default function WhyChooseUs() {
 
         <a
           href="/best-sellers"
-          className="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.1em] text-red-600 transition-colors hover:text-red-700 sm:gap-3"
+          className="group inline-flex items-center gap-2 text-xs font-semibold uppercase  text-red-600 transition-colors hover:text-red-700 sm:gap-3"
         >
           Experience the collection
           <span className="text-base transition-transform duration-200 group-hover:translate-x-1">→</span>

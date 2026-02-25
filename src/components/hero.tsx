@@ -18,9 +18,7 @@ export default function Hero() {
       {/* Content */}
       <div className="relative mx-auto flex h-full max-w-[1100px] items-center px-6 py-20 sm:px-10 lg:px-16">
         <div className="max-w-xl space-y-6">
-          <p className="text-gray-700 text-sm font-semibold uppercase tracking-[0.5em]">
-            Sculpted Support
-          </p>
+         
 
           <h1 className="text-4xl text-gray-700 font-bold uppercase leading-tight sm:text-5xl md:text-6xl">
             Confidence,{" "}
@@ -36,7 +34,7 @@ export default function Hero() {
             <button
               type="button"
               className="inline-flex items-center rounded text-white px-8 py-3 text-sm
-              font-semibold uppercase tracking-[0.25em] transition-colors
+              font-semibold uppercase transition-colors
               bg-[#cc071e] border-2 border-transparent
               hover:bg-transparent hover:border-[#cc071e]
               hover:text-gray-700 cursor-pointer"

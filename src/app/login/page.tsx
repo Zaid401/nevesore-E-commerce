@@ -56,7 +56,7 @@ export default function LoginPage() {
               )}
 
               <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2 text-xs font-semibold uppercase tracking-widest text-neutral-600">
+                <div className="flex flex-col gap-2 text-xs font-semibold uppercase text-neutral-600">
                   <label htmlFor="login-email">Email Address</label>
                   <input
                     id="login-email"
@@ -64,16 +64,16 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="enter your email address"
-                    className="h-12 rounded-2xl border border-neutral-300 bg-neutral-50 px-5 text-sm font-medium tracking-normal text-neutral-900 placeholder:text-neutral-400 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                    className="h-12 rounded-2xl border border-neutral-300 bg-neutral-50 px-5 text-sm font-medium  text-neutral-900 placeholder:text-neutral-400 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
                     required
                     disabled={loading}
                   />
                 </div>
 
-                <div className="flex flex-col gap-2 text-xs font-semibold uppercase tracking-widest text-neutral-600">
+                <div className="flex flex-col gap-2 text-xs font-semibold uppercase text-neutral-600">
                   <div className="flex items-center justify-between">
                     <label htmlFor="login-password">Password</label>
-                    <a href="#" className="text-[10px] font-bold tracking-widest text-red-600 transition-colors hover:text-red-700">
+                    <a href="#" className="text-[10px] font-bold  text-red-600 transition-colors hover:text-red-700">
                       Forgot?
                     </a>
                   </div>
@@ -84,7 +84,7 @@ export default function LoginPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="h-12 w-full rounded-2xl border border-neutral-300 bg-neutral-50 px-5 pr-12 text-sm font-medium tracking-widest text-neutral-900 placeholder:text-neutral-400 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                      className="h-12 w-full rounded-2xl border border-neutral-300 bg-neutral-50 px-5 pr-12 text-sm font-medium  text-neutral-900 placeholder:text-neutral-400 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
                       required
                       disabled={loading}
                     />
@@ -108,13 +108,13 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="h-12 rounded-2xl bg-red-600 text-sm font-bold uppercase tracking-widest text-white transition-transform duration-150 hover:-translate-y-0.5 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                  className="h-12 rounded-2xl bg-red-600 text-sm font-bold uppercase  text-white transition-transform duration-150 hover:-translate-y-0.5 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                 >
                   {loading ? "Signing In..." : "Sign In"}
                 </button>
               </form>
 
-              <div className="flex items-center gap-4 text-xs uppercase tracking-[0.4em] text-neutral-400">
+              <div className="flex items-center gap-4 text-xs uppercase text-neutral-400">
                 <span className="h-px flex-1 bg-neutral-300" aria-hidden />
                 <span>Or</span>
                 <span className="h-px flex-1 bg-neutral-300" aria-hidden />
@@ -122,7 +122,7 @@ export default function LoginPage() {
 
               <button
                 type="button"
-                className="flex h-12 items-center justify-center gap-3 rounded-2xl border border-neutral-300 bg-neutral-50 text-sm font-semibold uppercase tracking-widest text-neutral-900 transition-transform duration-150 hover:-translate-y-0.5 hover:border-neutral-400"
+                className="flex h-12 items-center justify-center gap-3 rounded-2xl border border-neutral-300 bg-neutral-50 text-sm font-semibold uppercase text-neutral-900 transition-transform duration-150 hover:-translate-y-0.5 hover:border-neutral-400"
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
                   <path
@@ -145,7 +145,7 @@ export default function LoginPage() {
                 Sign in with Google
               </button>
 
-              <p className="text-center text-xs uppercase tracking-widest text-neutral-500">
+              <p className="text-center text-xs uppercase text-neutral-500">
                 Don&apos;t have an account?{" "}
                 <Link href="/signup" className="text-red-600 transition-colors hover:text-red-700">
                   Create Account

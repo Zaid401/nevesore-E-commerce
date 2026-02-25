@@ -77,11 +77,11 @@ export default function FeaturedProductsPage() {
         <div className="mb-12">
           <Link
             href="/"
-            className="text-xs font-semibold uppercase tracking-[0.15em] text-neutral-600 hover:text-neutral-900 transition-colors sm:text-sm"
+            className="text-xs font-semibold uppercase  text-neutral-600 hover:text-neutral-900 transition-colors sm:text-sm"
           >
             ← Back to Home
           </Link>
-          <h1 className="mt-5 text-2xl font-extrabold uppercase tracking-[0.2em] text-neutral-900 sm:mt-6 sm:text-3xl lg:text-4xl">
+          <h1 className="mt-5 text-2xl font-extrabold uppercase text-neutral-900 sm:mt-6 sm:text-3xl lg:text-4xl">
             Featured Products
           </h1>
           <div className="mt-3 h-0.5 w-20 bg-linear-to-r from-[#cc071e] to-transparent" />
@@ -146,7 +146,7 @@ export default function FeaturedProductsPage() {
 
         {/* CTA Section */}
         <div className="rounded-2xl bg-linear-to-r from-[#cc071e] to-red-700 p-6 text-center text-white sm:p-10 lg:p-16">
-          <h2 className="text-xl font-bold uppercase tracking-[0.2em] sm:text-2xl">
+          <h2 className="text-xl font-bold uppercase sm:text-2xl">
             Find Your Perfect Fit
           </h2>
           <p className="mt-3 text-xs sm:mt-4 sm:text-sm lg:text-base">
@@ -156,13 +156,13 @@ export default function FeaturedProductsPage() {
           <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center sm:justify-center">
             <Link
               href="/upper"
-              className="px-6 py-3 bg-white text-[#cc071e] text-xs font-bold uppercase tracking-[0.15em] hover:bg-neutral-100 transition-all sm:px-8 sm:text-sm"
+              className="px-6 py-3 bg-white text-[#cc071e] text-xs font-bold uppercase hover:bg-neutral-100 transition-all sm:px-8 sm:text-sm"
             >
               Shop All
             </Link>
             <a
               href="mailto:support@neversore.com"
-              className="px-6 py-3 border-2 border-white text-xs font-bold uppercase tracking-[0.15em] text-white hover:bg-white hover:text-[#cc071e] transition-all sm:px-8 sm:text-sm"
+              className="px-6 py-3 border-2 border-white text-xs font-bold uppercase text-white hover:bg-white hover:text-[#cc071e] transition-all sm:px-8 sm:text-sm"
             >
               Contact Us
             </a>

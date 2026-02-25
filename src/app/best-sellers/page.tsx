@@ -75,11 +75,11 @@ export default function BestSellersPage() {
         <div className="mb-12">
           <Link
             href="/"
-            className="text-xs font-semibold uppercase tracking-[0.15em] text-neutral-600 hover:text-neutral-900 transition-colors sm:text-sm"
+            className="text-xs font-semibold uppercase  text-neutral-600 hover:text-neutral-900 transition-colors sm:text-sm"
           >
             ← Back to Home
           </Link>
-          <h1 className="mt-5 text-2xl font-extrabold uppercase tracking-[0.2em] text-neutral-900 sm:mt-6 sm:text-3xl lg:text-4xl">
+          <h1 className="mt-5 text-2xl font-extrabold uppercase text-neutral-900 sm:mt-6 sm:text-3xl lg:text-4xl">
             Best Seller Collection
           </h1>
           <div className="mt-3 h-0.5 w-20 bg-gradient-to-r from-[#cc071e] to-transparent" />

@@ -433,8 +433,6 @@ function TrackOrderInner() {
                 href="mailto:support@neversore.com"
                 className="mt-2 sm:mt-3 block w-full rounded-full border border-[#cc071e] py-2 sm:py-3 text-xs font-bold uppercase tracking-[0.25em] text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white"
               >
-              <p className="text-xs sm:text-sm lg:text-sm text-[#555555]">Need help with your order?</p>
-              <button className="mt-2 sm:mt-3 lg:mt-3 w-full rounded-full border border-[#cc071e] py-2 sm:py-3 lg:py-3 text-xs font-bold uppercase text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white">
                 Contact Support
               </a>
               <p className="mt-2 sm:mt-3 text-xs text-[#555555]">support@neversore.com</p>

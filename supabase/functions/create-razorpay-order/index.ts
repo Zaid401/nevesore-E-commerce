@@ -3,7 +3,12 @@ import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
 import { corsHeaders } from '../_shared/cors';
 import { getSupabaseClient, supabaseAdmin } from '../_shared/supabase';
 
-interface CartVariant {
+interface RequestItem {
+  variant_id: string;
+  quantity: number;
+}
+
+interface VariantRow {
   id: string;
   sku: string;
   stock_quantity: number;
@@ -35,34 +40,38 @@ serve(async (req: Request) => {
       });
     }
 
-    const { address_id, coupon_code } = await req.json();
+    const { items, address_id, coupon_code, payment_method } = await req.json() as {
+      items: RequestItem[];
+      address_id: string;
+      coupon_code?: string;
+      payment_method: 'online' | 'cod';
+    };
 
-    // 1. Fetch user's cart with items and validate stock
-    const { data: cart } = await supabaseAdmin
-      .from('carts')
-      .select(`
-        id,
-        cart_items (
-          id, quantity,
-          variant:product_variants (
-            id, sku, stock_quantity, price_override, is_active,
-            product:products (id, name, base_price, sale_price, is_active),
-            color:product_colors (color_name),
-            size:sizes (size_label)
-          )
-        )
-      `)
-      .eq('user_id', user.id)
-      .single();
-
-    if (!cart || !cart.cart_items?.length) {
+    if (!items || items.length === 0) {
       return new Response(JSON.stringify({ error: 'Cart is empty' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    // 2. Validate stock and calculate subtotal
+    // 1. Fetch variants from DB and validate stock
+    const variantIds = items.map((i) => i.variant_id);
+    const { data: variants, error: variantsError } = await supabaseAdmin
+      .from('product_variants')
+      .select(`
+        id, sku, stock_quantity, price_override, is_active,
+        product:products (id, name, base_price, sale_price, is_active),
+        color:product_colors (color_name),
+        size:sizes (size_label)
+      `)
+      .in('id', variantIds);
+
+    if (variantsError || !variants) {
+      throw new Error('Failed to fetch product variants');
+    }
+
+    const variantMap = new Map(variants.map((v) => [v.id, v as unknown as VariantRow]));
+
     let subtotal = 0;
     const validatedItems: Array<{
       variant_id: string;
@@ -75,8 +84,14 @@ serve(async (req: Request) => {
       total_price: number;
     }> = [];
 
-    for (const item of cart.cart_items) {
-      const variant = item.variant as CartVariant;
+    for (const item of items) {
+      const variant = variantMap.get(item.variant_id);
+      if (!variant) {
+        return new Response(
+          JSON.stringify({ error: `Product variant not found: ${item.variant_id}` }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
       if (!variant.is_active || !variant.product.is_active) {
         return new Response(
           JSON.stringify({ error: `Product "${variant.product.name}" is no longer available` }),
@@ -92,7 +107,7 @@ serve(async (req: Request) => {
         );
       }
 
-      const unitPrice: number = variant.price_override ?? variant.product.sale_price ?? variant.product.base_price;
+      const unitPrice = variant.price_override ?? variant.product.sale_price ?? variant.product.base_price;
       subtotal += unitPrice * item.quantity;
 
       validatedItems.push({
@@ -107,7 +122,7 @@ serve(async (req: Request) => {
       });
     }
 
-    // 3. Apply coupon if provided
+    // 2. Apply coupon if provided
     let discountAmount = 0;
     let couponId: string | null = null;
 
@@ -115,7 +130,7 @@ serve(async (req: Request) => {
       const { data: coupon } = await supabaseAdmin
         .from('coupons')
         .select('*')
-        .eq('code', (coupon_code as string).toUpperCase())
+        .eq('code', coupon_code.toUpperCase())
         .eq('is_active', true)
         .single();
 
@@ -150,14 +165,13 @@ serve(async (req: Request) => {
       }
     }
 
-    // 4. Calculate final totals
-    const shippingCost = subtotal >= 999 ? 0 : 99; // free shipping above ₹999
-    const taxRate = 0.18; // 18% GST
+    // 3. Calculate totals
+    const shippingCost = subtotal >= 999 ? 0 : 99;
     const taxableAmount = subtotal - discountAmount;
-    const taxAmount = Math.round(taxableAmount * taxRate * 100) / 100;
+    const taxAmount = Math.round(taxableAmount * 0.18 * 100) / 100; // 18% GST
     const totalAmount = Math.round((taxableAmount + taxAmount + shippingCost) * 100) / 100;
 
-    // 5. Fetch shipping address
+    // 4. Fetch shipping address
     const { data: address } = await supabaseAdmin
       .from('addresses')
       .select('*')
@@ -172,14 +186,92 @@ serve(async (req: Request) => {
       });
     }
 
-    // 6. Generate order number
+    // 5. Generate order number
     const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
     const random = Math.random().toString(36).substring(2, 6).toUpperCase();
     const orderNumber = `ORD-${dateStr}-${random}`;
 
-    // 7. Create Razorpay order
+    const orderBase = {
+      order_number: orderNumber,
+      user_id: user.id,
+      shipping_full_name: address.full_name,
+      shipping_phone: address.phone,
+      shipping_address_line_1: address.address_line_1,
+      shipping_address_line_2: address.address_line_2 ?? null,
+      shipping_city: address.city,
+      shipping_state: address.state,
+      shipping_postal_code: address.postal_code,
+      shipping_country: address.country,
+      subtotal,
+      discount_amount: discountAmount,
+      shipping_cost: shippingCost,
+      tax_amount: taxAmount,
+      total_amount: totalAmount,
+      coupon_id: couponId,
+      coupon_code: coupon_code ? coupon_code.toUpperCase() : null,
+    };
+
+    // ── COD path ────────────────────────────────────────────────────────
+    if (payment_method === 'cod') {
+      const { data: order, error: orderError } = await supabaseAdmin
+        .from('orders')
+        .insert({ ...orderBase, status: 'confirmed', payment_status: 'cod_pending' })
+        .select('id, order_number')
+        .single();
+
+      if (orderError || !order) throw new Error(orderError?.message ?? 'Failed to create COD order');
+
+      await supabaseAdmin.from('order_items').insert(
+        validatedItems.map((item) => ({ order_id: order.id, ...item }))
+      );
+
+      // Deduct stock
+      for (const item of validatedItems) {
+        const variant = variantMap.get(item.variant_id)!;
+        const previousQty = variant.stock_quantity;
+        const newQty = Math.max(0, previousQty - item.quantity);
+
+        await supabaseAdmin
+          .from('product_variants')
+          .update({ stock_quantity: newQty, updated_at: new Date().toISOString() })
+          .eq('id', item.variant_id);
+
+        await supabaseAdmin.from('inventory_logs').insert({
+          variant_id: item.variant_id,
+          change_type: 'sale',
+          quantity_change: -item.quantity,
+          previous_quantity: previousQty,
+          new_quantity: newQty,
+          reason: 'order_placed',
+          reference_id: order.id,
+          performed_by: user.id,
+        });
+      }
+
+      // Record coupon usage
+      if (couponId) {
+        await supabaseAdmin.from('coupon_usages').insert({
+          coupon_id: couponId,
+          user_id: user.id,
+          order_id: order.id,
+        });
+        await supabaseAdmin.rpc('increment_coupon_usage', { coupon_id_input: couponId });
+      }
+
+      // Send confirmation email
+      await supabaseAdmin.functions.invoke('send-order-email', {
+        body: { order_id: order.id, type: 'confirmation' },
+      });
+
+      return new Response(
+        JSON.stringify({ success: true, order_id: order.id, order_number: order.order_number }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // ── Online payment path ──────────────────────────────────────────────
     // @ts-expect-error - Deno.env is available in Deno runtime
-    const razorpayKeyId = Deno.env.get('RAZORPAY_KEY_ID')!
+    const razorpayKeyId = Deno.env.get('RAZORPAY_KEY_ID')!;
     // @ts-expect-error - Deno.env is available in Deno runtime
     const razorpayKeySecret = Deno.env.get('RAZORPAY_KEY_SECRET')!;
     const razorpayAuth = btoa(`${razorpayKeyId}:${razorpayKeySecret}`);
@@ -188,16 +280,13 @@ serve(async (req: Request) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Basic ${razorpayAuth}`,
+        Authorization: `Basic ${razorpayAuth}`,
       },
       body: JSON.stringify({
-        amount: Math.round(totalAmount * 100), // Razorpay expects paise
+        amount: Math.round(totalAmount * 100),
         currency: 'INR',
         receipt: orderNumber,
-        notes: {
-          user_id: user.id,
-          order_number: orderNumber,
-        },
+        notes: { user_id: user.id, order_number: orderNumber },
       }),
     });
 
@@ -206,45 +295,26 @@ serve(async (req: Request) => {
       throw new Error(`Razorpay error: ${JSON.stringify(rzpOrder)}`);
     }
 
-    // 8. Create order in database
     const { data: order, error: orderError } = await supabaseAdmin
       .from('orders')
       .insert({
-        order_number: orderNumber,
-        user_id: user.id,
+        ...orderBase,
         status: 'pending',
-        shipping_full_name: address.full_name,
-        shipping_phone: address.phone,
-        shipping_address_line_1: address.address_line_1,
-        shipping_address_line_2: address.address_line_2 ?? null,
-        shipping_city: address.city,
-        shipping_state: address.state,
-        shipping_postal_code: address.postal_code,
-        shipping_country: address.country,
-        subtotal,
-        discount_amount: discountAmount,
-        shipping_cost: shippingCost,
-        tax_amount: taxAmount,
-        total_amount: totalAmount,
-        coupon_id: couponId,
-        coupon_code: coupon_code ? (coupon_code as string).toUpperCase() : null,
         payment_status: 'pending',
         razorpay_order_id: rzpOrder.id,
       })
       .select('id')
       .single();
 
-    if (orderError) throw orderError;
+    if (orderError || !order) throw new Error(orderError?.message ?? 'Failed to create order');
 
-    // 9. Create order items
     await supabaseAdmin.from('order_items').insert(
-      validatedItems.map((item) => ({ order_id: order!.id, ...item }))
+      validatedItems.map((item) => ({ order_id: order.id, ...item }))
     );
 
-    // 10. Return Razorpay checkout info to frontend
     return new Response(
       JSON.stringify({
-        order_id: order!.id,
+        order_id: order.id,
         order_number: orderNumber,
         razorpay_order_id: rzpOrder.id,
         razorpay_key_id: razorpayKeyId,

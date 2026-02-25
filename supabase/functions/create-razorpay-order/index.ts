@@ -1,7 +1,7 @@
 // @ts-expect-error - Deno runtime import
 import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
-import { corsHeaders } from '../_shared/cors';
-import { getSupabaseClient, supabaseAdmin } from '../_shared/supabase';
+import { corsHeaders } from '../_shared/cors.ts';
+import { getSupabaseClient, supabaseAdmin } from '../_shared/supabase.ts';
 
 interface RequestItem {
   variant_id: string;
@@ -70,7 +70,9 @@ serve(async (req: Request) => {
       throw new Error('Failed to fetch product variants');
     }
 
-    const variantMap = new Map(variants.map((v) => [v.id, v as unknown as VariantRow]));
+    const variantMap: Map<string, VariantRow> = new Map(
+      variants.map((v: unknown) => [(v as VariantRow).id, v as VariantRow])
+    );
 
     let subtotal = 0;
     const validatedItems: Array<{

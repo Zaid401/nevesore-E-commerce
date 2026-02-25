@@ -349,15 +349,15 @@ function TrackOrderInner() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold uppercase  text-[#555555]">Shipping Method</p>
-                  <p className="text-xs sm:text-sm lg:text-sm font-semibold">{mockOrder.shippingMethod}</p>
+                  <p className="text-xs sm:text-sm lg:text-sm font-semibold">Standard Delivery</p>
                 </div>
                 <div>
                   <p className="text-xs font-semibold uppercase  text-[#555555]">Phone</p>
-                  <p className="text-xs sm:text-sm lg:text-sm font-semibold">{mockOrder.phone}</p>
+                  <p className="text-xs sm:text-sm lg:text-sm font-semibold">{order.shipping_phone}</p>
                 </div>
                 <div className="sm:col-span-2 lg:col-span-2">
                   <p className="text-xs font-semibold uppercase text-[#555555]">Delivery Address</p>
-                  <p className="text-xs sm:text-sm lg:text-sm font-semibold">{mockOrder.address}</p>
+                  <p className="text-xs sm:text-sm lg:text-sm font-semibold">{shippingAddress}</p>
                 </div>
               </div>
             </section>

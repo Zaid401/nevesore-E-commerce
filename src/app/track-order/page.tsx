@@ -215,8 +215,6 @@ function TrackOrderInner() {
             className="mt-4 sm:mt-5 w-full rounded-full bg-[#cc071e] py-2 sm:py-3 text-xs font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-red-700 disabled:opacity-60"
           >
             {loading ? "Searching..." : "Track Order"}
-          <button className="mt-4 sm:mt-5 lg:mt-5 w-full rounded-full bg-[#cc071e] py-2 sm:py-3 lg:py-3 text-xs font-bold uppercase text-white transition-all hover:bg-red-700">
-            Track Order
           </button>
         </form>
 
@@ -231,8 +229,6 @@ function TrackOrderInner() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold uppercase text-[#555555]">Order Date</p>
-                  <p className="text-xs sm:text-sm lg:text-sm font-semibold">{mockOrder.orderDate}</p>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#555555]">Order Date</p>
                   <p className="text-xs sm:text-sm font-semibold">{orderDate}</p>
                 </div>
                 <div>

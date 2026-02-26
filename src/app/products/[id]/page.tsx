@@ -212,7 +212,7 @@ export default function ProductDetailPage() {
     return (
       <main className="bg-[#f8f8f8] min-h-screen text-slate-900">
         <Navbar />
-        <div className="max-w-7xl mx-auto px-4 py-24 text-center text-gray-400 text-sm">
+        <div className="max-w-7xl mx-auto px-4 py-16 text-center text-gray-400 text-xs sm:py-20 sm:text-sm lg:py-24 lg:text-sm">
           Loading product
         </div>
         <Footer />
@@ -224,9 +224,9 @@ export default function ProductDetailPage() {
     return (
       <main className="bg-[#f8f8f8] min-h-screen text-slate-900">
         <Navbar />
-        <div className="max-w-7xl mx-auto px-4 py-24 text-center">
-          <p className="text-lg font-semibold">Product not found.</p>
-          <Link href="/" className="mt-4 inline-block text-sm text-[#cc071e] underline">Back to home</Link>
+        <div className="max-w-7xl mx-auto px-4 py-16 text-center sm:py-20 lg:py-24">
+          <p className="text-base font-semibold sm:text-lg lg:text-lg">Product not found.</p>
+          <Link href="/" className="mt-4 inline-block text-xs text-[#cc071e] underline sm:text-sm lg:text-sm">Back to home</Link>
         </div>
         <Footer />
       </main>
@@ -237,19 +237,19 @@ export default function ProductDetailPage() {
     <main className="bg-[#f8f8f8] min-h-screen text-slate-900">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <div className="max-w-7xl mx-auto px-4 py-8 sm:py-10 lg:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12">
 
           {/* LEFT COLUMN - IMAGE GALLERY */}
           <div className="lg:col-span-7">
-            <div className="flex flex-col gap-4 lg:flex-row">
+            <div className="flex flex-col gap-3 sm:gap-4 lg:flex-row">
               {/* Thumbnails */}
-              <div className="flex gap-3 overflow-x-auto pb-2 lg:w-28 lg:flex-col lg:overflow-visible lg:pb-0">
+              <div className="order-2 flex gap-2 overflow-x-auto pb-2 sm:gap-3 lg:order-none lg:w-28 lg:flex-col lg:overflow-visible lg:pb-0">
                 {displayImages.map((img, index) => (
                   <button
                     key={img.id}
                     onClick={() => setSelectedImageIdx(index)}
-                    className={`relative h-20 w-20 flex-none border-2 lg:h-24 lg:w-24 ${selectedImageIdx === index
+                    className={`relative h-16 w-16 flex-none border-2 sm:h-20 sm:w-20 lg:h-24 lg:w-24 ${selectedImageIdx === index
                       ? "border-[#cc071e]"
                       : "border-transparent hover:border-gray-300"
                       }`}
@@ -267,7 +267,7 @@ export default function ProductDetailPage() {
               </div>
 
               {/* Main Image */}
-              <div className="bg-white rounded-sm overflow-hidden aspect-4/5 shadow-sm relative flex-1">
+              <div className="order-1 bg-white rounded-sm overflow-hidden aspect-4/5 shadow-sm relative flex-1 lg:order-none">
                 {displayImages[selectedImageIdx] ? (
                   <Image
                     src={imgErrors.has(selectedImageIdx) ? FALLBACK_IMAGE : (displayImages[selectedImageIdx].image_url || FALLBACK_IMAGE)}
@@ -288,39 +288,39 @@ export default function ProductDetailPage() {
           </div>
 
           {/* RIGHT COLUMN - PRODUCT INFO */}
-          <div className="lg:col-span-5 space-y-8">
+          <div className="lg:col-span-5 space-y-6 sm:space-y-8 lg:space-y-8">
 
             {/* Header */}
             <div>
-              <p className="text-xs font-bold text-gray-400 mb-2 uppercase">
+              <p className="text-[10px] font-bold text-gray-400 mb-2 uppercase sm:text-xs lg:text-xs">
                 {product.category_name}
               </p>
 
-              <h1 className="text-4xl font-extrabold mb-2 uppercase">
+              <h1 className="text-2xl font-extrabold mb-2 uppercase sm:text-3xl lg:text-4xl">
                 {product.name}
               </h1>
 
               <div className="h-0.5 w-1/3 bg-linear-to-r from-[#cc071e] to-transparent mb-4" />
 
               <div className="flex items-center space-x-4 mb-4">
-                <span className="text-2xl font-semibold text-[#cc071e]">
+                <span className="text-xl font-semibold text-[#cc071e] sm:text-2xl lg:text-2xl">
                   {formatPrice(displayPrice)}
                 </span>
                 {product.sale_price && product.sale_price < product.base_price && !selectedVariant?.price_override && (
-                  <span className="text-base text-gray-400 line-through">
+                  <span className="text-sm text-gray-400 line-through sm:text-base lg:text-base">
                     {formatPrice(product.base_price)}
                   </span>
                 )}
                 {product.review_count > 0 && (
                   <div className="flex items-center text-yellow-400">
-                    <span className="text-sm font-medium text-gray-600 mr-1">{product.avg_rating}</span>
+                    <span className="text-xs font-medium text-gray-600 mr-1 sm:text-sm lg:text-sm">{product.avg_rating}</span>
                     â­
-                    <span className="text-xs text-gray-400 ml-2">({product.review_count} Reviews)</span>
+                    <span className="text-[10px] text-gray-400 ml-2 sm:text-xs lg:text-xs">({product.review_count} Reviews)</span>
                   </div>
                 )}
               </div>
 
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-sm text-gray-600 leading-relaxed sm:text-base lg:text-base">
                 {product.short_description ?? product.description ?? ""}
               </p>
             </div>
@@ -328,12 +328,12 @@ export default function ProductDetailPage() {
             {/* Color Selection */}
             {product.colors.length > 0 && (
               <div>
-                <span className="text-sm font-bold uppercase">
+                <span className="text-xs font-bold uppercase sm:text-sm lg:text-sm">
                   Select Color:{" "}
                   <span className="font-normal text-gray-500">{selectedColor?.color_name}</span>
                 </span>
 
-                <div className="flex space-x-3 mt-3">
+                <div className="flex gap-2 mt-3 sm:gap-3">
                   {product.colors.map((color, index) => (
                     <button
                       key={color.id}
@@ -344,7 +344,7 @@ export default function ProductDetailPage() {
                         const newSizes = product.sizesByColor[color.id] ?? [];
                         setSelectedSizeId(newSizes[0]?.id ?? null);
                       }}
-                      className={`w-8 h-8 rounded-full transition-all ${selectedColorIdx === index
+                      className={`w-7 h-7 rounded-full transition-all sm:w-8 sm:h-8 lg:w-8 lg:h-8 ${selectedColorIdx === index
                         ? "ring-2 ring-[#cc071e] ring-offset-2"
                         : "hover:ring-2 hover:ring-gray-300 hover:ring-offset-1"
                         }`}
@@ -359,7 +359,7 @@ export default function ProductDetailPage() {
             {/* Size Selection */}
             {availableSizes.length > 0 && (
               <div>
-                <span className="text-sm font-bold uppercase">Select Size</span>
+                <span className="text-xs font-bold uppercase sm:text-sm lg:text-sm">Select Size</span>
                 <div className="grid grid-cols-5 gap-2 mt-3">
                   {availableSizes.map((size) => {
                     const isOutOfStock = size.stock_quantity <= 0;
@@ -368,7 +368,7 @@ export default function ProductDetailPage() {
                         key={size.id}
                         onClick={() => !isOutOfStock && setSelectedSizeId(size.id)}
                         disabled={isOutOfStock}
-                        className={`py-3 border text-sm font-bold uppercase transition relative ${isOutOfStock
+                        className={`py-2 border text-xs font-bold uppercase transition relative sm:py-3 sm:text-sm lg:py-3 lg:text-sm ${isOutOfStock
                           ? "border-gray-100 text-gray-300 cursor-not-allowed line-through"
                           : selectedSizeId === size.id
                             ? "border-[#cc071e] text-[#cc071e]"
@@ -384,20 +384,20 @@ export default function ProductDetailPage() {
             )}
 
             {/* Quantity + Stock status */}
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:space-x-4">
               <div className="flex items-center border border-gray-200 rounded">
-                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-4 py-2">-</button>
-                <span className="px-4 font-bold">{quantity}</span>
-                <button onClick={() => setQuantity(Math.min((selectedVariant?.stock_quantity ?? 1), quantity + 1))} className="px-4 py-2">+</button>
+                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-3 py-2 sm:px-4">-</button>
+                <span className="px-3 text-sm font-bold sm:px-4 sm:text-base">{quantity}</span>
+                <button onClick={() => setQuantity(Math.min((selectedVariant?.stock_quantity ?? 1), quantity + 1))} className="px-3 py-2 sm:px-4">+</button>
               </div>
               {selectedVariant ? (
                 selectedVariant.stock_quantity > 0 ? (
-                  <p className="text-sm text-green-600 font-medium">In Stock — {selectedVariant.stock_quantity} available</p>
+                  <p className="text-xs text-green-600 font-medium sm:text-sm lg:text-sm">In Stock — {selectedVariant.stock_quantity} available</p>
                 ) : (
-                  <p className="text-sm text-red-500 font-medium">Out of Stock</p>
+                  <p className="text-xs text-red-500 font-medium sm:text-sm lg:text-sm">Out of Stock</p>
                 )
               ) : (
-                <p className="text-sm text-red-500 font-medium">Select a size</p>
+                <p className="text-xs text-red-500 font-medium sm:text-sm lg:text-sm">Select a size</p>
               )}
             </div>
 
@@ -406,7 +406,7 @@ export default function ProductDetailPage() {
               <button
                 onClick={handleAddToCart}
                 disabled={!selectedVariant || selectedVariant.stock_quantity <= 0}
-                className="w-full bg-[#cc071e] text-white py-4 font-extrabold hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-[#cc071e] text-white py-3 text-sm font-extrabold transition hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed sm:py-4 sm:text-base lg:py-4 lg:text-base"
               >
                 {selectedVariant && selectedVariant.stock_quantity <= 0 ? 'OUT OF STOCK' : 'ADD TO CART'}
               </button>
@@ -414,7 +414,7 @@ export default function ProductDetailPage() {
               <button
                 onClick={() => { handleAddToCart(); router.push("/checkout"); }}
                 disabled={!selectedVariant || selectedVariant.stock_quantity <= 0}
-                className="w-full border-2 border-slate-900 py-4 font-extrabold hover:bg-slate-900 hover:text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full border-2 border-slate-900 py-3 text-sm font-extrabold transition hover:bg-slate-900 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed sm:py-4 sm:text-base lg:py-4 lg:text-base"
               >
                 BUY IT NOW
               </button>
@@ -423,8 +423,8 @@ export default function ProductDetailPage() {
             {/* Description */}
             {product.description && (
               <div className="border-t border-gray-100 pt-6">
-                <h3 className="font-bold text-sm uppercase mb-3">Description</h3>
-                <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+                <h3 className="font-bold text-xs uppercase mb-3 sm:text-sm lg:text-sm">Description</h3>
+                <p className="text-xs text-gray-600 leading-relaxed whitespace-pre-line sm:text-sm lg:text-sm">
                   {product.description}
                 </p>
               </div>
@@ -451,23 +451,23 @@ export default function ProductDetailPage() {
         aria-hidden={!isCartOpen}
       >
         <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between border-b border-gray-100 p-6">
-            <h2 className="text-sm font-extrabold uppercase text-slate-900">
+          <div className="flex items-center justify-between border-b border-gray-100 p-4 sm:p-6 lg:p-6">
+            <h2 className="text-xs font-extrabold uppercase text-slate-900 sm:text-sm lg:text-sm">
               Your Cart ({itemCount})
             </h2>
-            <button type="button" onClick={() => setIsCartOpen(false)} className="text-sm font-semibold text-gray-500 hover:text-slate-900">
+            <button type="button" onClick={() => setIsCartOpen(false)} className="text-xs font-semibold text-gray-500 hover:text-slate-900 sm:text-sm lg:text-sm">
               Close
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-6">
             {items.length === 0 ? (
-              <p className="text-sm text-gray-500">Your cart is currently empty.</p>
+              <p className="text-xs text-gray-500 sm:text-sm lg:text-sm">Your cart is currently empty.</p>
             ) : (
               <div className="space-y-4">
                 {items.map((item) => (
                   <div key={item.variant_id} className="flex items-center gap-4 border-b border-gray-100 pb-4">
-                    <div className="relative h-20 w-16 overflow-hidden rounded-md bg-gray-100">
+                    <div className="relative h-16 w-12 overflow-hidden rounded-md bg-gray-100 sm:h-20 sm:w-16 lg:h-20 lg:w-16">
                       <Image
                         src={cartImgErrors.has(item.variant_id) ? FALLBACK_IMAGE : (item.image || FALLBACK_IMAGE)}
                         alt={item.product_name}
@@ -478,13 +478,13 @@ export default function ProductDetailPage() {
                       />
                     </div>
                     <div className="flex-1">
-                      <p className="text-xs font-semibold uppercase text-gray-400">{item.category}</p>
-                      <p className="mt-1 text-sm font-bold text-slate-900">{item.product_name}</p>
+                      <p className="text-[10px] font-semibold uppercase text-gray-400 sm:text-xs lg:text-xs">{item.category}</p>
+                      <p className="mt-1 text-xs font-bold text-slate-900 sm:text-sm lg:text-sm">{item.product_name}</p>
                       <p className="mt-1 text-xs text-gray-500">{item.color_name} â€¢ {item.size_label}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-bold text-[#cc071e]">{formatPrice(item.price * item.quantity)}</p>
-                      <p className="mt-1 text-xs text-gray-500">Qty {item.quantity}</p>
+                      <p className="text-xs font-bold text-[#cc071e] sm:text-sm lg:text-sm">{formatPrice(item.price * item.quantity)}</p>
+                      <p className="mt-1 text-[10px] text-gray-500 sm:text-xs lg:text-xs">Qty {item.quantity}</p>
                     </div>
                   </div>
                 ))}
@@ -492,19 +492,19 @@ export default function ProductDetailPage() {
             )}
           </div>
 
-          <div className="border-t border-gray-100 p-6">
-            <div className="flex items-center justify-between text-sm font-semibold text-slate-900">
+          <div className="border-t border-gray-100 p-4 sm:p-6 lg:p-6">
+            <div className="flex items-center justify-between text-xs font-semibold text-slate-900 sm:text-sm lg:text-sm">
               <span>Subtotal</span>
               <span>{formatPrice(subtotal)}</span>
             </div>
             <Link
               href="/checkout"
-              className="mt-4 block w-full bg-[#cc071e] py-3 text-center text-sm font-extrabold uppercase  text-white hover:bg-red-700 transition"
+              className="mt-4 block w-full bg-[#cc071e] py-3 text-center text-xs font-extrabold uppercase text-white transition hover:bg-red-700 sm:text-sm lg:text-sm"
             >
               Checkout
             </Link>
             <button
-              className="mt-3 w-full border-2 border-slate-900 py-3 text-sm font-extrabold uppercase text-slate-900 hover:bg-slate-900 hover:text-white transition"
+              className="mt-3 w-full border-2 border-slate-900 py-3 text-xs font-extrabold uppercase text-slate-900 transition hover:bg-slate-900 hover:text-white sm:text-sm lg:text-sm"
               onClick={() => setIsCartOpen(false)}
             >
               Continue Shopping

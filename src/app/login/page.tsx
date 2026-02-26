@@ -35,28 +35,28 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen bg-neutral-50 text-neutral-900">
       <Navbar />
-      <section className="relative flex justify-center px-6 py-16 sm:py-20">
+      <section className="relative flex justify-center px-4 py-21 sm:px-6 sm:py-16 lg:py-20">
         <div className="pointer-events-none absolute inset-0" aria-hidden />
         <div className="relative w-full max-w-md">
-          <div className="rounded-4xl border border-neutral-200 bg-white p-10 shadow-[0_30px_70px_rgba(0,0,0,0.1)]">
-            <div className="flex flex-col gap-6">
+          <div className="rounded-4xl border border-neutral-200 bg-white p-6 shadow-[0_30px_70px_rgba(0,0,0,0.1)] sm:p-8 lg:p-10">
+            <div className="flex flex-col gap-5 sm:gap-6 lg:gap-6">
               <header className="flex flex-col gap-2 text-left">
-                <h1 className="text-2xl font-extrabold uppercase  text-neutral-900">
+                <h1 className="text-xl font-extrabold uppercase text-neutral-900 sm:text-2xl lg:text-2xl">
                   Access Your Potential
                 </h1>
-                <p className="text-sm text-neutral-600">
+                <p className="text-xs text-neutral-600 sm:text-sm lg:text-sm">
                   Enter your credentials to continue your training.
                 </p>
               </header>
 
               {error && (
-                <div className="rounded-2xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
+                <div className="rounded-2xl bg-red-50 border border-red-200 px-4 py-3 text-xs text-red-600 sm:text-sm lg:text-sm">
                   {error}
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2 text-xs font-semibold uppercase text-neutral-600">
+              <form onSubmit={handleSubmit} className="flex flex-col gap-5 sm:gap-6 lg:gap-6">
+                <div className="flex flex-col gap-2 text-[10px] font-semibold uppercase text-neutral-600 sm:text-xs lg:text-xs">
                   <label htmlFor="login-email">Email Address</label>
                   <input
                     id="login-email"
@@ -64,16 +64,16 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="enter your email address"
-                    className="h-12 rounded-2xl border border-neutral-300 bg-neutral-50 px-5 text-sm font-medium  text-neutral-900 placeholder:text-neutral-400 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                    className="h-11 rounded-2xl border border-neutral-300 bg-neutral-50 px-4 text-xs font-medium text-neutral-900 placeholder:text-neutral-400 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 sm:h-12 sm:px-5 sm:text-sm lg:h-12 lg:px-5 lg:text-sm"
                     required
                     disabled={loading}
                   />
                 </div>
 
-                <div className="flex flex-col gap-2 text-xs font-semibold uppercase text-neutral-600">
+                <div className="flex flex-col gap-2 text-[10px] font-semibold uppercase text-neutral-600 sm:text-xs lg:text-xs">
                   <div className="flex items-center justify-between">
                     <label htmlFor="login-password">Password</label>
-                    <a href="#" className="text-[10px] font-bold  text-red-600 transition-colors hover:text-red-700">
+                    <a href="#" className="text-[10px] font-bold text-red-600 transition-colors hover:text-red-700">
                       Forgot?
                     </a>
                   </div>
@@ -84,7 +84,7 @@ export default function LoginPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="h-12 w-full rounded-2xl border border-neutral-300 bg-neutral-50 px-5 pr-12 text-sm font-medium  text-neutral-900 placeholder:text-neutral-400 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                      className="h-11 w-full rounded-2xl border border-neutral-300 bg-neutral-50 px-4 pr-12 text-xs font-medium text-neutral-900 placeholder:text-neutral-400 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 sm:h-12 sm:px-5 sm:text-sm lg:h-12 lg:px-5 lg:text-sm"
                       required
                       disabled={loading}
                     />
@@ -93,7 +93,7 @@ export default function LoginPage() {
                       aria-label="Toggle password visibility"
                       aria-pressed={showPassword}
                       onClick={() => setShowPassword((prev) => !prev)}
-                      className="absolute right-3 flex h-8 w-8 items-center justify-center rounded-full text-neutral-500 transition-colors hover:text-neutral-700"
+                      className="absolute right-3 flex h-7 w-7 items-center justify-center rounded-full text-neutral-500 transition-colors hover:text-neutral-700 sm:h-8 sm:w-8 lg:h-8 lg:w-8"
                     >
                       <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
                         <path
@@ -108,13 +108,13 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="h-12 rounded-2xl bg-red-600 text-sm font-bold uppercase  text-white transition-transform duration-150 hover:-translate-y-0.5 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                  className="h-11 rounded-2xl bg-red-600 text-xs font-bold uppercase text-white transition-transform duration-150 hover:-translate-y-0.5 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 sm:h-12 sm:text-sm lg:h-12 lg:text-sm"
                 >
                   {loading ? "Signing In..." : "Sign In"}
                 </button>
               </form>
 
-              <div className="flex items-center gap-4 text-xs uppercase text-neutral-400">
+              <div className="flex items-center gap-4 text-[10px] uppercase text-neutral-400 sm:text-xs lg:text-xs">
                 <span className="h-px flex-1 bg-neutral-300" aria-hidden />
                 <span>Or</span>
                 <span className="h-px flex-1 bg-neutral-300" aria-hidden />
@@ -123,7 +123,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={signInWithGoogle}
-                className="flex h-12 items-center justify-center gap-3 rounded-2xl border border-neutral-300 bg-neutral-50 text-sm font-semibold uppercase text-neutral-900 transition-transform duration-150 hover:-translate-y-0.5 hover:border-neutral-400"
+                className="flex h-11 items-center justify-center gap-3 rounded-2xl border border-neutral-300 bg-neutral-50 text-xs font-semibold uppercase text-neutral-900 transition-transform duration-150 hover:-translate-y-0.5 hover:border-neutral-400 sm:h-12 sm:text-sm lg:h-12 lg:text-sm"
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
                   <path
@@ -146,7 +146,7 @@ export default function LoginPage() {
                 Sign in with Google
               </button>
 
-              <p className="text-center text-xs uppercase text-neutral-500">
+              <p className="text-center text-[10px] uppercase text-neutral-500 sm:text-xs lg:text-xs">
                 Don&apos;t have an account?{" "}
                 <Link href="/signup" className="text-red-600 transition-colors hover:text-red-700">
                   Create Account

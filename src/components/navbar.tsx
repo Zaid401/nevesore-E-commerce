@@ -295,7 +295,7 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Right: Search Icon + Cart Icon + Account Icon */}
+          {/* Right: Search Icon + Cart Icon */}
           <div className="flex items-center gap-1">
             {/* Search Icon */}
             <button
@@ -330,86 +330,6 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
-
-            {/* Auth: Login Button or Avatar (Mobile) */}
-            {mounted && user ? (
-              <div className="relative">
-                <button
-                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                  className="relative rounded-full p-2.5 -mr-2.5 transition-all hover:bg-[#f3f3f3]"
-                  aria-label="Account"
-                >
-                  {profile?.avatar_url ? (
-                    <Image
-                      src={profile.avatar_url}
-                      alt={profile.full_name || "User"}
-                      width={24}
-                      height={24}
-                      className="h-6 w-6 rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="h-6 w-6 rounded-full bg-[#cc071e] flex items-center justify-center text-white text-xs font-bold">
-                      {(profile?.full_name || user?.email || "U")[0].toUpperCase()}
-                    </div>
-                  )}
-                </button>
-
-                {/* Mobile Dropdown Menu */}
-                {profileMenuOpen && (
-                  <>
-                    <div
-                      className="fixed inset-0 z-30"
-                      onClick={() => setProfileMenuOpen(false)}
-                    />
-                    <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl border border-[#e5e5e5] shadow-[0_12px_30px_rgba(0,0,0,0.12)] z-40 overflow-hidden">
-                      <div className="px-4 py-3 border-b border-[#f3f3f3]">
-                        <p className="text-sm font-bold text-[#111111] truncate">
-                          {profile?.full_name || "User"}
-                        </p>
-                        <p className="text-xs text-[#666666] truncate">
-                          {user?.email}
-                        </p>
-                      </div>
-                      <Link
-                        href="/account"
-                        className="block px-4 py-3 text-sm text-[#111111] hover:bg-[#f3f3f3] transition-colors"
-                        onClick={() => setProfileMenuOpen(false)}
-                      >
-                        My Account
-                      </Link>
-                      <Link
-                        href="/account?tab=orders"
-                        className="block px-4 py-3 text-sm text-[#111111] hover:bg-[#f3f3f3] transition-colors"
-                        onClick={() => setProfileMenuOpen(false)}
-                      >
-                        Track Order
-                      </Link>
-                      <button
-                        onClick={() => {
-                          logout();
-                          setProfileMenuOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-3 text-sm text-[#cc071e] hover:bg-[#f3f3f3] transition-colors border-t border-[#f3f3f3]"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            ) : (
-              <Link
-                href="/login"
-                className="flex items-center gap-2 rounded-full px-3 py-2 -mr-2.5 bg-[#cc071e] text-white font-bold text-xs uppercase hover:bg-[#a80618] transition-colors"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
-                  <path
-                    fill="currentColor"
-                    d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5m0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5"
-                  />
-                </svg>
-              </Link>
-            )}
           </div>
         </div>
 
@@ -540,6 +460,24 @@ export default function Navbar() {
                     </span>
                   )}
                 </Link>
+
+                {/* Account + Login (Mobile) */}
+                <div className="mt-2 space-y-1">
+                  <Link
+                    href={user ? "/account" : "/login"}
+                    className="block px-4 py-3 rounded-lg text-sm font-semibold text-[#111111] transition-all hover:text-[#cc071e] hover:bg-[#f3f3f3]"
+                    onClick={handleCloseMenu}
+                  >
+                    Account
+                  </Link>
+                  <Link
+                    href="/login"
+                    className="block px-4 py-3 rounded-lg text-sm font-semibold text-[#111111] transition-all hover:text-[#cc071e] hover:bg-[#f3f3f3]"
+                    onClick={handleCloseMenu}
+                  >
+                    Login
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

@@ -5,10 +5,10 @@ const footerColumns = [
   {
     title: "Shop",
     links: [
-      { label: "All Products", href: "#" },
-      { label: "New Arrivals", href: "#" },
-      { label: "Best Sellers", href: "#" },
-      { label: "Activewear", href: "#" },
+      { label: "Upper Wear", href: "/upper" },
+      { label: "Bottom Wear", href: "/bottom" },
+      { label: "Active Wear", href: "/active" },
+      { label: "Best Sellers", href: "/best-sellers" },
     ],
   },
   {

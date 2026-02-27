@@ -1,7 +1,7 @@
 // @ts-expect-error - Deno runtime import
 import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
-import { corsHeaders } from '../_shared/cors';
-import { getSupabaseClient, supabaseAdmin } from '../_shared/supabase';
+import { corsHeaders } from '../_shared/cors.ts';
+import { getSupabaseClient, supabaseAdmin } from '../_shared/supabase.ts';
 
 interface OrderItem {
   variant_id: string;
@@ -122,8 +122,7 @@ serve(async (req: Request) => {
 
       await supabaseAdmin.from('inventory_logs').insert({
         variant_id: item.variant_id,
-        change_type: 'sale',
-        quantity_change: -item.quantity,
+        change_quantity: -item.quantity,
         previous_quantity: previousQty,
         new_quantity: newQty,
         reason: 'order_placed',

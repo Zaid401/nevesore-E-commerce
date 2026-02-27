@@ -29,17 +29,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch user profile
+  // Fetch user profile (auto-creates one for OAuth users if missing)
   const fetchProfile = async (userId: string) => {
     try {
       const { data, error } = await supabase
         .from("profiles")
         .select("id, email, full_name, avatar_url, phone")
         .eq("id", userId)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
-      setProfile(data);
+
+      if (data) {
+        setProfile(data);
+      } else {
+        // Profile doesn't exist (e.g. Google OAuth) — create one
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const newProfile = {
+            id: user.id,
+            email: user.email ?? "",
+            full_name: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
+            avatar_url: user.user_metadata?.avatar_url ?? user.user_metadata?.picture ?? null,
+            phone: user.user_metadata?.phone ?? null,
+          };
+          const { data: created, error: insertError } = await supabase
+            .from("profiles")
+            .upsert(newProfile, { onConflict: "id" })
+            .select("id, email, full_name, avatar_url, phone")
+            .single();
+
+          if (insertError) throw insertError;
+          setProfile(created);
+        }
+      }
     } catch (error) {
       console.error("Error fetching profile:", error);
       setProfile(null);

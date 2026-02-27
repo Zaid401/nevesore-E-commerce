@@ -1,6 +1,6 @@
 // @ts-expect-error - Deno runtime import
 import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
-import { supabaseAdmin } from '../_shared/supabase.js';
+import { supabaseAdmin } from '../_shared/supabase.ts';
 
 // Use Web Crypto API for webhook signature verification
 async function verifyWebhookSignature(body: string, signature: string, secret: string): Promise<boolean> {

@@ -39,7 +39,10 @@ export default function Hero() {
               hover:bg-transparent hover:border-[#cc071e]
               hover:text-gray-700 cursor-pointer"
             >
+              <a href="/best-sellers"> 
               Explore Collection
+              
+              </a>
             </button>
           </div>
         </div>

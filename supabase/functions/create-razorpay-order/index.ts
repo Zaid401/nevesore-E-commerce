@@ -62,7 +62,7 @@ serve(async (req: Request) => {
         id, sku, stock_quantity, price_override, is_active,
         product:products (id, name, base_price, sale_price, is_active),
         color:product_colors (color_name),
-        size:sizes (size_label)
+        size:product_sizes (size_label)
       `)
       .in('id', variantIds);
 
@@ -217,7 +217,7 @@ serve(async (req: Request) => {
     if (payment_method === 'cod') {
       const { data: order, error: orderError } = await supabaseAdmin
         .from('orders')
-        .insert({ ...orderBase, status: 'confirmed', payment_status: 'cod_pending' })
+        .insert({ ...orderBase, status: 'confirmed', payment_status: 'pending' })
         .select('id, order_number')
         .single();
 
@@ -240,8 +240,7 @@ serve(async (req: Request) => {
 
         await supabaseAdmin.from('inventory_logs').insert({
           variant_id: item.variant_id,
-          change_type: 'sale',
-          quantity_change: -item.quantity,
+          change_quantity: -item.quantity,
           previous_quantity: previousQty,
           new_quantity: newQty,
           reason: 'order_placed',

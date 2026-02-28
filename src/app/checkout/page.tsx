@@ -176,6 +176,35 @@ export default function CheckoutPage() {
         }
       }
 
+      // Ensure we have a valid session and refresh it if needed
+      let session = (await supabase.auth.getSession()).data.session;
+      
+      if (!session) {
+        setOrderError("You must be logged in to place an order. Please log in again.");
+        setIsSubmitting(false);
+        router.push("/login?redirect=/checkout");
+        return;
+      }
+
+      // Refresh the session to ensure token is valid
+      const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
+      if (refreshError) {
+        console.error("Session refresh error:", refreshError);
+        setOrderError("Session expired. Please log in again.");
+        setIsSubmitting(false);
+        router.push("/login?redirect=/checkout");
+        return;
+      }
+
+      if (refreshData.session) {
+        session = refreshData.session;
+      }
+
+      console.log("Making request with session:", { 
+        userId: session.user.id, 
+        tokenExpiry: new Date(session.expires_at! * 1000).toISOString() 
+      });
+
       const { data, error } = await supabase.functions.invoke("create-razorpay-order", {
         body: {
           items: items.map((item) => ({ variant_id: item.variant_id, quantity: item.quantity })),
@@ -185,7 +214,10 @@ export default function CheckoutPage() {
         },
       });
 
+      console.log("Edge function response:", { data, error });
+
       if (error || data?.error) {
+        console.error("Edge function error:", error);
         throw new Error(data?.error || error?.message || "Failed to create order");
       }
 
@@ -217,6 +249,12 @@ export default function CheckoutPage() {
         },
         handler: async (response) => {
           try {
+            // Ensure session is still valid
+            const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+            if (sessionError || !sessionData.session) {
+              throw new Error("Authentication session expired. Please log in again.");
+            }
+
             const { data: verifyData, error: verifyError } = await supabase.functions.invoke(
               "verify-razorpay-payment",
               {

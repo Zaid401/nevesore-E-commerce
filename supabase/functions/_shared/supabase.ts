@@ -6,13 +6,17 @@ export const supabaseAdmin = createClient(
 );
 
 export function getSupabaseClient(req: Request) {
+  const authHeader = req.headers.get('Authorization');
+  
   return createClient(
     Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_ANON_KEY')!,
-    {
-      global: {
-        headers: { Authorization: req.headers.get('Authorization')! },
-      },
-    }
+    authHeader
+      ? {
+          global: {
+            headers: { Authorization: authHeader },
+          },
+        }
+      : {}
   );
 }

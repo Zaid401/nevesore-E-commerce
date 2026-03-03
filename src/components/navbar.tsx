@@ -383,7 +383,19 @@ export default function Navbar() {
           >
             {/* Drawer Header with Close Button - Fixed at top */}
             <div className="shrink-0 bg-white border-b border-[#f3f3f3] p-4 flex items-center justify-between" >
-              <h3 className="text-xs font-bold uppercase  text-[#666666]">SHOP</h3>
+              <Link
+                href="/login"
+                className="flex items-center gap-2 rounded-full px-4 py-2 bg-[#cc071e] text-white font-bold text-xs uppercase hover:bg-[#a80618] transition-colors shadow-sm"
+                onClick={handleCloseMenu}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4">
+                  <path
+                    fill="currentColor"
+                    d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5m0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5"
+                  />
+                </svg>
+                <span>Login</span>
+              </Link>
               <button
                 onClick={handleCloseMenu}
                 className="rounded-full p-2 transition-all hover:bg-[#f3f3f3]"

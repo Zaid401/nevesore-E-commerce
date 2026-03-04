@@ -2,7 +2,14 @@ import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import type { Metadata } from "next";
 
-const contactHighlights = [
+type ContactHighlight = {
+  label: string;
+  value: string;
+  description: string;
+  link?: string;
+};
+
+const contactHighlights: ReadonlyArray<ContactHighlight> = [
   {
     label: "Email",
     value: "teams@neversore.com",
@@ -19,7 +26,7 @@ const contactHighlights = [
     value: "24–48 working hours",
     description: "We aim to resolve most tickets within two business days depending on queue volume.",
   },
-] as const;
+] ;
 
 const assistanceTopics = [
   {

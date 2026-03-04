@@ -7,42 +7,47 @@ const footerColumns = [
     links: [
       { label: "Upper Wear", href: "/upper" },
       { label: "Bottom Wear", href: "/bottom" },
-      { label: "Active Wear", href: "/active" },
+      //{ label: "Active Wear", href: "/active" },
       { label: "Best Sellers", href: "/best-sellers" },
     ],
   },
   {
     title: "Support",
     links: [
-      { label: "Contact Us", href: "#" },
-      { label: "Shipping Info", href: "#" },
-      { label: "Returns", href: "#" },
-      { label: "Size Guide", href: "#" },
+      { label: "Contact Us", href: "/contact" },
+      { label: "Shipping and Delivery", href: "/shipping-and-delivery" },
+      { label: "Returns & Exchanges", href: "/returns-and-exchanges" },
     ],
   },
   {
     title: "Company",
     links: [
       { label: "About Us", href: "#" },
-      { label: "Athletes", href: "#" },
-      { label: "Careers", href: "#" },
-      { label: "Terms", href: "#" },
+      { label: "Terms of Service", href: "/terms-of-service" },
+      //{ label: "Athletes", href: "#" },
+      //{ label: "Careers", href: "#" },
+      { label: "Privacy Policy", href: "/privacy-policy" },
+
+     
     ],
   },
   {
     title: "Help",
     links: [
-      { label: "Track Order", href: "#" },
-      { label: "FAQ", href: "#" },
-      { label: "Store Locator", href: "#" },
+    
+      { label: "FAQ", href: "/#faq" },
+      //{ label: "Store Locator", href: "#" },
+      { label: "Offers", href: "/offers" },
+      { label: "Leave a Feedback", href: "/leave-feedback" },
+
     ],
   },
 ];
 
 const socialIcons = [
   {
-   label: "Community",
-   href: "#",
+    label: "Community",
+    href: "#",
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
         <path
@@ -79,8 +84,7 @@ const socialIcons = [
 ];
 
 const legalLinks = [
-  { label: "Privacy Policy", href: "#" },
-  { label: "Terms of Service", href: "#" },
+
   { label: "Cookies", href: "#" },
 ];
 
@@ -92,7 +96,7 @@ export default function Footer() {
           <div className="col-span-2 flex flex-col gap-5 sm:gap-6 lg:col-span-1">
             <div className="flex items-center gap-3 sm:gap-4">
               <Link href="/" aria-label="Neversore Home">
-              <Image src="/darklogo.png" alt="Neversore logo" width={400} height={400} className="h-7 w-auto sm:h-8" />
+                <Image src="/darklogo.png" alt="Neversore logo" width={400} height={400} className="h-7 w-auto sm:h-8" />
               </Link>
             </div>
 
@@ -115,15 +119,14 @@ export default function Footer() {
           {footerColumns.map((column) => (
             <div
               key={column.title}
-              className={`flex flex-col gap-3 sm:gap-4 ${
-                column.title === "Shop"
-                  ? "order-1"
-                  : column.title === "Support"
-                    ? "order-2"
-                    : column.title === "Company"
-                      ? "order-3"
-                      : "order-4"
-              } sm:order-none`}
+              className={`flex flex-col gap-3 sm:gap-4 ${column.title === "Shop"
+                ? "order-1"
+                : column.title === "Support"
+                  ? "order-2"
+                  : column.title === "Company"
+                    ? "order-3"
+                    : "order-4"
+                } sm:order-none`}
             >
               <h3 className="text-xs font-semibold uppercase  text-white sm:text-sm">
                 {column.title}

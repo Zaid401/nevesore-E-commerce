@@ -6,6 +6,7 @@ import Link from "next/link";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import { useAuth } from "@/context/auth-context";
+import { FcGoogle } from "react-icons/fc";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function SignupPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,8 +29,8 @@ export default function SignupPage() {
 
     // Validation
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      setLoading(false);
+      setError("Passwords do not match.");
+      // setLoading(false); // Removed as per instruction
       return;
     }
 
@@ -38,7 +40,15 @@ export default function SignupPage() {
       return;
     }
 
-    const { error: signUpError } = await signUp(email, password, fullName);
+    setLoading(true); // Moved here as per instruction
+
+    let formattedPhone = phoneNumber.trim();
+    if (formattedPhone && !formattedPhone.startsWith("+")) {
+      const digitsOnly = formattedPhone.replace(/\D/g, "");
+      formattedPhone = digitsOnly.length === 10 ? `+91${digitsOnly}` : `+${digitsOnly}`;
+    }
+
+    const { error: signUpError } = await signUp(email, password, fullName, formattedPhone);
 
     if (signUpError) {
       setError(signUpError.message || "Failed to create account. Please try again.");
@@ -140,6 +150,20 @@ export default function SignupPage() {
                 </div>
 
                 <div className="flex flex-col gap-2 text-[10px] font-semibold uppercase text-neutral-600 sm:text-xs lg:text-xs">
+                  <label htmlFor="signup-phone">Phone Number</label>
+                  <input
+                    id="signup-phone"
+                    type="tel"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    placeholder="+1 234 567 8900"
+                    className="h-11 rounded-2xl border border-neutral-300 bg-neutral-50 px-4 text-xs font-medium text-neutral-900 placeholder:text-neutral-400 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 sm:h-12 sm:px-5 sm:text-sm lg:h-12 lg:px-5 lg:text-sm"
+                    required
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2 text-[10px] font-semibold uppercase text-neutral-600 sm:text-xs lg:text-xs">
                   <label htmlFor="signup-password">Password</label>
                   <div className="relative flex items-center">
                     <input
@@ -225,25 +249,8 @@ export default function SignupPage() {
                 onClick={signInWithGoogle}
                 className="flex h-11 items-center justify-center gap-3 rounded-2xl border border-neutral-300 bg-neutral-50 text-xs font-semibold uppercase text-neutral-900 transition-transform duration-150 hover:-translate-y-0.5 hover:border-neutral-400 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 sm:h-12 sm:text-sm lg:h-12 lg:text-sm"
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
-                  <path
-                    fill="currentColor"
-                    d="M21.35 11.1h-9.18v2.93h5.29a4.54 4.54 0 0 1-1.93 2.98l3.11 2.41a8.36 8.36 0 0 0 2.71-6.44 8.17 8.17 0 0 0-.21-1.88"
-                  />
-                  <path
-                    fill="currentColor"
-                    d="M12.17 21c2.45 0 4.51-.81 6.02-2.21l-3.11-2.41a4.7 4.7 0 0 1-6.93-2.48H5.9v2.5A8.44 8.44 0 0 0 12.17 21"
-                  />
-                  <path
-                    fill="currentColor"
-                    d="M7 13.9a4.69 4.69 0 0 1 0-3.8v-2.5H4.04a8.5 8.5 0 0 0 0 8.8l2.96-2.5"
-                  />
-                  <path
-                    fill="currentColor"
-                    d="M12.17 7.54a4.55 4.55 0 0 1 3.21 1.26l2.42-2.37A8.41 8.41 0 0 0 12.17 3a8.44 8.44 0 0 0-6.27 2.6l2.96 2.49a4.7 4.7 0 0 1 3.31-1.55"
-                  />
-                </svg>
-                Sign up with Google
+                <FcGoogle className="h-5 w-5" />
+                Continue with Google
               </button>
 
               <p className="text-center text-[10px] uppercase text-neutral-500 sm:text-xs lg:text-xs">

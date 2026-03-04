@@ -3,6 +3,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import { auth as firebaseAuth } from "@/lib/firebase";
+import { signInWithPhoneNumber } from "firebase/auth";
 
 interface UserProfile {
   id: string;
@@ -18,7 +20,9 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<{ error: Error | null }>;
   logout: () => Promise<void>;
-  signUp: (email: string, password: string, fullName?: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, fullName?: string, phone?: string) => Promise<{ error: Error | null }>;
+  loginWithPhone: (phoneNumber: string, appVerifier: any) => Promise<{ confirmationResult: any; error: Error | null }>;
+  verifyPhoneOTP: (confirmationResult: any, otp: string) => Promise<{ error: Error | null }>;
   signInWithGoogle: () => Promise<void>;
 }
 
@@ -71,10 +75,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Initialize auth state
   useEffect(() => {
+    // Check firebase auth state
+    const unsubscribeFirebase = firebaseAuth.onAuthStateChanged((firebaseUser) => {
+      if (firebaseUser?.phoneNumber) {
+        setUser(firebaseUser as any);
+        fetchProfile(firebaseUser.uid); // Will attempt to fetch by UID, may not exist
+        setLoading(false);
+      }
+    });
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
       if (session?.user) {
+        setUser(session.user);
         fetchProfile(session.user.id);
       }
       setLoading(false);
@@ -84,15 +97,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
       if (session?.user) {
+        setUser(session.user);
         fetchProfile(session.user.id);
       } else {
-        setProfile(null);
+        // If supabase logs out, check firebase
+        if (!firebaseAuth.currentUser) {
+          setUser(null);
+          setProfile(null);
+        }
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      unsubscribeFirebase();
+    };
   }, []);
 
   // Login function
@@ -116,8 +136,55 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // Phone Auth via Firebase
+  const loginWithPhone = async (phoneNumber: string, appVerifier: any) => {
+    try {
+      const confirmationResult = await signInWithPhoneNumber(firebaseAuth, phoneNumber, appVerifier);
+      return { confirmationResult, error: null };
+    } catch (error) {
+      console.error("Phone login error:", error);
+      return { confirmationResult: null, error: error as Error };
+    }
+  };
+
+  const verifyPhoneOTP = async (confirmationResult: any, otp: string) => {
+    try {
+      const result = await confirmationResult.confirm(otp);
+
+      // Look up user by phone number in Supabase
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('phone', result.user.phoneNumber)
+        .maybeSingle();
+
+      if (data) {
+        setProfile(data);
+      } else {
+        // Create basic profile
+        const newProfile = {
+          id: result.user.uid,
+          email: `${result.user.uid}@phone-auth.placeholder.com`,
+          phone: result.user.phoneNumber,
+        };
+        const { data: created } = await supabase
+          .from("profiles")
+          .upsert(newProfile, { onConflict: "id" })
+          .select('*')
+          .single();
+        if (created) setProfile(created);
+      }
+
+      setUser(result.user as any);
+      return { error: null };
+    } catch (error) {
+      console.error("OTP verification error:", error);
+      return { error: error as Error };
+    }
+  };
+
   // Sign up function
-  const signUp = async (email: string, password: string, fullName?: string) => {
+  const signUp = async (email: string, password: string, fullName?: string, phone?: string) => {
     try {
       const { error } = await supabase.auth.signUp({
         email,
@@ -125,6 +192,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         options: {
           data: {
             full_name: fullName,
+            phone: phone,
           },
         },
       });
@@ -152,6 +220,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     try {
       await supabase.auth.signOut();
+      await firebaseAuth.signOut();
       setUser(null);
       setProfile(null);
     } catch (error) {
@@ -166,6 +235,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         profile,
         loading,
         login,
+        loginWithPhone,
+        verifyPhoneOTP,
         logout,
         signUp,
         signInWithGoogle,

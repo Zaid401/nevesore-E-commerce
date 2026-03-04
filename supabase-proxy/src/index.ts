@@ -13,8 +13,19 @@
 
 // --- Config ---
 const SUPABASE_URL = "https://cqeosjuwkaxcnigqtymw.supabase.co";
-const ALLOWED_ORIGINS = "*";
+const ALLOWED_ORIGINS: string = "*";
 const ENABLED_SERVICES: SupabaseService[] = ['rest', 'auth', 'storage', 'realtime', 'functions', 'graphql'];
+
+type WorkerWebSocket = WebSocket & { accept(): void };
+type WorkerWebSocketResponse = Response & { webSocket?: WorkerWebSocket };
+type WorkerResponseInit = ResponseInit & { webSocket?: WorkerWebSocket };
+interface WorkerWebSocketPair {
+  0: WorkerWebSocket;
+  1: WorkerWebSocket;
+}
+
+// Minimal declaration so the file type-checks even outside a Workers-aware tsconfig.
+declare const WebSocketPair: { new (): WorkerWebSocketPair };
 
 // --- Types ---
 type SupabaseService = 'rest' | 'auth' | 'storage' | 'realtime' | 'functions' | 'graphql';
@@ -154,7 +165,7 @@ async function handleWebSocket(request: Request): Promise<Response> {
   headers.delete('cf-ipcountry');
 
   const upstreamResp = await fetch(upstreamUrl.toString(), { headers });
-  const upstreamWs = upstreamResp.webSocket;
+  const upstreamWs = (upstreamResp as WorkerWebSocketResponse).webSocket;
 
   if (!upstreamWs) {
     return new Response('Failed to establish upstream WebSocket', { status: 502 });
@@ -162,22 +173,24 @@ async function handleWebSocket(request: Request): Promise<Response> {
   upstreamWs.accept();
 
   // Create client WebSocket pair
-  const [client, server] = Object.values(new WebSocketPair());
+  const pair = new WebSocketPair();
+  const client = pair[0];
+  const server = pair[1];
   server.accept();
 
   // Relay messages bidirectionally
-  upstreamWs.addEventListener('message', (event) => {
+  upstreamWs.addEventListener('message', (event: MessageEvent) => {
     try { server.send(event.data); } catch {}
   });
-  server.addEventListener('message', (event) => {
+  server.addEventListener('message', (event: MessageEvent) => {
     try { upstreamWs.send(event.data); } catch {}
   });
 
   // Relay close events
-  upstreamWs.addEventListener('close', (event) => {
+  upstreamWs.addEventListener('close', (event: CloseEvent) => {
     try { server.close(event.code, event.reason); } catch {}
   });
-  server.addEventListener('close', (event) => {
+  server.addEventListener('close', (event: CloseEvent) => {
     try { upstreamWs.close(event.code, event.reason); } catch {}
   });
 
@@ -189,7 +202,7 @@ async function handleWebSocket(request: Request): Promise<Response> {
     try { upstreamWs.close(1011, 'Client error'); } catch {}
   });
 
-  return new Response(null, { status: 101, webSocket: client });
+  return new Response(null, { status: 101, webSocket: client } as WorkerResponseInit);
 }
 
 // --- Main handler ---
@@ -222,4 +235,4 @@ export default {
       return Response.json({ error: 'Internal proxy error' }, { status: 500 });
     }
   },
-} satisfies ExportedHandler;
+};

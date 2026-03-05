@@ -34,6 +34,10 @@ export default function RootLayout({
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="beforeInteractive"
         />
+        <Script
+          src="https://www.google.com/recaptcha/enterprise.js?render=6LfLfoAsAAAAABNKFMQWlpb3zRbGV5Wg89ideXqX"
+          strategy="beforeInteractive"
+        />
       </head>
       <body
         className={`${inter.variable} ${montserrat.variable} antialiased`}

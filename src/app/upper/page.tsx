@@ -5,7 +5,7 @@ export const revalidate = 60;
 export default function UpperPage() {
   return (
     <CategoryProductsPage
-      slug="upper"
+      slug="upper-wear"
       label="Upper Body"
       title="Upper Collection"
       description="Premium tops, tanks, and tees engineered for maximum performance and muscle definition."

@@ -13,16 +13,17 @@ interface ProductRow {
 }
 
 async function fetchCategoryProducts(slug: string): Promise<ProductRow[]> {
-  const { data: category } = await supabase
+  const { data: category, error: categoryError } = await supabase
     .from("categories")
     .select("id")
     .eq("slug", slug)
     .eq("is_active", true)
     .maybeSingle();
 
+  if (categoryError) console.error(`[fetchCategoryProducts] category lookup error (slug="${slug}"):`, categoryError);
   if (!category) return [];
 
-  const { data } = await supabase
+  const { data, error: productsError } = await supabase
     .from("products")
     .select(
       "id, name, base_price, sale_price, short_description, product_images(image_url, is_primary, sort_order)"
@@ -31,6 +32,7 @@ async function fetchCategoryProducts(slug: string): Promise<ProductRow[]> {
     .eq("is_active", true)
     .order("created_at", { ascending: false });
 
+  if (productsError) console.error(`[fetchCategoryProducts] products query error (slug="${slug}"):`, productsError);
   return (data as ProductRow[]) ?? [];
 }
 

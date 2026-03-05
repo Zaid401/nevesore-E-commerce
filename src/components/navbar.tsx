@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, KeyboardEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/cart-context";
 import { useWishlist } from "@/context/wishlist-context";
 import { useAuth } from "@/context/auth-context";
@@ -29,6 +30,7 @@ export default function Navbar() {
   const { itemCount } = useCart();
   const { itemCount: wishlistCount } = useWishlist();
   const { user, profile, logout } = useAuth();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -66,6 +68,23 @@ export default function Navbar() {
     setTimeout(() => {
       setMenuVisible(false);
     }, 300);
+  };
+
+  const handleSearchSubmit = () => {
+    const trimmed = searchQuery.trim();
+    if (!trimmed) return;
+    router.push(`/search?q=${encodeURIComponent(trimmed)}`);
+    setSearchOpen(false);
+    if (mobileMenuOpen) {
+      handleCloseMenu();
+    }
+  };
+
+  const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSearchSubmit();
+    }
   };
 
   return (
@@ -119,10 +138,12 @@ export default function Navbar() {
               placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
               className="w-full px-4 py-3 border border-[#e5e5e5] rounded-3xl bg-[#f9f9f9] text-sm placeholder-[#999999] focus:outline-none focus:ring-2 focus:ring-[#cc071e] focus:border-transparent focus:bg-white transition-all"
             />
             <button
               type="button"
+              onClick={handleSearchSubmit}
               className="absolute right-3 p-2 text-[#666666] hover:text-[#111111] transition-colors"
               aria-label="Search"
             >
@@ -348,6 +369,7 @@ export default function Navbar() {
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
                 autoFocus
                 className="w-full pl-10 pr-4 py-3 border border-[#e5e5e5] rounded-3xl bg-[#f9f9f9] text-sm placeholder-[#999999] focus:outline-none focus:ring-2 focus:ring-[#cc071e] focus:border-transparent focus:bg-white transition-all"
               />

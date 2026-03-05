@@ -43,7 +43,7 @@ export default function CallToAction() {
         </p>
         <div className="flex w-full items-center justify-center gap-2 sm:gap-4">
           <Link
-            href="/products"
+            href="/featured-products"
             className="inline-flex flex-1 items-center justify-center rounded-full bg-[#cc071e] px-2 py-2 text-[0.6rem] font-semibold uppercase  text-white shadow-[0_14px_30px_rgba(204,7,30,0.18)] transition-all duration-300 hover:bg-[#a70618] hover:shadow-[0_18px_34px_rgba(204,7,30,0.25)] sm:flex-initial sm:px-8 sm:py-4 sm:text-[0.75rem]  lg:text-sm"
           >
             Explore Collections

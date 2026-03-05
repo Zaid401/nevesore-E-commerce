@@ -5,28 +5,32 @@ const footerColumns = [
   {
     title: "Shop",
     links: [
-      { label: "Upper Wear", href: "/upper" },
-      { label: "Bottom Wear", href: "/bottom" },
       //{ label: "Active Wear", href: "/active" },
       { label: "Best Sellers", href: "/best-sellers" },
+      { label: "Upper Wear", href: "/upper" },
+
+      { label: "Bottom Wear", href: "/bottom" },
+
     ],
   },
   {
     title: "Support",
     links: [
       { label: "Contact Us", href: "/contact" },
-      { label: "Shipping and Delivery", href: "/shipping-and-delivery" },
       { label: "Returns & Exchanges", href: "/returns-and-exchanges" },
+      { label: "Shipping and Delivery", href: "/shipping-and-delivery" },
+
     ],
   },
   {
     title: "Company",
     links: [
       { label: "About Us", href: "#" },
-      { label: "Terms of Service", href: "/terms-of-service" },
       //{ label: "Athletes", href: "#" },
       //{ label: "Careers", href: "#" },
       { label: "Privacy Policy", href: "/privacy-policy" },
+      { label: "Terms of Service", href: "/terms-of-service" },
+
 
      
     ],

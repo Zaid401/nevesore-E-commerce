@@ -10,6 +10,7 @@ import ProductRecommendations from "@/components/product-recommendations";
 import { useCart } from "@/context/cart-context";
 import { supabase } from "@/lib/supabase";
 import { formatPrice, resolvePrice } from "@/types/product";
+import ProductSkeleton from "@/loading/product";
 
 interface ProductColor {
   id: string;
@@ -209,15 +210,7 @@ export default function ProductDetailPage() {
   };
 
   if (loading) {
-    return (
-      <main className="bg-[#f8f8f8] min-h-screen text-slate-900">
-        <Navbar />
-        <div className="max-w-7xl mx-auto px-4 py-16 text-center text-gray-400 text-xs sm:py-20 sm:text-sm lg:py-24 lg:text-sm">
-          Loading product
-        </div>
-        <Footer />
-      </main>
-    );
+    return <ProductSkeleton />;
   }
 
   if (!product) {

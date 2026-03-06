@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  async redirects() {
+    return [
+      { source: "/upper-wear", destination: "/upper", permanent: true },
+      { source: "/bottom-wear", destination: "/bottom", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

@@ -336,7 +336,7 @@ export default function LoginPage() {
                 </div>
               )}
 
-              {loginMethod === "standard" && (
+              {/* {loginMethod === "standard" && (
                 <button
                   type="button"
                   onClick={() => setLoginMethod("phone")}
@@ -344,7 +344,7 @@ export default function LoginPage() {
                 >
                   Continue with Phone
                 </button>
-              )}
+              )} */}
 
               {loginMethod !== "forgot" && (
                 <button

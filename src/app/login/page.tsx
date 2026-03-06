@@ -9,37 +9,37 @@ import Navbar from "@/components/navbar";
 import { useAuth } from "@/context/auth-context";
 import { FcGoogle } from "react-icons/fc";
 import { auth as firebaseAuth } from "@/lib/firebase";
-import { RecaptchaVerifier } from "firebase/auth";
+// import { RecaptchaVerifier } from "firebase/auth";
 
-const RECAPTCHA_SITE_KEY = "6LfLfoAsAAAAABNKFMQWlpb3zRbGV5Wg89ideXqX";
+// const RECAPTCHA_SITE_KEY = "6LfLfoAsAAAAABNKFMQWlpb3zRbGV5Wg89ideXqX";
 
-async function getRecaptchaToken(action: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    window.grecaptcha.enterprise.ready(async () => {
-      try {
-        const token = await window.grecaptcha.enterprise.execute(RECAPTCHA_SITE_KEY, { action });
-        resolve(token);
-      } catch (err) {
-        reject(err);
-      }
-    });
-  });
-}
+// async function getRecaptchaToken(action: string): Promise<string> {
+//   return new Promise((resolve, reject) => {
+//     window.grecaptcha.enterprise.ready(async () => {
+//       try {
+//         const token = await window.grecaptcha.enterprise.execute(RECAPTCHA_SITE_KEY, { action });
+//         resolve(token);
+//       } catch (err) {
+//         reject(err);
+//       }
+//     });
+//   });
+// }
 
-async function verifyRecaptchaToken(token: string, action: string): Promise<void> {
-  const res = await fetch(
-    "https://cqeosjuwkaxcnigqtymw.supabase.co/functions/v1/verify-recaptcha",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token, action }),
-    }
-  );
-  const data = await res.json();
-  if (!data.success) {
-    throw new Error(data.message || "reCAPTCHA verification failed.");
-  }
-}
+// async function verifyRecaptchaToken(token: string, action: string): Promise<void> {
+//   const res = await fetch(
+//     "https://cqeosjuwkaxcnigqtymw.supabase.co/functions/v1/verify-recaptcha",
+//     {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ token, action }),
+//     }
+//   );
+//   const data = await res.json();
+//   if (!data.success) {
+//     throw new Error(data.message || "reCAPTCHA verification failed.");
+//   }
+// }
 
 export default function LoginPage() {
   const router = useRouter();
@@ -62,14 +62,14 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    try {
-      const token = await getRecaptchaToken("LOGIN");
-      await verifyRecaptchaToken(token, "LOGIN");
-    } catch (err: any) {
-      setError(err.message || "reCAPTCHA check failed. Please try again.");
-      setLoading(false);
-      return;
-    }
+    // try {
+    //   const token = await getRecaptchaToken("LOGIN");
+    //   await verifyRecaptchaToken(token, "LOGIN");
+    // } catch (err: any) {
+    //   setError(err.message || "reCAPTCHA check failed. Please try again.");
+    //   setLoading(false);
+    //   return;
+    // }
 
     const { error: loginError } = await login(email, password);
 
@@ -87,9 +87,9 @@ export default function LoginPage() {
     setError("");
 
     try {
-      // reCAPTCHA Enterprise check
-      const token = await getRecaptchaToken("PHONE_LOGIN");
-      await verifyRecaptchaToken(token, "PHONE_LOGIN");
+      // reCAPTCHA Enterprise check (disabled)
+      // const token = await getRecaptchaToken("PHONE_LOGIN");
+      // await verifyRecaptchaToken(token, "PHONE_LOGIN");
 
       let formattedPhone = phoneNumber.trim();
       // Ensure E.164 format: Must start with a '+' and contain country code.
@@ -99,12 +99,12 @@ export default function LoginPage() {
         formattedPhone = digitsOnly.length === 10 ? `+91${digitsOnly}` : `+${digitsOnly}`;
       }
 
-      // Firebase phone auth still requires its own RecaptchaVerifier internally.
-      if (!(window as any).recaptchaVerifier) {
-        (window as any).recaptchaVerifier = new RecaptchaVerifier(firebaseAuth, "recaptcha-container", {
-          size: "invisible",
-        });
-      }
+      // Firebase phone auth still requires its own RecaptchaVerifier internally (disabled).
+      // if (!(window as any).recaptchaVerifier) {
+      //   (window as any).recaptchaVerifier = new RecaptchaVerifier(firebaseAuth, "recaptcha-container", {
+      //     size: "invisible",
+      //   });
+      // }
       const { confirmationResult: confResult, error: phoneError } = await loginWithPhone(formattedPhone, (window as any).recaptchaVerifier);
       if (phoneError) throw phoneError;
       setConfirmationResult(confResult);
@@ -309,7 +309,7 @@ export default function LoginPage() {
                     </div>
                   )}
 
-                  <div id="recaptcha-container"></div>
+                  {/* <div id="recaptcha-container"></div> */}
 
                   <button
                     type="submit"

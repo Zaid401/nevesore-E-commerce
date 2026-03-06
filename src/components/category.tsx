@@ -164,13 +164,17 @@ function InfiniteCarousel({
     isDraggingRef.current = false;
     dragStartX.current = e.clientX;
     dragStartOffset.current = offset;
-    trackRef.current?.setPointerCapture(e.pointerId);
     stopAuto();
   };
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (Math.abs(e.clientX - dragStartX.current) > 5) {
+      isDraggingRef.current = true;
+    }
+  };
   const onPointerUp = (e: React.PointerEvent) => {
+    if (!isDraggingRef.current) return;
     const delta = dragStartX.current - e.clientX;
     if (Math.abs(delta) > 40) {
-      isDraggingRef.current = true;
       moveTo(dragStartOffset.current + (delta > 0 ? 1 : -1));
     }
   };
@@ -188,6 +192,7 @@ function InfiniteCarousel({
         ref={trackRef}
         className="overflow-hidden cursor-grab active:cursor-grabbing select-none"
         onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
       >
         <div

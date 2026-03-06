@@ -4,8 +4,8 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   async redirects() {
     return [
-      { source: "/upper-wear", destination: "/upper", permanent: true },
-      { source: "/bottom-wear", destination: "/bottom", permanent: true },
+      { source: "/upper", destination: "/upper-wear", permanent: true },
+      { source: "/bottom", destination: "/bottom-wear", permanent: true },
     ];
   },
   async headers() {

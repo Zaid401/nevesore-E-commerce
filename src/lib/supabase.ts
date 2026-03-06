@@ -10,9 +10,4 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     detectSessionInUrl: true,
     storage: typeof window !== 'undefined' ? window.localStorage : undefined,
   },
-  global: {
-    headers: typeof window !== 'undefined' ? {
-      'apikey': supabaseAnonKey,
-    } : {},
-  },
 });

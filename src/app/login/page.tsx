@@ -43,8 +43,8 @@ async function verifyRecaptchaToken(token: string, action: string): Promise<void
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, signInWithGoogle, loginWithPhone, verifyPhoneOTP } = useAuth();
-  const [loginMethod, setLoginMethod] = useState<"standard" | "phone">("standard");
+  const { login, signInWithGoogle, loginWithPhone, verifyPhoneOTP, resetPassword } = useAuth();
+  const [loginMethod, setLoginMethod] = useState<"standard" | "phone" | "forgot">("standard");
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -54,6 +54,8 @@ export default function LoginPage() {
   const [confirmationResult, setConfirmationResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotSuccess, setForgotSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,6 +130,19 @@ export default function LoginPage() {
     }
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    const { error: resetError } = await resetPassword(forgotEmail);
+    setLoading(false);
+    if (resetError) {
+      setError(resetError.message || "Failed to send reset email. Please try again.");
+    } else {
+      setForgotSuccess(true);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-neutral-50 text-neutral-900">
       <Navbar />
@@ -158,6 +173,7 @@ export default function LoginPage() {
                     <input
                       id="login-email"
                       type="email"
+                      autoComplete="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="enter your email address"
@@ -170,14 +186,19 @@ export default function LoginPage() {
                   <div className="flex flex-col gap-2 text-[10px] font-semibold uppercase text-neutral-600 sm:text-xs lg:text-xs">
                     <div className="flex items-center justify-between">
                       <label htmlFor="login-password">Password</label>
-                      <a href="#" className="text-[10px] font-bold text-red-600 transition-colors hover:text-red-700">
+                      <button
+                        type="button"
+                        onClick={() => { setLoginMethod("forgot"); setError(""); setForgotSuccess(false); }}
+                        className="text-[10px] font-bold text-red-600 transition-colors hover:text-red-700"
+                      >
                         Forgot?
-                      </a>
+                      </button>
                     </div>
                     <div className="relative flex items-center">
                       <input
                         id="login-password"
                         type={showPassword ? "text" : "password"}
+                        autoComplete="current-password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
@@ -210,6 +231,49 @@ export default function LoginPage() {
                     {loading ? "Signing In..." : "Sign In"}
                   </button>
                 </form>
+              ) : loginMethod === "forgot" ? (
+                <div className="flex flex-col gap-5 sm:gap-6 lg:gap-6">
+                  {forgotSuccess ? (
+                    <div className="rounded-2xl bg-green-50 border border-green-200 px-4 py-4 text-xs text-green-700 sm:text-sm">
+                      <p className="font-bold uppercase">Check your inbox</p>
+                      <p className="mt-1">A password reset link has been sent to <span className="font-semibold">{forgotEmail}</span>. Follow the link to set a new password.</p>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleForgotPassword} className="flex flex-col gap-5 sm:gap-6 lg:gap-6">
+                      <div className="flex flex-col gap-1">
+                        <p className="text-xs text-neutral-600 sm:text-sm">Enter the email address associated with your account and we&apos;ll send you a reset link.</p>
+                      </div>
+                      <div className="flex flex-col gap-2 text-[10px] font-semibold uppercase text-neutral-600 sm:text-xs lg:text-xs">
+                        <label htmlFor="forgot-email">Email Address</label>
+                        <input
+                          id="forgot-email"
+                          type="email"
+                          autoComplete="email"
+                          value={forgotEmail}
+                          onChange={(e) => setForgotEmail(e.target.value)}
+                          placeholder="enter your email address"
+                          className="h-11 rounded-2xl border border-neutral-300 bg-neutral-50 px-4 text-xs font-medium text-neutral-900 placeholder:text-neutral-400 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 sm:h-12 sm:px-5 sm:text-sm lg:h-12 lg:px-5 lg:text-sm"
+                          required
+                          disabled={loading}
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="h-11 rounded-2xl bg-red-600 text-xs font-bold uppercase text-white transition-transform duration-150 hover:-translate-y-0.5 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 sm:h-12 sm:text-sm lg:h-12 lg:text-sm"
+                      >
+                        {loading ? "Sending..." : "Send Reset Link"}
+                      </button>
+                    </form>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => { setLoginMethod("standard"); setError(""); setForgotSuccess(false); }}
+                    className="text-[10px] uppercase text-neutral-500 hover:text-neutral-900 sm:text-xs lg:text-xs"
+                  >
+                    Back to Sign In
+                  </button>
+                </div>
               ) : (
                 <form onSubmit={otpSent ? handleVerifyOTP : handlePhoneLogin} className="flex flex-col gap-5 sm:gap-6 lg:gap-6">
                   {!otpSent ? (
@@ -218,6 +282,7 @@ export default function LoginPage() {
                       <input
                         id="login-phone"
                         type="tel"
+                        autoComplete="tel"
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                         placeholder="+1 234 567 8900"
@@ -232,6 +297,8 @@ export default function LoginPage() {
                       <input
                         id="login-otp"
                         type="text"
+                        autoComplete="one-time-code"
+                        inputMode="numeric"
                         value={otp}
                         onChange={(e) => setOtp(e.target.value)}
                         placeholder="123456"
@@ -261,11 +328,13 @@ export default function LoginPage() {
                 </form>
               )}
 
-              <div className="flex items-center gap-4 text-[10px] uppercase text-neutral-400 sm:text-xs lg:text-xs">
-                <span className="h-px flex-1 bg-neutral-300" aria-hidden />
-                <span>Or</span>
-                <span className="h-px flex-1 bg-neutral-300" aria-hidden />
-              </div>
+              {loginMethod !== "forgot" && (
+                <div className="flex items-center gap-4 text-[10px] uppercase text-neutral-400 sm:text-xs lg:text-xs">
+                  <span className="h-px flex-1 bg-neutral-300" aria-hidden />
+                  <span>Or</span>
+                  <span className="h-px flex-1 bg-neutral-300" aria-hidden />
+                </div>
+              )}
 
               {loginMethod === "standard" && (
                 <button
@@ -277,14 +346,16 @@ export default function LoginPage() {
                 </button>
               )}
 
-              <button
-                type="button"
-                onClick={signInWithGoogle}
-                className="flex h-11 items-center justify-center gap-3 rounded-2xl border border-neutral-300 bg-neutral-50 text-xs font-semibold uppercase text-neutral-900 transition-transform duration-150 hover:-translate-y-0.5 hover:border-neutral-400 sm:h-12 sm:text-sm lg:h-12 lg:text-sm"
-              >
-                <FcGoogle className="h-5 w-5" />
-                Continue with Google
-              </button>
+              {loginMethod !== "forgot" && (
+                <button
+                  type="button"
+                  onClick={signInWithGoogle}
+                  className="flex h-11 items-center justify-center gap-3 rounded-2xl border border-neutral-300 bg-neutral-50 text-xs font-semibold uppercase text-neutral-900 transition-transform duration-150 hover:-translate-y-0.5 hover:border-neutral-400 sm:h-12 sm:text-sm lg:h-12 lg:text-sm"
+                >
+                  <FcGoogle className="h-5 w-5" />
+                  Continue with Google
+                </button>
+              )}
 
               <p className="text-center text-[10px] uppercase text-neutral-500 sm:text-xs lg:text-xs">
                 Don&apos;t have an account?{" "}

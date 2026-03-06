@@ -24,6 +24,7 @@ interface AuthContextType {
   loginWithPhone: (phoneNumber: string, appVerifier: any) => Promise<{ confirmationResult: any; error: Error | null }>;
   verifyPhoneOTP: (confirmationResult: any, otp: string) => Promise<{ error: Error | null }>;
   signInWithGoogle: () => Promise<void>;
+  resetPassword: (email: string) => Promise<{ error: Error | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -206,6 +207,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // Reset password via Edge Function (bypasses Supabase SMTP, uses Resend REST API directly)
+  const resetPassword = async (email: string) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/send-reset-email`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            redirectTo: `${window.location.origin}/reset-password`,
+          }),
+        }
+      );
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error ?? "Failed to send reset email");
+      }
+      return { error: null };
+    } catch (error) {
+      console.error("Reset password error:", error);
+      return { error: error as Error };
+    }
+  };
+
   // Google OAuth
   const signInWithGoogle = async () => {
     await supabase.auth.signInWithOAuth({
@@ -240,6 +266,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         logout,
         signUp,
         signInWithGoogle,
+        resetPassword,
       }}
     >
       {children}

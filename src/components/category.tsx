@@ -5,14 +5,7 @@ import Link from "next/link";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 
-// Local image fallback by slug (used when image_url is null in DB)
-const LOCAL_IMAGES: Record<string, string> = {
-  upper: "/images/categories/top.png",
-  bottom: "/images/categories/bottom.png",
-  active: "/images/categories/active.png",
-  casual: "/images/categories/active.png",
-};
-const DEFAULT_IMAGE = "/images/categories/active.png";
+
 
 interface Category {
   id: string;
@@ -24,6 +17,8 @@ interface Category {
 }
 
 // ─── Single card ───────────────────────────────────────────────────────────────
+const FALLBACK_IMAGE = "/images/categories/active.png";
+
 function CategoryCard({
   category,
   isDraggingRef,
@@ -33,22 +28,24 @@ function CategoryCard({
   isDraggingRef?: React.MutableRefObject<boolean>;
   tabIndex?: number;
 }) {
-  const image =
-    category.image_url ?? LOCAL_IMAGES[category.slug] ?? DEFAULT_IMAGE;
+  const [imgSrc, setImgSrc] = useState<string>(
+    category.image_url || FALLBACK_IMAGE
+  );
 
   return (
     <Link
       href={`/${category.slug}`}
       onClick={(e) => isDraggingRef?.current && e.preventDefault()}
       tabIndex={tabIndex}
-      className="group relative flex w-full overflow-hidden rounded-2xl border border-neutral-100 bg-neutral-50 shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-shadow duration-300 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
+      className="group relative flex w-full overflow-hidden rounded-2xl border border-neutral-100 bg-neutral-900 shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-shadow duration-300 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
       style={{ aspectRatio: "4/5" }}
     >
       <div className="absolute inset-0">
         <Image
-          src={image}
+          src={imgSrc}
           alt={`${category.name} category`}
           fill
+          onError={() => setImgSrc(FALLBACK_IMAGE)}
           className="object-cover opacity-90 transition-all duration-500 group-hover:opacity-100 group-hover:scale-[1.03]"
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 45vw, 80vw"
         />
@@ -314,19 +311,34 @@ function InfiniteCarousel({
 function SkeletonGrid() {
   return (
     <>
-      {/* Mobile skeleton - single card */}
+      {/* Mobile: single card + carousel controls */}
       <div className="sm:hidden">
         <div
-          className="rounded-2xl bg-neutral-100 animate-pulse"
+          className="rounded-2xl bg-neutral-200 animate-pulse"
           style={{ aspectRatio: "4/5" }}
         />
+        <div className="mt-6 flex items-center justify-center gap-4">
+          <div className="h-8 w-8 rounded-full bg-neutral-200 animate-pulse" />
+          <div className="flex items-center gap-2">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div
+                key={i}
+                className={`rounded-full bg-neutral-200 animate-pulse ${
+                  i === 0 ? "h-2 w-6" : "h-2 w-2"
+                }`}
+              />
+            ))}
+          </div>
+          <div className="h-8 w-8 rounded-full bg-neutral-200 animate-pulse" />
+        </div>
       </div>
-      {/* Desktop skeleton - grid */}
+
+      {/* Desktop: 4-card grid */}
       <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[...Array(4)].map((_, i) => (
+        {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            className="rounded-2xl bg-neutral-100 animate-pulse"
+            className="rounded-2xl bg-neutral-200 animate-pulse"
             style={{ aspectRatio: "4/5" }}
           />
         ))}

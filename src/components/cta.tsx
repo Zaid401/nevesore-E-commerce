@@ -32,7 +32,7 @@ export default function CallToAction() {
         <div className="flex flex-col gap-1 text-left sm:gap-2 lg:gap-3">
           
           <h2
-            className={`${montserrat.className} text-[18px] sm:text-[22px] lg:text-[27px] font-bold uppercase leading-tight text-[#101010]`}
+            className={`${montserrat.className} text-[15px] sm:text-[20px] lg:text-[25px] font-bold uppercase leading-tight text-[#101010]`}
           >
             Follow us on Instagram
           </h2>

@@ -15,7 +15,7 @@ const montserrat = Montserrat({
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-const shareImage = "/favicon.png";
+const shareImage = `${siteUrl}/favicon.png`;
 
 export const metadata: Metadata = {
   title: "NEVERSORE - Premium Gym Outfits",

@@ -7,24 +7,12 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/context/cart-context";
 import { useWishlist } from "@/context/wishlist-context";
 import { useAuth } from "@/context/auth-context";
+import { supabase } from "@/lib/supabase";
 
-const navLinks = [
-  { label: "Upper", href: "/upper" },
-  { label: "Bottom", href: "/bottom" },
-  { label: "Active", href: "/active" },
-  { label: "Casual", href: "/casual" },
-];
-
-const drawerLinks = [
-  { label: "Home", href: "/" },
-  { label: "Shop", href: "/upper" },
-  { label: "Categories", href: "/" },
-  { label: "Best Sellers", href: "/best-sellers" },
-  { label: "Wishlist", href: "/wishlist" },
-  { label: "My Account", href: "/account" },
-  { label: "Track Order", href: "/account?tab=orders" },
-  { label: "Contact Us", href: "/" },
-];
+interface NavCategory {
+  name: string;
+  slug: string;
+}
 
 export default function Navbar() {
   const { itemCount } = useCart();
@@ -38,14 +26,26 @@ export default function Navbar() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(true);
+  const [navCategories, setNavCategories] = useState<NavCategory[]>([]);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 0);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    supabase
+      .from("categories")
+      .select("name, slug")
+      .eq("is_active", true)
+      .is("parent_id", null)
+      .order("sort_order", { ascending: true })
+      .then(({ data }) => {
+        if (data) setNavCategories(data as NavCategory[]);
+      });
   }, []);
 
   const handleMenuToggle = () => {
@@ -114,13 +114,13 @@ export default function Navbar() {
                 </button>
                 <div className="absolute left-0 top-full z-50 w-130 translate-y-2 rounded-2xl border border-[#e5e5e5] bg-white p-6 text-left shadow-[0_12px_30px_rgba(0,0,0,0.08)] opacity-0 transition-all duration-200 ease-out pointer-events-none group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
                   <ul className="grid grid-cols-2 gap-4 text-xs font-bold uppercase text-[#666666]">
-                    {navLinks.map((link) => (
-                      <li key={link.label}>
+                    {navCategories.map((cat) => (
+                      <li key={cat.slug}>
                         <Link
-                          href={link.href}
+                          href={`/${cat.slug}`}
                           className="inline-flex w-full items-center justify-between rounded-xl border border-transparent px-4 py-3 transition-all hover:border-[#e5e5e5] hover:text-[#cc071e] hover:bg-[#f9f9f9]"
                         >
-                          {link.label}
+                          {cat.name}
                           <span className="text-[0.6rem] text-[#666666]">→</span>
                         </Link>
                       </li>
@@ -441,14 +441,14 @@ export default function Navbar() {
                 <div className="mb-6">
                   <h3 className="text-xs font-bold uppercase text-[#666666] mb-4">Categories</h3>
                   <div className="space-y-1">
-                    {navLinks.map((link) => (
+                    {navCategories.map((cat) => (
                       <Link
-                        key={link.label}
-                        href={link.href}
+                        key={cat.slug}
+                        href={`/${cat.slug}`}
                         className="block px-4 py-3 rounded-lg text-sm font-semibold text-[#111111] transition-all hover:text-[#cc071e] hover:bg-[#f3f3f3]"
                         onClick={handleCloseMenu}
                       >
-                        {link.label}
+                        {cat.name}
                       </Link>
                     ))}
                   </div>
@@ -461,7 +461,13 @@ export default function Navbar() {
                 <div className="mb-6">
                   <h3 className="text-xs font-bold uppercase text-[#666666] mb-4">Menu</h3>
                   <div className="space-y-1">
-                    {drawerLinks.map((link) => (
+                    {[
+                      { label: "Home", href: "/" },
+                      { label: "Best Sellers", href: "/best-sellers" },
+                      { label: "My Account", href: "/account" },
+                      { label: "Track Order", href: "/account?tab=orders" },
+                      { label: "Contact Us", href: "/contact" },
+                    ].map((link) => (
                       <Link
                         key={link.label}
                         href={link.href}

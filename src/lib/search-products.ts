@@ -111,7 +111,7 @@ export async function searchProducts(rawQuery: string): Promise<ProductSearchRes
     return [];
   }
 
-  return ((data as ProductRow[]) ?? []).map(mapRowToResult);
+  return ((data as unknown as ProductRow[]) ?? []).map(mapRowToResult);
 }
 
 function normalizeQuery(raw: string): string {

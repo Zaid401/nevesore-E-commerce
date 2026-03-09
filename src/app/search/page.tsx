@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Navbar from "@/components/navbar";
@@ -31,7 +31,7 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: "price_high_to_low", label: "Price: High to Low" },
 ];
 
-export default function SearchPage() {
+function SearchPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialQuery = searchParams.get("q") ?? "";
@@ -204,6 +204,14 @@ export default function SearchPage() {
 
       <Footer />
     </main>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense>
+      <SearchPageInner />
+    </Suspense>
   );
 }
 
@@ -380,7 +388,7 @@ async function fetchBestSellerFallback(): Promise<BestSellerProduct[]> {
     return [];
   }
 
-  return ((data as BestSellerRow[]) ?? []).map(mapBestSellerRow);
+  return ((data as unknown as BestSellerRow[]) ?? []).map(mapBestSellerRow);
 }
 
 function mapBestSellerRow(row: BestSellerRow): BestSellerProduct {

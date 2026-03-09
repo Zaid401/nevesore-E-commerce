@@ -28,6 +28,7 @@ export default function Navbar() {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [navCategories, setNavCategories] = useState<NavCategory[]>([]);
+  const [promoVisible, setPromoVisible] = useState(true);
   const searchButtonRef = useRef<HTMLButtonElement | null>(null);
   const searchBarRef = useRef<HTMLDivElement | null>(null);
 
@@ -102,8 +103,42 @@ export default function Navbar() {
     }
   };
 
+  const drawerOffset = searchOpen ? (promoVisible ? "170px" : "140px") : "10px";
+  const mobileSpacerHeightClass = (() => {
+    if (searchOpen) {
+      return promoVisible ? "h-40" : "h-32";
+    }
+    return promoVisible ? "h-8" : "h-4";
+  })();
+
   return (
     <>
+      {promoVisible && (
+        <div className="hidden md:flex w-full items-center justify-center bg-[#f4f1ed] text-[#111111] text-sm tracking-tight py-2 border-b border-[#e5e5e5] relative">
+          <div className="flex items-center gap-2">
+            <span>Get 15% off regular-priced items.</span>
+            <Link
+              href="/signup"
+              className="font-semibold underline underline-offset-4 decoration-[#111111] hover:text-[#cc071e]"
+            >
+              Sign Up
+            </Link>
+          </div>
+          <button
+            type="button"
+            aria-label="Hide announcement"
+            className="absolute right-6 rounded-full p-1.5 hover:bg-[#e5e5e5] transition"
+            onClick={() => setPromoVisible(false)}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 text-[#111111]">
+              <path
+                fill="currentColor"
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"
+              />
+            </svg>
+          </button>
+        </div>
+      )}
       {/* Desktop & Tablet Navbar */}
       <header className={`hidden md:block w-full bg-white z-40 transition-shadow duration-200 ${scrolled ? "shadow-[0_4px_12px_rgba(0,0,0,0.08)]" : "shadow-[0_2px_8px_rgba(0,0,0,0.04)]"}`}>
         <nav className="flex w-full flex-wrap items-center justify-between gap-6 px-6 py-4 text-[#111111] sm:px-10 lg:px-14">
@@ -289,6 +324,30 @@ export default function Navbar() {
 
       {/* Mobile Navbar - Premium 2-Row Layout */}
       <header className="md:hidden fixed top-0 left-0 right-0 bg-white z-40 w-full border-b border-[#e5e5e5]" style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+        {promoVisible && (
+          <div className="flex items-center justify-center px-4 py-[2px] text-[12px] font-semibold text-[#111111] bg-[#f4f1ed] border-b border-[#e5e5e5]">
+            <span className="mr-1 flex-1 text-center">Get 15% off regular-priced items.</span>
+            <Link
+              href="/signup"
+              className="underline underline-offset-4 decoration-[#111111]"
+            >
+              Sign Up
+            </Link>
+            <button
+              type="button"
+              aria-label="Hide announcement"
+              className="ml-2 rounded-full p-1.5 hover:bg-[#e5e5e5] transition"
+              onClick={() => setPromoVisible(false)}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 text-[#111111]">
+                <path
+                  fill="currentColor"
+                  d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
         {/* ROW 1: Main Navigation */}
         <div className="flex items-center px-4 py-3 border-b border-[#f3f3f3]">
           {/* Left: Hamburger Menu */}
@@ -391,7 +450,7 @@ export default function Navbar() {
             className="fixed inset-0 bg-black/30 z-30 md:hidden"
             onClick={handleCloseMenu}
             style={{
-              top: searchOpen ? "170px" : "10px",
+              top: drawerOffset,
               opacity: mobileMenuOpen ? 1 : 0,
               transition: "opacity 300ms ease-out",
               pointerEvents: mobileMenuOpen ? "auto" : "none",
@@ -402,7 +461,7 @@ export default function Navbar() {
           <div
             className="fixed left-0 top-0 bottom-0 bg-white z-40 w-72 max-w-[85vw] shadow-lg md:hidden flex flex-col border-r border-[#e5e5e5]"
             style={{
-              paddingTop: searchOpen ? "170px" : "10px",
+              paddingTop: drawerOffset,
               transform: mobileMenuOpen ? "translateX(0)" : "translateX(-100%)",
               opacity: mobileMenuOpen ? 1 : 0,
               transition: "transform 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 300ms ease-out",
@@ -530,7 +589,7 @@ export default function Navbar() {
       )}
 
       {/* Spacer for fixed navbar */}
-      <div className={`md:hidden transition-all duration-300 ${searchOpen ? "h-35" : "h-2.5"}`} />
+      <div className={`md:hidden transition-all duration-300 ${mobileSpacerHeightClass}`} />
     </>
   );
 }

@@ -20,7 +20,7 @@ export default function CallToAction() {
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 sm:px-6 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div className="relative overflow-hidden bg-white shadow-[0_25px_60px_rgba(0,0,0,0.08)]">
           <Image
-            src="/CTA.PNG"
+            src="/call-to-action.png"
             alt="Neversore campaign poster"
             width={900}
             height={1200}

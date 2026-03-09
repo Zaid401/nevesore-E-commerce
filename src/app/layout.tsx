@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import Script from "next/script";
@@ -16,6 +17,12 @@ const montserrat = Montserrat({
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const shareImage = `${siteUrl}/favicon.png`;
+const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "9166660436";
+const whatsappMessage = encodeURIComponent(
+  process.env.NEXT_PUBLIC_WHATSAPP_MESSAGE ||
+    "Hey, I want to know about upcoming products."
+);
+const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
 export const metadata: Metadata = {
   title: "NEVERSORE - Premium Gym Outfits",
@@ -70,6 +77,24 @@ export default function RootLayout({
         className={`${inter.variable} ${montserrat.variable} antialiased`}
       >
         <Providers>{children}</Providers>
+        <a
+          href={whatsappLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat with us on WhatsApp"
+          className="fixed bottom-4 right-4 z-50 flex items-center gap-3 px-4 py-3  font-semibold md:bottom-8 md:right-8 md:hidden"
+        >
+          <span className="sr-only">Open WhatsApp chat</span>
+          <Image
+            src="/social.png"
+            alt="WhatsApp"
+            width={45}
+            height={45}
+            priority
+            className="h-[45px] w-[45px]"
+          />
+          <span className="hidden sm:inline">Chat on WhatsApp</span>
+        </a>
       </body>
     </html>
   );

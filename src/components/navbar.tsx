@@ -327,12 +327,7 @@ export default function Navbar() {
         {promoVisible && (
           <div className="flex items-center justify-center px-4 py-[2px] text-[12px] font-semibold text-[#111111] bg-[#f4f1ed] border-b border-[#e5e5e5]">
             <span className="mr-1 flex-1 text-center">Get 15% off regular-priced items.</span>
-            <Link
-              href="/signup"
-              className="underline underline-offset-4 decoration-[#111111]"
-            >
-              Sign Up
-            </Link>
+           
             <button
               type="button"
               aria-label="Hide announcement"

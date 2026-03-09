@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import ProductRecommendations from "@/components/product-recommendations";
 import { useCart } from "@/context/cart-context";
 import { supabase } from "@/lib/supabase";
 import { formatPrice, resolvePrice } from "@/types/product";
@@ -425,8 +424,6 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
-
-      <ProductRecommendations currentProductId={product.id} />
 
       <Footer />
 

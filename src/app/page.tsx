@@ -18,7 +18,7 @@ export default function Home() {
       <FeaturedProducts />
       {/* <WhyChooseUs /> */}
       {/* <FaqSection /> */}
-      {/* <CallToAction /> */}
+       <CallToAction />
       <Footer />
     </main>
   );

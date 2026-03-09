@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, KeyboardEvent } from "react";
+import { useState, useEffect, useRef, KeyboardEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/cart-context";
+import { Search, ShoppingBag } from "lucide-react";
 import { useWishlist } from "@/context/wishlist-context";
 import { useAuth } from "@/context/auth-context";
 import { supabase } from "@/lib/supabase";
@@ -27,6 +28,8 @@ export default function Navbar() {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [navCategories, setNavCategories] = useState<NavCategory[]>([]);
+  const searchButtonRef = useRef<HTMLButtonElement | null>(null);
+  const searchBarRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,6 +72,18 @@ export default function Navbar() {
       setMenuVisible(false);
     }, 300);
   };
+
+  useEffect(() => {
+    if (!searchOpen) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (searchBarRef.current?.contains(target)) return;
+      if (searchButtonRef.current?.contains(target)) return;
+      setSearchOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [searchOpen]);
 
   const handleSearchSubmit = () => {
     const trimmed = searchQuery.trim();
@@ -147,12 +162,7 @@ export default function Navbar() {
               className="absolute right-3 p-2 text-[#666666] hover:text-[#111111] transition-colors"
               aria-label="Search"
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
-                <path
-                  fill="currentColor"
-                  d="M15.5 14h-.79l-.28-.27A6 6 0 1 0 14 15.5l.27.28v.79l5 5L20.49 19zm-6 0a4 4 0 1 1 0-8 4 4 0 0 1 0 8"
-                />
-              </svg>
+              <Search className="h-5 w-5" color="#111111" strokeWidth={1.8} />
             </button>
           </div>
 
@@ -182,12 +192,11 @@ export default function Navbar() {
               className="relative rounded-full p-2.5 lg:p-2 transition-colors hover:bg-[#f3f3f3]"
               aria-label="Cart"
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 lg:h-6 lg:w-6">
-                <path
-                  fill="currentColor"
-                  d="M7 4h-2l-1 2v2h2l3 9h9l3-11H8.42zM10 20a1 1 0 1 1-2 0 1 1 0 0 1 2 0m8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"
-                />
-              </svg>
+              <ShoppingBag
+                className="h-5 w-5 lg:h-6 lg:w-6"
+                color="#111111"
+                strokeWidth={1.8}
+              />
               {mounted && itemCount > 0 && (
                 <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#cc071e] px-1 text-[10px] font-bold text-white">
                   {itemCount}
@@ -326,13 +335,9 @@ export default function Navbar() {
               className="rounded-full p-2.5 transition-all hover:bg-[#f3f3f3]"
               aria-label="Search"
               aria-expanded={searchOpen}
+              ref={searchButtonRef}
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 text-[#111111]">
-                <path
-                  fill="currentColor"
-                  d="M15.5 14h-.79l-.28-.27A6 6 0 1 0 14 15.5l.27.28v.79l5 5L20.49 19zm-6 0a4 4 0 1 1 0-8 4 4 0 0 1 0 8"
-                />
-              </svg>
+              <Search className="h-6 w-6" color="#111111" strokeWidth={1.8} />
             </button>
 
             {/* Cart Icon */}
@@ -341,12 +346,11 @@ export default function Navbar() {
               className="relative rounded-full p-2.5 transition-all hover:bg-[#f3f3f3]"
               aria-label="Cart"
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 text-[#111111]">
-                <path
-                  fill="currentColor"
-                  d="M7 4h-2l-1 2v2h2l3 9h9l3-11H8.42zM10 20a1 1 0 1 1-2 0 1 1 0 0 1 2 0m8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"
-                />
-              </svg>
+              <ShoppingBag
+                className="h-6 w-6"
+                color="#111111"
+                strokeWidth={1.8}
+              />
               {mounted && itemCount > 0 && (
                 <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#cc071e] px-1.5 text-xs font-bold text-white">
                   {itemCount}
@@ -359,13 +363,12 @@ export default function Navbar() {
         {/* ROW 2: Search Bar - Animated Dropdown */}
         {searchOpen && (
           <div className="px-4 py-3 border-b border-[#f3f3f3] animate-in fade-in slide-in-from-top-2 duration-300">
-            <div className="relative w-full">
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#666666]">
-                <path
-                  fill="currentColor"
-                  d="M15.5 14h-.79l-.28-.27A6 6 0 1 0 14 15.5l.27.28v.79l5 5L20.49 19zm-6 0a4 4 0 1 1 0-8 4 4 0 0 1 0 8"
-                />
-              </svg>
+            <div className="relative w-full" ref={searchBarRef}>
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5"
+                color="#666666"
+                strokeWidth={1.8}
+              />
               <input
                 type="text"
                 placeholder="Search products..."
@@ -373,7 +376,7 @@ export default function Navbar() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleSearchKeyDown}
                 autoFocus
-                className="w-full pl-10 pr-4 py-3 border border-[#e5e5e5] rounded-3xl bg-[#f9f9f9] text-sm placeholder-[#999999] focus:outline-none focus:ring-2 focus:ring-[#cc071e] focus:border-transparent focus:bg-white transition-all"
+                className="w-full pl-10 pr-4 py-3 border border-[#e5e5e5] rounded-3xl bg-[#f9f9f9] text-sm text-[#111111] placeholder-[#999999] focus:outline-none focus:ring-2 focus:ring-[#cc071e] focus:border-transparent focus:bg-white transition-all"
               />
             </div>
           </div>

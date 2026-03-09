@@ -152,14 +152,14 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col gap-4 border-t border-white/10 pt-5 text-center text-[10px] uppercase text-neutral-500 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:pt-6 sm:text-left sm:text-xs">
-          <span>© {new Date().getFullYear()} Neversore Performance Apparel. All rights reserved.</span>
-          <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-end sm:gap-4">
+          <span>© {new Date().getFullYear()} Neversore All rights reserved.</span>
+          {/* <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-end sm:gap-4">
             {legalLinks.map((link) => (
               <Link key={link.label} href={link.href} className="transition-colors hover:text-white">
                 {link.label}
               </Link>
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>

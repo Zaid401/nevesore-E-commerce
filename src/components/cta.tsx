@@ -1,8 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Inter, Montserrat } from "next/font/google";
 
 const montserrat = Montserrat({
-  subsets: ["latin"],
+ 
   weight: ["700"],
   display: "swap",
 });
@@ -15,45 +16,42 @@ const inter = Inter({
 
 export default function CallToAction() {
   return (
-    <section className="relative overflow-hidden border-y border-[#e5e5e5] bg-[#f8f8f8] py-12 sm:py-16 lg:py-20 xl:py-24">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-60"
-        aria-hidden
-      >
-        <div className="absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#cc071e]/[0.08] blur-3xl" />
-        <div className="absolute right-[-80px] top-[-120px] h-[260px] w-[260px] rounded-full bg-[#cc071e]/[0.05] blur-3xl" />
-      </div>
+    <section className="border-y border-[#dedede] bg-white py-10 sm:py-16 lg:py-20">
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 sm:px-6 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <div className="relative overflow-hidden bg-white shadow-[0_25px_60px_rgba(0,0,0,0.08)]">
+          <Image
+            src="/CTA.PNG"
+            alt="Neversore campaign poster"
+            width={900}
+            height={1200}
+            priority
+            className="h-full w-full object-cover"
+          />
+        </div>
 
-      <div className="relative mx-auto flex max-w-[1100px] flex-col items-center gap-4 px-4 text-center sm:gap-6 sm:px-6 lg:gap-8 lg:px-16">
-        <span
-          className={`${inter.className} text-xs font-semibold uppercase text-[#666666]`}
-        >
-          Premium Performance Wear
-        </span>
-        <h2
-          className={`${montserrat.className} text-xl font-bold uppercase text-[#111111] sm:text-2xl lg:text-4xl xl:text-5xl`}
-        >
-          Elevate Your Training. Upgrade Your Fit.
-        </h2>
-        <p
-          className={`${inter.className} max-w-2xl text-xs text-[#666666] sm:text-sm lg:text-base xl:text-lg`}
-        >
-          Discover performance-driven gym outfits engineered for strength,
-          comfort, and style.
-        </p>
-        <div className="flex w-full items-center justify-center gap-2 sm:gap-4">
-          <Link
-            href="/featured-products"
-            className="inline-flex flex-1 items-center justify-center rounded-full bg-[#cc071e] px-2 py-2 text-[0.6rem] font-semibold uppercase  text-white shadow-[0_14px_30px_rgba(204,7,30,0.18)] transition-all duration-300 hover:bg-[#a70618] hover:shadow-[0_18px_34px_rgba(204,7,30,0.25)] sm:flex-initial sm:px-8 sm:py-4 sm:text-[0.75rem]  lg:text-sm"
+        <div className="flex flex-col gap-1 text-left sm:gap-2 lg:gap-3">
+          
+          <h2
+            className={`${montserrat.className} text-[18px] sm:text-[22px] lg:text-[27px] font-bold uppercase leading-tight text-[#101010]`}
           >
-            Explore Collections
-          </Link>
-          <Link
-            href="/best-sellers"
-            className="inline-flex flex-1 items-center justify-center rounded-full border border-[#cc071e] px-2 py-2 text-[0.6rem] font-semibold uppercase  text-[#111111] transition-all duration-300 hover:bg-[#cc071e] hover:text-white sm:flex-initial sm:px-8 sm:py-4 sm:text-[0.75rem]  lg:text-sm"
+            Follow us on Instagram
+          </h2>
+          <p
+            className={`${inter.className} text-[12px] sm:text-[14px] lg:text-[16px] text-[#666666]`}
           >
-            Shop Best Sellers
-          </Link>
+            Latest drops, style inspo & more.
+          </p>
+          <div className="space-y-1">
+            
+            <Link
+              href="https://instagram.com/be.neversore"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${montserrat.className} text-[13px] sm:text-[15px] lg:text-[17px] font-semibold uppercase tracking-wide text-[#111111] underline underline-offset-4 transition-colors duration-200 `}
+            >
+              @be.neversore
+            </Link>
+          </div>
         </div>
       </div>
     </section>

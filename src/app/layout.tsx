@@ -14,11 +14,38 @@ const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const shareImage = "/favicon.png";
+
 export const metadata: Metadata = {
   title: "NEVERSORE - Premium Gym Outfits",
   description: "Shop premium gym and fitness apparel",
+  metadataBase: new URL(siteUrl),
   icons: {
     icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+  },
+  openGraph: {
+    title: "NEVERSORE - Premium Gym Outfits",
+    description: "Shop premium gym and fitness apparel",
+    url: siteUrl,
+    siteName: "NEVERSORE",
+    images: [
+      {
+        url: shareImage,
+        width: 512,
+        height: 512,
+        alt: "NEVERSORE logo",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NEVERSORE - Premium Gym Outfits",
+    description: "Shop premium gym and fitness apparel",
+    images: [shareImage],
   },
 };
 

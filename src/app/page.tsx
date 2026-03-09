@@ -16,9 +16,9 @@ export default function Home() {
       <CategoryGrid />
       <BestSellerProducts />
       <FeaturedProducts />
-      <WhyChooseUs />
-      <FaqSection />
-      <CallToAction />
+      {/* <WhyChooseUs /> */}
+      {/* <FaqSection /> */}
+      {/* <CallToAction /> */}
       <Footer />
     </main>
   );

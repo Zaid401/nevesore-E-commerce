@@ -79,7 +79,7 @@ export default function BestSellerProducts() {
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="rounded-xl bg-neutral-100 animate-pulse"
+                className=" bg-neutral-100 animate-pulse"
                 style={{ aspectRatio: "3/4" }}
               />
             ))}

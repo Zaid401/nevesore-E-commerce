@@ -14,8 +14,8 @@ export default function Home() {
       <Navbar />
       <Hero />
       <CategoryGrid />
-      <BestSellerProducts />
-      <FeaturedProducts />
+      {/* <BestSellerProducts /> */}
+      {/* <FeaturedProducts /> */}
       {/* <WhyChooseUs /> */}
       {/* <FaqSection /> */}
        <CallToAction />

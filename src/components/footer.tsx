@@ -94,7 +94,7 @@ const legalLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-neutral-300">
+    <footer className="bg-[#F5F5F5] text-neutral-300">
       <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-12 sm:px-10 sm:py-14 lg:px-16 lg:py-16 lg:gap-16">
         <div className="grid grid-cols-2 gap-8 sm:gap-10 lg:grid-cols-[minmax(0,1.6fr)_repeat(4,minmax(0,1fr))]">
           <div className="col-span-2 flex flex-col gap-5 sm:gap-6 lg:col-span-1">
@@ -104,7 +104,7 @@ export default function Footer() {
               </Link>
             </div>
 
-            <p className="max-w-xs text-xs text-neutral-400 sm:text-sm">
+            <p className="max-w-xs text-xs text-gray-700 sm:text-sm">
               The world isn&apos;t built for the weak. We build for the ones who keep going when it hurts.
             </p>
             <div className="flex items-center gap-3 sm:gap-4">
@@ -113,7 +113,7 @@ export default function Footer() {
                   key={item.label}
                   aria-label={item.label}
                   href={item.href}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-colors hover:border-red-500/80 hover:text-red-400 sm:h-12 sm:w-12"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-700 transition-colors hover:border-red-500/80 hover:text-red-400 sm:h-12 sm:w-12"
                 >
                   {item.icon}
                 </Link>
@@ -132,15 +132,15 @@ export default function Footer() {
                     : "order-4"
                 } sm:order-none`}
             >
-              <h3 className="text-xs font-semibold uppercase  text-white sm:text-sm">
+              <h3 className="text-xs font-semibold uppercase  text-gray-800 sm:text-sm">
                 {column.title}
               </h3>
-              <ul className="flex flex-col gap-2 text-xs text-neutral-400 sm:gap-3 sm:text-sm">
+              <ul className="flex flex-col gap-2 text-xs text-gray-700 sm:gap-3 sm:text-sm">
                 {column.links.map((link) => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="transition-colors hover:text-white"
+                      className="transition-colors hover:text-[#cc071e]"
                     >
                       {link.label}
                     </Link>

@@ -281,31 +281,33 @@ export default function Navbar() {
       {/* Mobile Navbar - Premium 2-Row Layout */}
       <header className="md:hidden fixed top-0 left-0 right-0 bg-white z-40 w-full border-b border-[#e5e5e5]" style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
         {/* ROW 1: Main Navigation */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-[#f3f3f3]">
+        <div className="flex items-center px-4 py-3 border-b border-[#f3f3f3]">
           {/* Left: Hamburger Menu */}
-          <button
-            onClick={handleMenuToggle}
-            className="rounded-full p-2.5 -ml-2.5 transition-all hover:bg-[#f3f3f3]"
-            aria-label="Toggle menu"
-            aria-expanded={mobileMenuOpen}
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 text-[#111111]">
-              {mobileMenuOpen ? (
-                <path
-                  fill="currentColor"
-                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"
-                />
-              ) : (
-                <path
-                  fill="currentColor"
-                  d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
-                />
-              )}
-            </svg>
-          </button>
+          <div className="flex flex-1 items-center">
+            <button
+              onClick={handleMenuToggle}
+              className="rounded-full p-2.5 -ml-2.5 transition-all hover:bg-[#f3f3f3]"
+              aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 text-[#111111]">
+                {mobileMenuOpen ? (
+                  <path
+                    fill="currentColor"
+                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"
+                  />
+                ) : (
+                  <path
+                    fill="currentColor"
+                    d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                  />
+                )}
+              </svg>
+            </button>
+          </div>
 
           {/* Center: Logo */}
-          <Link href="/" className="h-8 w-auto flex-1 flex justify-center">
+          <Link href="/" className="h-8 w-auto flex-shrink-0">
             <Image
               src="/newLogo.jpeg"
               alt="Neversore"
@@ -317,7 +319,7 @@ export default function Navbar() {
           </Link>
 
           {/* Right: Search Icon + Cart Icon */}
-          <div className="flex items-center gap-1">
+          <div className="flex flex-1 items-center justify-end gap-1">
             {/* Search Icon */}
             <button
               onClick={() => setSearchOpen(!searchOpen)}

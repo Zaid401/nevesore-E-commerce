@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -21,29 +22,24 @@ export default function Hero() {
          
 
           <h1 className="text-4xl text-gray-700 font-bold uppercase leading-tight sm:text-5xl md:text-6xl">
-            Confidence,{" "}
-            <span className="text-[#cc071e]">seamlessly</span> built
+            <span className="block sm:hidden">The most<br />Defining,</span>
+            <span className="hidden sm:inline whitespace-nowrap">The most Defining,</span>
+            <span className="block text-[#cc071e]">Compression</span>
+            <span className="block">Tee Yet.</span>
           </h1>
 
           <p className="max-w-lg text-base text-gray-700 sm:text-lg">
-            Premium gym wear designed for the elite athlete. Built for maximum
-            strength, durability, and intense movement.
+            A tee that makes every lift feel superhuman.  
           </p>
 
           <div className="pt-4">
-            <button
-              type="button"
-              className="inline-flex items-center rounded text-white px-8 py-3 text-sm
-              font-semibold uppercase transition-colors
-              bg-[#cc071e] border-2 border-transparent
-              hover:bg-transparent hover:border-[#cc071e]
-              hover:text-gray-700 cursor-pointer"
+            <Link
+              href="/best-sellers"
+              className="inline-flex flex-col text-white text-sm font-semibold uppercase tracking-wide group "
             >
-              <a href="/best-sellers"> 
-              Explore Collection
-              
-              </a>
-            </button>
+              <span className="text-gray-700">Explore Collection</span>
+              <span className="mt-1 h-0.5 w-full bg-black transition-all duration-200 group-hover:w-11/12" />
+            </Link>
           </div>
         </div>
       </div>

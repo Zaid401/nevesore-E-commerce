@@ -19,14 +19,21 @@ export default function CallToAction() {
     <section className="border-y border-[#dedede] bg-white py-10 sm:py-16 lg:py-20">
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 sm:px-6 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div className="relative overflow-hidden bg-white shadow-[0_25px_60px_rgba(0,0,0,0.08)]">
-          <Image
-            src="/call-to-action.png"
-            alt="Neversore campaign poster"
-            width={900}
-            height={1200}
-            priority
-            className="h-full w-full object-cover"
-          />
+          <Link
+            href="https://instagram.com/be.neversore"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block h-full w-full"
+          >
+            <Image
+              src="/call-to-action.png"
+              alt="Neversore campaign poster"
+              width={900}
+              height={1200}
+              priority
+              className="h-full w-full object-cover"
+            />
+          </Link>
         </div>
 
         <div className="flex flex-col gap-1 text-left sm:gap-2 lg:gap-3">

@@ -117,12 +117,7 @@ export default function Navbar() {
         <div className="hidden md:flex w-full items-center justify-center bg-[#f4f1ed] text-[#111111] text-sm tracking-tight py-2 border-b border-[#e5e5e5] relative">
           <div className="flex items-center gap-2">
             <span>Get 15% off regular-priced items.</span>
-            <Link
-              href="/signup"
-              className="font-semibold underline underline-offset-4 decoration-[#111111] hover:text-[#cc071e]"
-            >
-              Sign Up
-            </Link>
+            
           </div>
           <button
             type="button"
@@ -462,41 +457,28 @@ export default function Navbar() {
               transition: "transform 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 300ms ease-out",
             }}
           >
-            {/* Drawer Header with Close Button - Fixed at top */}
-            <div className="shrink-0 bg-white border-b border-[#f3f3f3] p-4 flex items-center justify-between" >
-              <Link
-                href="/login"
-                className="flex items-center gap-2 rounded-full px-4 py-2 bg-[#cc071e] text-white font-bold text-xs uppercase hover:bg-[#a80618] transition-colors shadow-sm"
-                onClick={handleCloseMenu}
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4">
-                  <path
-                    fill="currentColor"
-                    d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5m0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5"
-                  />
-                </svg>
-                <span>Login</span>
-              </Link>
-              <button
-                onClick={handleCloseMenu}
-                className="rounded-full p-2 transition-all hover:bg-[#f3f3f3]"
-                aria-label="Close menu"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 text-[#111111]">
-                  <path
-                    fill="currentColor"
-                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"
-                  />
-                </svg>
-              </button>
-            </div>
-
             {/* Drawer Content - Scrollable */}
             <div className="flex-1 overflow-y-auto">
               <div className="p-6 space-y-2">
                 {/* Categories Section */}
                 <div className="mb-6">
-                  <h3 className="text-xs font-bold uppercase text-[#666666] mb-4">Categories</h3>
+                  <div className="mb-4 flex items-center justify-between">
+                    <h3 className="text-xs font-bold uppercase text-[#666666]">
+                      Categories
+                    </h3>
+                    <button
+                      onClick={handleCloseMenu}
+                      className="rounded-full p-2 transition-all hover:bg-[#f3f3f3]"
+                      aria-label="Close menu"
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-[#111111]">
+                        <path
+                          fill="currentColor"
+                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                   <div className="space-y-1">
                     {navCategories.map((cat) => (
                       <Link
@@ -514,67 +496,27 @@ export default function Navbar() {
                 {/* Divider */}
                 <div className="h-px bg-[#e5e5e5] my-6" />
 
-                {/* Main Menu Section */}
-                <div className="mb-6">
-                  <h3 className="text-xs font-bold uppercase text-[#666666] mb-4">Menu</h3>
-                  <div className="space-y-1">
-                    {[
-                      { label: "Home", href: "/" },
-                      { label: "Best Sellers", href: "/best-sellers" },
-                      { label: "My Account", href: "/account" },
-                      { label: "Track Order", href: "/account?tab=orders" },
-                      { label: "Contact Us", href: "/contact" },
-                    ].map((link) => (
-                      <Link
-                        key={link.label}
-                        href={link.href}
-                        className="block px-4 py-3 rounded-lg text-sm font-semibold text-[#111111] transition-all hover:text-[#cc071e] hover:bg-[#f3f3f3]"
-                        onClick={handleCloseMenu}
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Divider */}
-                <div className="h-px bg-[#e5e5e5] my-6" />
-
                 {/* Wishlist Quick Access */}
-                <Link
-                  href="/wishlist"
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold text-[#111111] transition-all hover:text-[#cc071e] hover:bg-[#f3f3f3]"
-                  onClick={handleCloseMenu}
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
-                    <path
-                      fill="currentColor"
-                      d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                    />
-                  </svg>
-                  Wishlist
-                  {mounted && wishlistCount > 0 && (
-                    <span className="ml-auto bg-[#cc071e] text-white text-xs font-bold px-2.5 py-1 rounded-full">
-                      {wishlistCount}
-                    </span>
-                  )}
-                </Link>
+              
 
                 {/* Account + Login (Mobile) */}
-                <div className="mt-2 space-y-1">
-                  <Link
-                    href={user ? "/account" : "/login"}
-                    className="block px-4 py-3 rounded-lg text-sm font-semibold text-[#111111] transition-all hover:text-[#cc071e] hover:bg-[#f3f3f3]"
-                    onClick={handleCloseMenu}
-                  >
+                <div className="mt-2 space-y-3">
+                  <h3 className="px-4 text-base font-semibold text-[#111111]">
                     Account
-                  </Link>
+                  </h3>
                   <Link
                     href="/login"
-                    className="block px-4 py-3 rounded-lg text-sm font-semibold text-[#111111] transition-all hover:text-[#cc071e] hover:bg-[#f3f3f3]"
+                    className="block bg-gray-900 px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-[#3a1b10]"
                     onClick={handleCloseMenu}
                   >
-                    Login
+                    Log In
+                  </Link>
+                  <Link
+                    href={user ? "/account" : "/signup"}
+                    className="block  border border-gray-700 px-4 py-[11px] text-center text-sm font-semibold text-gray-900 transition-colors hover:bg-[#fdf7f3]"
+                    onClick={handleCloseMenu}
+                  >
+                    Register
                   </Link>
                 </div>
               </div>

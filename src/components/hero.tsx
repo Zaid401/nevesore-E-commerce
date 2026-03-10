@@ -17,7 +17,7 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative mx-auto flex h-full max-w-[1100px] items-center px-6 py-20 sm:px-10 lg:px-16">
+      <div className="relative mx-auto flex h-full max-w-[1100px] items-center px-6 pt-[250px] pb-20 sm:px-10 sm:py-20 lg:px-16">
         <div className="max-w-xl space-y-6">
          
 

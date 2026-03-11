@@ -20,7 +20,8 @@ export default function Hero() {
       <div className="absolute inset-0 hidden sm:block bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
 
       {/* Gradient Overlay - mobile: dark at bottom so text is readable */}
-      <div className="absolute inset-0 sm:hidden bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
+      <div className="absolute inset-0 sm:hidden bg-gradient-to-t from-black/65 via-black/25 to-transparent" />
+      {/* <div className="absolute inset-0 sm:hidden bg-gradient-to-t from-black/85 via-black/40 to-black/10" /> */}
 
       {/* Content */}
       <div className="relative mx-auto flex h-full max-w-[1100px] items-center px-6 pt-[250px] pb-20 sm:px-10 sm:py-20 lg:px-16">

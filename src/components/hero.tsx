@@ -17,7 +17,7 @@ export default function Hero() {
       </div>
 
        {/* Gradient Overlay - desktop */}
-      <div className="absolute inset-0 hidden sm:block bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
+      <div className="absolute inset-0 hidden sm:block bg-gradient-to-r from-black/50 via-black/30 to-transparent" />
 
       {/* Gradient Overlay - mobile: dark at bottom so text is readable */}
       <div className="absolute inset-0 sm:hidden bg-gradient-to-t from-black/70 via-black/25 to-transparent" />

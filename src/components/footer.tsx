@@ -25,7 +25,7 @@ const footerColumns = [
   {
     title: "Company",
     links: [
-      { label: "About Us", href: "#" },
+      { label: "About Us", href: "/about" },
       //{ label: "Athletes", href: "#" },
       //{ label: "Careers", href: "#" },
       { label: "Privacy Policy", href: "/privacy-policy" },

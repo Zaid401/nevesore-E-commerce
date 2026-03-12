@@ -13,11 +13,10 @@ export default function CartPage() {
   const { items, subtotal, updateQuantity, removeItem } = useCart();
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
+  const [couponError, setCouponError] = useState(false);
 
   const discount = useMemo(() => {
-    if (!couponApplied) {
-      return 0;
-    }
+    if (!couponApplied) return 0;
     return subtotal * 0.1;
   }, [couponApplied, subtotal]);
 
@@ -27,192 +26,410 @@ export default function CartPage() {
 
   const applyCoupon = () => {
     const normalized = couponCode.trim().toUpperCase();
-    setCouponApplied(normalized === "NEVER10");
+    if (normalized === "NEVER10") {
+      setCouponApplied(true);
+      setCouponError(false);
+    } else {
+      setCouponApplied(false);
+      setCouponError(true);
+    }
   };
 
   return (
-    <main className="min-h-screen bg-[#f8f8f8] text-[#111111]">
+    <div className="bg-[#faf9f7] text-[#111111] min-h-screen">
       <Navbar />
 
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:py-10 lg:py-12 lg:px-8">
-        <div className="mb-6 sm:mb-8 lg:mb-10">
-          <h1 className="text-2xl font-extrabold uppercase  sm:text-3xl lg:text-3xl">Your Cart</h1>
-          <p className="mt-1 text-xs text-[#555555] sm:mt-2 sm:text-sm lg:text-sm">Premium essentials curated for peak performance.</p>
-        </div>
+      <main>
+        {/* ── HERO HEADER ── */}
+        <section className="relative overflow-hidden border-b border-[#e0ddd8] pt-24 md:pt-28">
+          <span
+            className="pointer-events-none select-none absolute bottom-[-0.15em] right-[-0.04em] text-transparent font-black leading-none tracking-wide hidden sm:block"
+            style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: "clamp(80px, 16vw, 240px)",
+              WebkitTextStroke: "1.5px #e8e5e0",
+            }}
+          >
+            CART
+          </span>
 
-        {items.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-[#e5e5e5] bg-white px-4 py-12 text-center shadow-[0_10px_30px_rgba(0,0,0,0.06)] sm:px-6 sm:py-16 lg:px-6 lg:py-16">
-            <p className="text-base font-semibold sm:text-lg lg:text-lg">Your cart is currently empty.</p>
-            <p className="mt-1 text-xs text-[#555555] sm:mt-2 sm:text-sm lg:text-sm">Explore our latest drops and find your next set.</p>
-            <Link
-              href="/"
-              className="mt-4 inline-flex items-center justify-center rounded-full border border-[#cc071e] px-6 py-2 text-xs font-bold uppercase text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white sm:mt-6 sm:px-8 sm:py-3 lg:px-8 lg:py-3"
-            >
-              Continue Shopping
-            </Link>
-          </div>
-        ) : (
-          <div className="grid gap-8 lg:grid-cols-12">
-            <div className="lg:col-span-8 space-y-4 sm:space-y-5 lg:space-y-6">
-              {items.map((item) => (
-                <div
-                  key={item.variant_id}
-                  className="rounded-2xl border border-[#e5e5e5] bg-white p-6 shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-all hover:-translate-y-0.5 hover:shadow-[0_14px_38px_rgba(0,0,0,0.08)]"
-                >
-                  <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
-                    <div className="relative h-24 w-24 overflow-hidden rounded-xl bg-[#f1f1f1]">
-                      <Image src={item.image} alt={item.product_name} fill className="object-cover" />
-                    </div>
-                    <div className="flex-1">
-                      <h2 className="text-lg font-bold">{item.product_name}</h2>
-                      <p className="mt-1 text-sm text-[#555555]">
-                        Size: <span className="font-semibold">{item.size_label}</span> | Color:{" "}
-                        <span className="font-semibold">{item.color_name}</span>
-                      </p>
-                      <p className="mt-2 text-sm text-[#555555]">&#8377;{item.price.toLocaleString("en-IN")}</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2 sm:gap-3 lg:gap-4 lg:flex-row lg:items-center">
-                      <div className="flex items-center rounded-full border border-[#e5e5e5] bg-white">
-                        <button
-                          type="button"
-                          onClick={() => updateQuantity(item.variant_id, item.quantity - 1)}
-                          className="h-10 w-10 text-sm font-semibold text-[#555555] hover:text-[#111111]"
-                        >
-                          -
-                        </button>
-                        <span className="w-8 text-center text-xs font-semibold sm:w-10 sm:text-sm lg:w-10">{item.quantity}</span>
-                        <button
-                          type="button"
-                          onClick={() => updateQuantity(item.variant_id, item.quantity + 1)}
-                          className="h-10 w-10 text-sm font-semibold text-[#555555] hover:text-[#111111]"
-                        >
-                          +
-                        </button>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => removeItem(item.variant_id)}
-                        className="text-xs font-semibold uppercase  text-[#cc071e]"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                    <div className="text-right text-sm font-semibold text-[#111111]">
-                      &#8377;{(item.price * item.quantity).toLocaleString("en-IN")}
-                    </div>
-                  </div>
-                </div>
-              ))}
+          <div className="relative max-w-6xl mx-auto px-5 sm:px-8 pb-14 md:pb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-[10px] font-medium tracking-[0.22em] uppercase rounded-full px-3.5 py-1.5 mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                Your Bag
+              </div>
+              <h1
+                className="leading-[0.92] tracking-wide text-[#111111] mb-4"
+                style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: "clamp(48px, 9vw, 100px)",
+                }}
+              >
+                Your <span className="text-red-600">Cart</span>
+              </h1>
+              <p className="text-base font-light text-[#444444]">
+                Premium essentials curated for peak performance.
+              </p>
             </div>
 
-            <div className="lg:col-span-4">
-              <div className="rounded-2xl border border-[#e5e5e5] bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.06)] sm:p-6 lg:sticky lg:top-24 lg:p-6">
-                <div className="mb-4 sm:mb-6 lg:mb-6">
-                  <div className="mb-2 flex items-center justify-between text-xs font-semibold text-[#555555] sm:mb-3 sm:text-sm lg:mb-3 lg:text-sm">
-                    <span>Free shipping progress</span>
-                    <span>{Math.round(freeShippingProgress)}%</span>
+            <div className="md:text-right flex-shrink-0 pb-1 space-y-2">
+              <p
+                className="leading-none text-[#111111] tracking-wide"
+                style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: "clamp(40px, 6vw, 64px)",
+                }}
+              >
+                {items.length}
+              </p>
+              <p className="text-[11px] tracking-[0.18em] uppercase text-[#888888]">
+                {items.length === 1 ? "Item" : "Items"}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── BODY ── */}
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-10 md:py-14 pb-32 lg:pb-14">
+
+          {/* ── EMPTY STATE ── */}
+          {items.length === 0 ? (
+            <div className="rounded-2xl border border-[#e0ddd8] bg-white overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
+              <div className="bg-[#111111] px-6 py-3.5 flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+                <span className="ml-auto text-[11px] tracking-[0.18em] uppercase text-white/30">
+                  Empty Bag
+                </span>
+              </div>
+              <div className="flex flex-col items-center justify-center px-6 py-20 text-center">
+                <p
+                  className="text-[#111111] mb-2 leading-tight"
+                  style={{
+                    fontFamily: "'Bebas Neue', sans-serif",
+                    fontSize: "clamp(32px, 5vw, 48px)",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  Your Cart is <span className="text-red-600">Empty</span>
+                </p>
+                <p className="text-sm font-light text-[#888888] mb-8 max-w-sm">
+                  Explore our latest drops and find your next set of performance gear.
+                </p>
+                <Link
+                  href="/"
+                  className="group inline-flex items-center gap-2.5 bg-red-600 hover:bg-red-700 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full px-7 py-3.5 transition-all duration-200 hover:-translate-y-0.5"
+                >
+                  Continue Shopping
+                  <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+
+              {/* ── CART ITEMS ── */}
+              <div className="lg:col-span-8 space-y-4">
+                {/* Free shipping bar */}
+                <div className="rounded-2xl border border-[#e0ddd8] bg-white px-6 py-5">
+                  <div className="flex items-center justify-between mb-2.5">
+                    <p className="text-[11px] font-medium tracking-[0.18em] uppercase text-[#888888]">
+                      Free Shipping Progress
+                    </p>
+                    <p className="text-[11px] font-medium tracking-[0.1em] uppercase text-red-600">
+                      {Math.round(freeShippingProgress)}%
+                    </p>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-[#f1f1f1]">
+                  <div className="h-1.5 w-full rounded-full bg-[#f0edea]">
                     <div
-                      className="h-2 rounded-full bg-[#cc071e] transition-all"
+                      className="h-1.5 rounded-full bg-red-600 transition-all duration-500"
                       style={{ width: `${freeShippingProgress}%` }}
                     />
                   </div>
-                  {remainingForFreeShipping > 0 ? (
-                    <p className="mt-2 text-xs text-[#555555]">
-                      Add &#8377;{remainingForFreeShipping.toLocaleString("en-IN")} to unlock free shipping.
-                    </p>
-                  ) : (
-                    <p className="mt-1 text-xs font-semibold text-[#cc071e] sm:mt-2 lg:mt-2">
-                      You have unlocked free shipping.
-                    </p>
-                  )}
+                  <p className="mt-2.5 text-xs font-light text-[#888888]">
+                    {remainingForFreeShipping > 0 ? (
+                      <>Add <span className="text-[#111111] font-medium">&#8377;{remainingForFreeShipping.toLocaleString("en-IN")}</span> more to unlock free shipping.</>
+                    ) : (
+                      <span className="text-red-600 font-medium">🎉 You've unlocked free shipping!</span>
+                    )}
+                  </p>
                 </div>
 
-                <h2 className="text-base font-bold uppercase sm:text-lg lg:text-lg">Order Summary</h2>
-                <div className="mt-3 space-y-2 text-xs text-[#555555] sm:mt-4 sm:space-y-3 sm:text-sm lg:mt-4">
-                  <div className="flex items-center justify-between">
-                    <span>Subtotal</span>
-                    <span className="font-semibold text-[#111111]">&#8377;{subtotal.toLocaleString("en-IN")}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>Shipping</span>
-                    <span>Calculated at checkout</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>Discount</span>
-                    <span>{discount > 0 ? `-&#8377;${discount.toLocaleString("en-IN")}` : "-"}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>Tax</span>
-                    <span>Calculated at checkout</span>
-                  </div>
-                </div>
-
-                <div className="my-3 h-px bg-[#e5e5e5] sm:my-4 lg:my-4" />
-
-                <div className="flex items-center justify-between text-sm font-bold sm:text-base lg:text-base">
-                  <span>Total</span>
-                  <span>&#8377;{total.toLocaleString("en-IN")}</span>
-                </div>
-
-                <div className="mt-4 space-y-2 sm:mt-6 sm:space-y-3 lg:mt-6">
-                  <div className="flex items-center gap-2">
-                    <input
-                      value={couponCode}
-                      onChange={(event) => setCouponCode(event.target.value)}
-                      placeholder="Enter discount code"
-                      className="h-10 flex-1 rounded-full border border-[#e5e5e5] bg-white px-3 text-xs focus:border-[#cc071e] focus:outline-none sm:h-12 sm:px-4 sm:text-sm lg:h-12"
-                    />
-                    <button
-                      type="button"
-                      onClick={applyCoupon}
-                      className="h-10 rounded-full border border-[#cc071e] px-3 text-xs font-bold uppercase text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white sm:h-12 sm:px-4 sm:text-sm lg:h-12"
-                    >
-                      Apply
-                    </button>
-                  </div>
-                  {couponApplied && (
-                    <p className="text-xs font-semibold text-[#cc071e] sm:text-sm lg:text-sm">Coupon applied successfully.</p>
-                  )}
-                </div>
-
-                <div className="mt-4 space-y-2 sm:mt-6 sm:space-y-3 lg:mt-6">
-                  <Link
-                    href="/checkout"
-                    className="block w-full rounded-full bg-[#cc071e] py-3 text-center text-xs font-bold uppercase  text-white transition-all hover:bg-red-700 hover:shadow-[0_12px_30px_rgba(204,7,30,0.3)] sm:py-4 sm:text-xs lg:py-4 lg:text-xs"
+                {/* Items */}
+                {items.map((item) => (
+                  <article
+                    key={item.variant_id}
+                    className="group rounded-2xl border border-[#e0ddd8] bg-white hover:border-red-200 hover:shadow-[0_8px_32px_rgba(212,0,31,0.06)] transition-all duration-300 overflow-hidden"
                   >
-                    Proceed to Checkout
-                  </Link>
-                  <Link
-                    href="/"
-                    className="block w-full rounded-full border border-[#cc071e] py-3 text-center text-xs font-bold uppercase  text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white sm:py-4 sm:text-xs lg:py-4 lg:text-xs"
-                  >
-                    Continue Shopping
-                  </Link>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-5 p-5 sm:p-6">
+                      {/* Product image */}
+                      <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl bg-[#f0edea] border border-[#e0ddd8]">
+                        <Image
+                          src={item.image}
+                          alt={item.product_name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+
+                      {/* Product info */}
+                      <div className="flex-1 min-w-0">
+                        <h2
+                          className="text-[#111111] tracking-wide truncate"
+                          style={{
+                            fontFamily: "'Bebas Neue', sans-serif",
+                            fontSize: "clamp(17px, 2.5vw, 21px)",
+                            letterSpacing: "0.04em",
+                          }}
+                        >
+                          {item.product_name}
+                        </h2>
+                        <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+                          <span className="text-[10px] font-medium tracking-[0.18em] uppercase text-[#888888] bg-[#f0edea] border border-[#e0ddd8] rounded-full px-2.5 py-1">
+                            Size: {item.size_label}
+                          </span>
+                          <span className="text-[10px] font-medium tracking-[0.18em] uppercase text-[#888888] bg-[#f0edea] border border-[#e0ddd8] rounded-full px-2.5 py-1">
+                            {item.color_name}
+                          </span>
+                        </div>
+                        <p className="mt-2 text-sm font-light text-[#888888]">
+                          &#8377;{item.price.toLocaleString("en-IN")} each
+                        </p>
+                      </div>
+
+                      {/* Controls */}
+                      <div className="flex sm:flex-col items-center sm:items-end gap-4 sm:gap-3">
+                        {/* Quantity stepper */}
+                        <div className="flex items-center border border-[#e0ddd8] rounded-full overflow-hidden bg-[#faf9f7]">
+                          <button
+                            type="button"
+                            onClick={() => updateQuantity(item.variant_id, item.quantity - 1)}
+                            className="w-9 h-9 text-base text-[#888888] hover:text-[#111111] hover:bg-[#f0edea] transition-colors duration-150 flex items-center justify-center"
+                          >
+                            −
+                          </button>
+                          <span
+                            className="w-8 text-center text-sm font-medium text-[#111111]"
+                            style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
+                          >
+                            {item.quantity}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => updateQuantity(item.variant_id, item.quantity + 1)}
+                            className="w-9 h-9 text-base text-[#888888] hover:text-[#111111] hover:bg-[#f0edea] transition-colors duration-150 flex items-center justify-center"
+                          >
+                            +
+                          </button>
+                        </div>
+
+                        {/* Remove */}
+                        <button
+                          type="button"
+                          onClick={() => removeItem(item.variant_id)}
+                          className="text-[10px] font-medium tracking-[0.18em] uppercase text-[#cccccc] hover:text-red-600 transition-colors duration-150"
+                        >
+                          Remove
+                        </button>
+                      </div>
+
+                      {/* Line total */}
+                      <div
+                        className="text-right flex-shrink-0 hidden sm:block"
+                        style={{
+                          fontFamily: "'Bebas Neue', sans-serif",
+                          fontSize: "clamp(18px, 2vw, 22px)",
+                          letterSpacing: "0.04em",
+                        }}
+                      >
+                        &#8377;{(item.price * item.quantity).toLocaleString("en-IN")}
+                      </div>
+                    </div>
+
+                    {/* Mobile line total */}
+                    <div className="sm:hidden flex items-center justify-between px-5 py-3 border-t border-[#e0ddd8] bg-[#faf9f7]">
+                      <span className="text-[10px] tracking-[0.18em] uppercase text-[#888888]">Subtotal</span>
+                      <span
+                        className="text-[#111111]"
+                        style={{
+                          fontFamily: "'Bebas Neue', sans-serif",
+                          fontSize: "18px",
+                          letterSpacing: "0.04em",
+                        }}
+                      >
+                        &#8377;{(item.price * item.quantity).toLocaleString("en-IN")}
+                      </span>
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              {/* ── ORDER SUMMARY ── */}
+              <div className="lg:col-span-4">
+                <div className="rounded-2xl border border-[#e0ddd8] bg-white overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.04)] lg:sticky lg:top-24">
+                  {/* Mac-style header */}
+                  <div className="bg-[#111111] px-6 py-3.5 flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+                    <span className="ml-auto text-[11px] tracking-[0.18em] uppercase text-white/30">
+                      Order Summary
+                    </span>
+                  </div>
+
+                  <div className="p-6">
+                    {/* Summary rows */}
+                    <div className="space-y-3 mb-5">
+                      {[
+                        {
+                          label: "Subtotal",
+                          value: `₹${subtotal.toLocaleString("en-IN")}`,
+                          highlight: true,
+                        },
+                        {
+                          label: "Shipping",
+                          value: "At checkout",
+                          highlight: false,
+                        },
+                        {
+                          label: "Discount",
+                          value: discount > 0 ? `−₹${discount.toLocaleString("en-IN")}` : "—",
+                          highlight: false,
+                          red: discount > 0,
+                        },
+                        {
+                          label: "Tax",
+                          value: "At checkout",
+                          highlight: false,
+                        },
+                      ].map((row) => (
+                        <div key={row.label} className="flex items-center justify-between">
+                          <p className="text-[11px] tracking-[0.15em] uppercase text-[#888888]">
+                            {row.label}
+                          </p>
+                          <p
+                            className={`text-sm font-medium ${
+                              row.red
+                                ? "text-red-600"
+                                : row.highlight
+                                ? "text-[#111111]"
+                                : "text-[#888888]"
+                            }`}
+                          >
+                            {row.value}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="h-px bg-[#e0ddd8] mb-5" />
+
+                    {/* Total */}
+                    <div className="flex items-center justify-between mb-6">
+                      <p className="text-[11px] tracking-[0.2em] uppercase text-[#888888]">Total</p>
+                      <p
+                        className="text-[#111111] tracking-wide"
+                        style={{
+                          fontFamily: "'Bebas Neue', sans-serif",
+                          fontSize: "clamp(22px, 3vw, 28px)",
+                          letterSpacing: "0.04em",
+                        }}
+                      >
+                        &#8377;{total.toLocaleString("en-IN")}
+                      </p>
+                    </div>
+
+                    {/* Coupon */}
+                    <div className="mb-5">
+                      <p className="text-[10px] font-medium tracking-[0.2em] uppercase text-[#888888] mb-2">
+                        Discount Code
+                      </p>
+                      <div className="flex gap-2">
+                        <input
+                          value={couponCode}
+                          onChange={(e) => {
+                            setCouponCode(e.target.value);
+                            setCouponError(false);
+                          }}
+                          placeholder="e.g. NEVER10"
+                          className="flex-1 h-10 rounded-full border border-[#e0ddd8] bg-[#faf9f7] px-4 text-xs text-[#111111] placeholder:text-[#bbbbbb] focus:border-red-400 focus:outline-none transition-colors"
+                        />
+                        <button
+                          type="button"
+                          onClick={applyCoupon}
+                          className="h-10 px-4 rounded-full border border-red-600 text-red-600 hover:bg-red-600 hover:text-white text-[10px] font-medium tracking-[0.15em] uppercase transition-all duration-200 flex-shrink-0"
+                        >
+                          Apply
+                        </button>
+                      </div>
+                      {couponApplied && (
+                        <p className="mt-2 text-[11px] font-medium text-red-600 tracking-wide">
+                          ✓ 10% discount applied
+                        </p>
+                      )}
+                      {couponError && (
+                        <p className="mt-2 text-[11px] font-medium text-[#888888] tracking-wide">
+                          Invalid code. Try NEVER10.
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="h-px bg-[#e0ddd8] mb-5" />
+
+                    {/* CTAs */}
+                    <div className="space-y-3">
+                      <Link
+                        href="/checkout"
+                        className="group flex items-center justify-center gap-2.5 w-full bg-red-600 hover:bg-red-700 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full py-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(212,0,31,0.3)]"
+                      >
+                        Proceed to Checkout
+                        <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                      </Link>
+                      <Link
+                        href="/"
+                        className="flex items-center justify-center w-full border border-[#e0ddd8] hover:border-red-200 text-[#888888] hover:text-red-600 text-[11px] font-medium tracking-[0.15em] uppercase rounded-full py-3.5 transition-all duration-200"
+                      >
+                        Continue Shopping
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
-      </div>
 
+            </div>
+          )}
+        </div>
+      </main>
+
+      {/* ── MOBILE STICKY CHECKOUT BAR ── */}
       {items.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 border-t border-[#e5e5e5] bg-white p-3 shadow-[0_-10px_30px_rgba(0,0,0,0.08)] sm:p-4 lg:hidden">
-          <div className="flex items-center justify-between text-xs font-semibold sm:text-sm">
-            <span>Total</span>
-            <span>&#8377;{total.toLocaleString("en-IN")}</span>
+        <div className="fixed bottom-0 left-0 right-0 border-t border-[#e0ddd8] bg-white/95 backdrop-blur-sm px-5 py-4 shadow-[0_-8px_24px_rgba(0,0,0,0.08)] lg:hidden z-50">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-[#888888]">Total</p>
+            <p
+              className="text-[#111111] tracking-wide"
+              style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: "22px",
+                letterSpacing: "0.04em",
+              }}
+            >
+              &#8377;{total.toLocaleString("en-IN")}
+            </p>
           </div>
           <Link
             href="/checkout"
-            className="mt-2 block w-full rounded-full bg-[#cc071e] py-2 text-center text-xs font-bold uppercase text-white sm:mt-3 sm:py-3 sm:text-xs"
+            className="group flex items-center justify-center gap-2.5 w-full bg-red-600 hover:bg-red-700 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full py-3.5 transition-all duration-200"
           >
             Proceed to Checkout
+            <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
           </Link>
         </div>
       )}
 
       <Footer />
-    </main>
+    </div>
   );
 }

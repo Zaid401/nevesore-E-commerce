@@ -25,27 +25,17 @@ export default function Hero() {
 
       {/* Content */}
       <div className="relative mx-auto flex h-full max-w-[1100px] items-center px-6 pt-[250px] pb-20 sm:px-10 sm:py-20 lg:px-16">
-        <div className="max-w-xl space-y-6">
-         
-
-           <h1 className="text-4xl font-bold uppercase leading-tight text-white sm:text-5xl md:text-6xl">
-
-            <span className="block sm:hidden">
-              The Most<br />Defining,
-            </span>
-
-            <span className="hidden sm:inline whitespace-nowrap">
+        <div className="max-w-xl space-y-5 sm:space-y-6">
+          <h1 className="text-3xl font-bold uppercase leading-snug text-white sm:text-5xl sm:leading-tight md:text-6xl">
+            <span className="block whitespace-nowrap sm:inline">
               The Most Defining,
             </span>
-
             <span className="block text-red-600">
-              Compression
+              SEAMLESS TEE
             </span>
-
             <span className="block">
-              Tee Yet.
+              Yet.
             </span>
-
           </h1>
 
           <p className="max-w-lg text-base text-gray-200 sm:text-lg">

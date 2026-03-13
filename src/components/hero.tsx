@@ -1,5 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Great_Vibes } from "next/font/google";
+
+const greatVibes = Great_Vibes({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 export default function Hero() {
   return (
@@ -35,14 +41,21 @@ export default function Hero() {
       {/* <div className="absolute inset-0 sm:hidden bg-gradient-to-t from-black/85 via-black/40 to-black/10" /> */}
 
       {/* Content */}
-      <div className="relative mx-auto flex h-full max-w-[1100px] items-center px-6 pt-[250px] pb-20 sm:px-10 sm:py-20 lg:px-16">
+      <div className="relative mx-auto flex h-full max-w-[1100px] items-center px-6 pt-[250px] pb-20 sm:px-10 sm:py-20 lg:px-16 italic">
         <div className="max-w-xl space-y-5 sm:space-y-6">
           <h1 className="text-3xl font-bold uppercase leading-snug text-white sm:text-5xl sm:leading-tight md:text-6xl">
             <span className="block whitespace-nowrap sm:inline">
               The Most Defining,
             </span>
-            <span className="block text-red-600">
-              SEAMLESS TEE
+            <span className="inline-flex flex-wrap items-baseline gap-2 ">
+              <span
+                className={`${greatVibes.className} normal-case text-4xl leading-none sm:text-5xl md:text-6xl`}
+              >
+                Seamless
+              </span>
+              <span className="text-2xl font-semibold  sm:text-3xl">
+                TEE
+              </span>
             </span>
             <span className="block">
               Yet.

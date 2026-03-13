@@ -6,13 +6,24 @@ export default function Hero() {
     <section className="relative h-screen overflow-hidden text-white">
       {/* Background Image */}
       <div className="absolute inset-0">
+        {/* Desktop / tablet hero */}
         <Image
           src="/real_Hero.PNG"
           alt="Athlete posing confidently in activewear"
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center md:object-[65%_30%]"
+          className="hidden object-cover object-center md:object-[65%_30%] sm:block"
+        />
+
+        {/* Mobile hero */}
+        <Image
+          src="/new-mobile-image.PNG"
+          alt="Model showcasing the seamless tee"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[50%_20%] sm:hidden"
         />
       </div>
 

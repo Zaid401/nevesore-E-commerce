@@ -29,9 +29,12 @@ export const metadata: Metadata = {
   description: "Shop premium gym and fitness apparel",
   metadataBase: new URL(siteUrl),
   icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
+    icon: [
+      { url: "/favicon.ico", type: "image/x-icon" },
+      { url: "/favicon.png", type: "image/png", sizes: "32x32" },
+    ],
+    shortcut: [{ url: "/favicon.ico" }],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   openGraph: {
     title: "NEVERSORE - Premium Gym Outfits",
@@ -64,9 +67,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.png" sizes="32x32" />
-        <link rel="apple-touch-icon" href="/favicon.png" sizes="180x180" />
-        <link rel="shortcut icon" href="/favicon.png" />
+        <link rel="icon" type="image/png" href="/favicon.png" sizes="32x32" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="beforeInteractive"

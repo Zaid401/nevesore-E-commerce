@@ -40,8 +40,8 @@ function CategoryCard({ category }: { category: Category }) {
         <div className="absolute inset-0 bg-linear-to-t from-neutral-950/75 via-neutral-900/20 to-transparent" />
       </div>
 
-      <div className="relative flex h-full w-full flex-col items-center justify-center p-3 text-center sm:p-7">
-        <h3 className="text-base sm:text-xl font-black uppercase tracking-wide text-white">
+      <div className="relative flex h-full w-full flex-col items-center justify-end p-3 text-center pb-3 sm:p-7 sm:pb-10">
+        <h3 className="text-xs font-black uppercase tracking-wide text-white sm:text-base">
           {category.name}
         </h3>
         {category.description && (

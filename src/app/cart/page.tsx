@@ -144,7 +144,7 @@ export default function CartPage() {
                   </div>
                   <div className="h-1.5 w-full rounded-full bg-[#f0edea]">
                     <div
-                      className="h-1.5 rounded-full bg-red-600 transition-all duration-500"
+                      className="h-1.5 rounded-full bg-gray-900 transition-all duration-500"
                       style={{ width: `${freeShippingProgress}%` }}
                     />
                   </div>
@@ -359,7 +359,7 @@ export default function CartPage() {
                         <button
                           type="button"
                           onClick={applyCoupon}
-                          className="h-10 px-4 rounded-full border border-red-600 text-red-600 hover:bg-red-600 hover:text-white text-[10px] font-medium tracking-[0.15em] uppercase transition-all duration-200 flex-shrink-0"
+                          className="h-10 px-4 rounded-full border border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white text-[11px] font-medium  uppercase transition-all duration-200 flex-shrink-0"
                         >
                           Apply
                         </button>
@@ -382,14 +382,14 @@ export default function CartPage() {
                     <div className="space-y-3">
                       <Link
                         href="/checkout"
-                        className="group flex items-center justify-center gap-2.5 w-full bg-red-600 hover:bg-red-700 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full py-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(212,0,31,0.3)]"
+                        className="group flex items-center justify-center gap-2.5 w-full bg-gray-900 hover:bg-gray-800 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full py-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(212,0,31,0.3)]"
                       >
                         Proceed to Checkout
                         <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
                       </Link>
                       <Link
                         href="/"
-                        className="flex items-center justify-center w-full border border-[#e0ddd8] hover:border-red-200 text-[#888888] hover:text-red-600 text-[11px] font-medium tracking-[0.15em] uppercase rounded-full py-3.5 transition-all duration-200"
+                        className="flex items-center justify-center w-full border border-[#e0ddd8] hover:border-gray-900 text-[#888888] hover:text-gray-900 text-[11px] font-medium tracking-[0.15em] uppercase rounded-full py-3.5 transition-all duration-200"
                       >
                         Continue Shopping
                       </Link>
@@ -421,7 +421,7 @@ export default function CartPage() {
           </div>
           <Link
             href="/checkout"
-            className="group flex items-center justify-center gap-2.5 w-full bg-red-600 hover:bg-red-700 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full py-3.5 transition-all duration-200"
+            className="group flex items-center justify-center gap-2.5 w-full bg-gray-900 hover:bg-gray-800 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full py-3.5 transition-all duration-200"
           >
             Proceed to Checkout
             <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>

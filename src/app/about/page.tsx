@@ -70,8 +70,7 @@ export default function AboutPage() {
                   fontSize: "clamp(52px, 9vw, 108px)",
                 }}
               >
-                Built For<br />
-                <span className="text-red-600">The Work.</span>
+                Built For<br />The Work.
               </h1>
 
               <p className="text-base sm:text-lg font-light text-[#444444] leading-relaxed max-w-lg">

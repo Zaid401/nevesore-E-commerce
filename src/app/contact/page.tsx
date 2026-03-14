@@ -95,7 +95,7 @@ export default function ContactPage() {
                 }}
               >
                 Get In{" "}
-                <span className="text-red-600">Touch.</span>
+                Touch.
               </h1>
 
               <p className="text-base sm:text-lg font-light text-[#444444] leading-relaxed">
@@ -280,7 +280,7 @@ export default function ContactPage() {
               <div className="bg-white border-t border-[#e0ddd8] px-6 sm:px-7 py-5 mt-5">
                 <a
                   href="mailto:teams@neversore.com"
-                  className="group inline-flex items-center gap-2.5 bg-red-600 hover:bg-red-700 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full px-6 py-3 transition-all duration-200 hover:-translate-y-0.5"
+                  className="group inline-flex items-center gap-2.5 bg-gray-900 hover:bg-gray-700 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full px-6 py-3 transition-all duration-200 hover:-translate-y-0.5"
                 >
                   Send Email
                   <span className="transition-transform duration-200 group-hover:translate-x-1">

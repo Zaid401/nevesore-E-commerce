@@ -7,6 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { useCart } from "@/context/cart-context";
+import { useWishlist } from "@/context/wishlist-context";
 import { supabase } from "@/lib/supabase";
 import { formatPrice, resolvePrice } from "@/types/product";
 import ProductSkeleton from "@/loading/product";
@@ -58,6 +59,7 @@ export default function ProductDetailPage() {
   const params = useParams<{ id: string }>();
   const { addItem, itemCount, items, subtotal } = useCart();
   const router = useRouter();
+  const { isInWishlist, addItem: addWishlistItem } = useWishlist();
 
   const [product, setProduct] = useState<ProductData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -177,6 +179,8 @@ export default function ProductDetailPage() {
   const colorImages = product?.images.filter((img) => img.color_id === selectedColor?.id) ?? [];
   const globalImages = product?.images.filter((img) => !img.color_id) ?? [];
   const displayImages = colorImages.length > 0 ? colorImages : globalImages;
+  const heroImageSrc = displayImages[selectedImageIdx]?.image_url || displayImages[0]?.image_url || FALLBACK_IMAGE;
+  const currentImageSrc = imgErrors.has(selectedImageIdx) ? FALLBACK_IMAGE : heroImageSrc;
 
   // Reset image errors when color changes
   // (inline reset in the setSelectedColorIdx call below handles most cases)
@@ -185,6 +189,18 @@ export default function ProductDetailPage() {
   const displayPrice = product
     ? resolvePrice(product.base_price, product.sale_price, selectedVariant?.price_override ?? null)
     : 0;
+  const isWishlisted = product ? isInWishlist(product.id) : false;
+
+  const handleWishlistToggle = () => {
+    if (!product) return;
+    addWishlistItem({
+      id: product.id,
+      name: product.name,
+      price: displayPrice,
+      image: heroImageSrc,
+      category: product.category_name,
+    });
+  };
 
   const handleAddToCart = () => {
     if (!product || !selectedColor || !selectedVariant) return;
@@ -260,9 +276,9 @@ export default function ProductDetailPage() {
 
               {/* Main Image */}
               <div className="order-1 bg-white rounded-sm overflow-hidden aspect-4/5 shadow-sm relative flex-1 lg:order-none">
-                {displayImages[selectedImageIdx] ? (
+                {displayImages.length > 0 ? (
                   <Image
-                    src={imgErrors.has(selectedImageIdx) ? FALLBACK_IMAGE : (displayImages[selectedImageIdx].image_url || FALLBACK_IMAGE)}
+                    src={currentImageSrc}
                     alt={product.name}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 42vw"
@@ -275,6 +291,23 @@ export default function ProductDetailPage() {
                     No image
                   </div>
                 )}
+
+                <button
+                  type="button"
+                  onClick={handleWishlistToggle}
+                  aria-label="Add to wishlist"
+                  aria-pressed={isWishlisted}
+                  className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-slate-900 shadow-md transition hover:scale-105"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
+                    <path
+                      fill={isWishlisted ? "currentColor" : "none"}
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                    />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>

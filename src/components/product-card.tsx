@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { useWishlist } from "@/context/wishlist-context";
 
 interface ProductCardProps {
   id: string;
@@ -18,26 +17,15 @@ interface ProductCardProps {
 const FALLBACK_IMAGE = "/product/fallback.png";
 
 export default function ProductCard({ id, name, price, sale_price, image, category, short_description }: ProductCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
   const [imgSrc, setImgSrc] = useState(image || FALLBACK_IMAGE);
-  const { isInWishlist, addItem } = useWishlist();
-  const isFavorited = isInWishlist(id);
 
   const displayPrice = sale_price ?? price;
   const hasDiscount = sale_price != null && sale_price < price;
-
-  const handleWishlistClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addItem({ id, name, price: displayPrice, image, category });
-  };
 
   return (
     <Link
       href={`/products/${id}`}
       className="group relative overflow-hidden border border-neutral-200 bg-white transition-all duration-200 hover:-translate-y-1 hover:border-neutral-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)]"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative aspect-3/4 overflow-hidden bg-neutral-100">
         <Image
@@ -69,23 +57,6 @@ export default function ProductCard({ id, name, price, sale_price, image, catego
           )}
         </div>
       </div>
-      {isHovered ? (
-        <button
-          type="button"
-          onClick={handleWishlistClick}
-          className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-neutral-900 text-white opacity-100 transition-all duration-200"
-          aria-label="Add to wishlist"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
-            <path
-              fill={isFavorited ? "currentColor" : "none"}
-              stroke="currentColor"
-              strokeWidth="2"
-              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-            />
-          </svg>
-        </button>
-      ) : null}
     </Link>
   );
 }

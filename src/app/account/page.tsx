@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useState, useCallback } from "react";
+import { BsPlusLg } from "react-icons/bs";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,539 +14,777 @@ import { supabase } from "@/lib/supabase";
 
 type Tab = "orders" | "wishlist" | "addresses" | "settings";
 
-// ---------- Types ----------
 interface Order {
-    id: string;
-    order_number: string;
-    status: string;
-    total_amount: number;
-    created_at: string;
-    shipping_full_name: string;
-    order_items: OrderItem[];
+  id: string;
+  order_number: string;
+  status: string;
+  total_amount: number;
+  created_at: string;
+  shipping_full_name: string;
+  order_items: OrderItem[];
 }
 interface OrderItem {
-    id: string;
-    product_name: string;
-    color_name: string;
-    size_label: string;
-    quantity: number;
-    unit_price: number;
-    total_price: number;
+  id: string;
+  product_name: string;
+  color_name: string;
+  size_label: string;
+  quantity: number;
+  unit_price: number;
+  total_price: number;
 }
 interface Address {
-    id: string;
-    label: string | null;
-    full_name: string;
-    phone: string;
-    address_line_1: string;
-    address_line_2: string | null;
-    city: string;
-    state: string;
-    postal_code: string;
-    country: string;
-    is_default: boolean;
+  id: string;
+  label: string | null;
+  full_name: string;
+  phone: string;
+  address_line_1: string;
+  address_line_2: string | null;
+  city: string;
+  state: string;
+  postal_code: string;
+  country: string;
+  is_default: boolean;
 }
 
-const STATUS_COLORS: Record<string, string> = {
-    pending: "bg-yellow-100 text-yellow-800",
-    confirmed: "bg-blue-100 text-blue-800",
-    processing: "bg-indigo-100 text-indigo-800",
-    shipped: "bg-purple-100 text-purple-800",
-    delivered: "bg-green-100 text-green-800",
-    cancelled: "bg-red-100 text-red-800",
+const STATUS_STYLES: Record<string, string> = {
+  pending:    "bg-yellow-50 text-yellow-700 border-yellow-200",
+  confirmed:  "bg-blue-50 text-blue-700 border-blue-200",
+  processing: "bg-indigo-50 text-indigo-700 border-indigo-200",
+  shipped:    "bg-purple-50 text-purple-700 border-purple-200",
+  delivered:  "bg-green-50 text-green-700 border-green-200",
+  cancelled:  "bg-red-50 text-red-600 border-red-200",
 };
 
 const TABS: { key: Tab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-    { key: "orders", label: "Orders", icon: FiPackage },
-    { key: "wishlist", label: "Wishlist", icon: FiHeart },
-    { key: "addresses", label: "Addresses", icon: FiMapPin },
-    { key: "settings", label: "Settings", icon: FiSettings },
+  { key: "orders",    label: "Orders",    icon: FiPackage  },
+  { key: "wishlist",  label: "Wishlist",  icon: FiHeart    },
+  { key: "addresses", label: "Addresses", icon: FiMapPin   },
+  { key: "settings",  label: "Settings",  icon: FiSettings },
 ];
 
 const FALLBACK = "/product/fallback.png";
 
+/* ─────────────────────────────────────────────
+   Shared input style
+───────────────────────────────────────────── */
+const inputCls =
+  "w-full rounded-full border border-[#e0ddd8] bg-[#faf9f7] px-4 py-2.5 text-sm text-[#111111] placeholder:text-[#bbbbbb] focus:border-red-400 focus:outline-none transition-colors";
+
+/* ─────────────────────────────────────────────
+   Spinner
+───────────────────────────────────────────── */
+function Spinner() {
+  return (
+    <div className="flex items-center justify-center py-24">
+      <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-red-600 border-t-transparent" />
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Empty state card
+───────────────────────────────────────────── */
+function EmptyState({
+  title, sub, cta, href,
+}: { title: string; sub: string; cta?: string; href?: string }) {
+  return (
+    <div className="rounded-2xl border border-[#e0ddd8] bg-white overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
+      <div className="bg-[#111111] px-6 py-3.5 flex items-center gap-2">
+        <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+        <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+        <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+      </div>
+      <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+        <p
+          className="text-[#111111] mb-2 leading-tight"
+          style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(26px,4vw,38px)", letterSpacing: "0.04em" }}
+        >
+          {title}
+        </p>
+        <p className="text-sm font-light text-[#888888] mb-8 max-w-xs">{sub}</p>
+        {cta && href && (
+          <Link
+            href={href}
+            className="group inline-flex items-center gap-2.5 bg-gray-900 hover:bg-gray-700 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full px-7 py-3 transition-all duration-200 hover:-translate-y-0.5"
+          >
+            {cta}
+            <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+          </Link>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   ROOT EXPORT
+═══════════════════════════════════════════════ */
 export default function AccountPage() {
-    return (
-        <Suspense fallback={
-            <main className="min-h-screen bg-[#f8f8f8]">
-                <Navbar />
-                <div className="flex items-center justify-center py-32">
-                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#cc071e] border-t-transparent" />
-                </div>
-            </main>
-        }>
-            <AccountPageInner />
-        </Suspense>
-    );
+  return (
+    <Suspense fallback={
+      <div className="bg-[#faf9f7] min-h-screen">
+        <Navbar />
+        <Spinner />
+      </div>
+    }>
+      <AccountPageInner />
+    </Suspense>
+  );
 }
 
+/* ═══════════════════════════════════════════════
+   INNER PAGE
+═══════════════════════════════════════════════ */
 function AccountPageInner() {
-    const { user, profile, loading: authLoading, logout } = useAuth();
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const initialTab = (searchParams.get("tab") as Tab) || "orders";
+  const { user, profile, loading: authLoading, logout } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [activeTab, setActiveTab] = useState<Tab>((searchParams.get("tab") as Tab) || "orders");
 
-    const [activeTab, setActiveTab] = useState<Tab>(initialTab);
+  useEffect(() => {
+    if (!authLoading && !user) router.push("/login");
+  }, [authLoading, user, router]);
 
-    // Redirect if not authenticated
-    useEffect(() => {
-        if (!authLoading && !user) router.push("/login");
-    }, [authLoading, user, router]);
-
-    if (authLoading || !user) {
-        return (
-            <main className="min-h-screen bg-[#f8f8f8]">
-                <Navbar />
-                <div className="flex items-center justify-center py-32">
-                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#cc071e] border-t-transparent" />
-                </div>
-            </main>
-        );
-    }
-
+  if (authLoading || !user) {
     return (
-        <main className="min-h-screen bg-[#f8f8f8] text-[#111111]">
-            <Navbar />
-            <div className="mx-auto max-w-7xl px-4 py-7 sm:py-8 lg:py-12 lg:px-8">
-                {/* Header */}
-                <div className="mb-6 sm:mb-8 lg:mb-8">
-                    <h1 className="text-xl font-extrabold uppercase sm:text-2xl lg:text-3xl">My Account</h1>
-                    <p className="mt-1 text-xs text-[#555555] sm:text-sm lg:text-sm">Welcome back, {profile?.full_name || user.email}</p>
-                </div>
-
-                <div className="grid gap-6 sm:gap-8 lg:grid-cols-12">
-                    {/* Sidebar */}
-                    <aside className="lg:col-span-3">
-                        <div className="rounded-2xl border border-[#e5e5e5] bg-white p-4 shadow-sm">
-                            {/* Profile summary */}
-                            <div className="flex items-center gap-3 border-b border-[#f3f3f3] pb-4 mb-4">
-                                <div className="h-10 w-10 rounded-full bg-[#cc071e] flex items-center justify-center text-white text-base font-bold shrink-0 sm:h-12 sm:w-12 sm:text-lg lg:h-12 lg:w-12 lg:text-lg">
-                                    {(profile?.full_name || user.email || "U")[0].toUpperCase()}
-                                </div>
-                                <div className="min-w-0">
-                                    <p className="font-bold text-xs truncate sm:text-sm lg:text-sm">{profile?.full_name || "User"}</p>
-                                    <p className="text-[10px] text-[#666] truncate sm:text-xs lg:text-xs">{user.email}</p>
-                                </div>
-                            </div>
-
-                            {/* Tabs */}
-                            <nav className="space-y-1">
-                                {TABS.map((t) => {
-                                    const Icon = t.icon;
-                                    return (
-                                        <button
-                                            key={t.key}
-                                            onClick={() => setActiveTab(t.key)}
-                                            className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 sm:px-4 sm:py-3 sm:text-sm sm:gap-3 lg:px-4 lg:py-3 lg:text-sm lg:gap-3 ${activeTab === t.key
-                                                ? "bg-[#cc071e] text-white"
-                                                : "text-[#333] hover:bg-[#f3f3f3]"
-                                                }`}
-                                        >
-                                            <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
-                                            {t.label}
-                                        </button>
-                                    );
-                                })}
-                            </nav>
-
-                            <button
-                                onClick={logout}
-                                className="mt-4 w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-[#cc071e] hover:bg-red-50 transition-colors flex items-center gap-2 sm:px-4 sm:py-3 sm:text-sm sm:gap-3 lg:px-4 lg:py-3 lg:text-sm lg:gap-3"
-                            >
-                                <FiLogOut className="h-4 w-4 sm:h-5 sm:w-5" /> Logout
-                            </button>
-                        </div>
-                    </aside>
-
-                    {/* Content */}
-                    <div className="lg:col-span-9">
-                        {activeTab === "orders" && <OrdersTab userId={user.id} />}
-                        {activeTab === "wishlist" && <WishlistTab />}
-                        {activeTab === "addresses" && <AddressesTab userId={user.id} />}
-                        {activeTab === "settings" && <SettingsTab />}
-                    </div>
-                </div>
-            </div>
-            <Footer />
-        </main>
+      <div className="bg-[#faf9f7] min-h-screen">
+        <Navbar />
+        <Spinner />
+      </div>
     );
-}
+  }
 
-// ===================== ORDERS TAB =====================
-function OrdersTab({ userId }: { userId: string }) {
-    const [orders, setOrders] = useState<Order[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [expanded, setExpanded] = useState<string | null>(null);
+  const initials = (profile?.full_name || user.email || "U")[0].toUpperCase();
 
-    useEffect(() => {
-        (async () => {
-            const { data } = await supabase
-                .from("orders")
-                .select("id,order_number,status,total_amount,created_at,shipping_full_name,order_items(id,product_name,color_name,size_label,quantity,unit_price,total_price)")
-                .eq("user_id", userId)
-                .order("created_at", { ascending: false });
-            setOrders((data as Order[]) || []);
-            setLoading(false);
-        })();
-    }, [userId]);
+  return (
+    <div className="bg-[#faf9f7] text-[#111111] min-h-screen">
+      <Navbar />
 
-    if (loading)
-        return <div className="text-center py-12 text-xs text-[#999] sm:py-16 sm:text-sm lg:py-16 lg:text-sm">Loading orders...</div>;
+      <main>
+        {/* ── HERO HEADER ── */}
+        <section className="relative overflow-hidden border-b border-[#e0ddd8] pt-24 md:pt-28">
+          <span
+            className="pointer-events-none select-none absolute bottom-[-0.15em] right-[-0.04em] text-transparent font-black leading-none tracking-wide hidden sm:block"
+            style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: "clamp(80px, 16vw, 240px)",
+              WebkitTextStroke: "1.5px #e8e5e0",
+            }}
+          >
+            ACCOUNT
+          </span>
 
-    if (orders.length === 0)
-        return (
-            <div className="rounded-2xl border border-[#e5e5e5] bg-white p-6 text-center sm:p-8 lg:p-10">
-                <p className="text-base font-bold sm:text-lg lg:text-lg">No orders yet</p>
-                <p className="mt-2 text-xs text-[#666] sm:text-sm lg:text-sm">Start shopping to see your orders here.</p>
-                <Link href="/upper" className="mt-4 inline-block rounded-full bg-[#cc071e] px-5 py-2 text-xs font-bold uppercase text-white hover:bg-red-700 transition sm:px-6 sm:text-sm lg:px-6 lg:text-sm">
-                    Shop Now
-                </Link>
+          <div className="relative max-w-6xl mx-auto px-5 sm:px-8 pb-14 md:pb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-[10px] font-medium tracking-[0.22em] uppercase rounded-full px-3.5 py-1.5 mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                My Account
+              </div>
+              <h1
+                className="leading-[0.92] tracking-wide text-[#111111] mb-4"
+                style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(48px, 9vw, 100px)" }}
+              >
+                Welcome Back.
+              </h1>
+              <p className="text-base font-light text-[#444444]">
+                {profile?.full_name || user.email}
+              </p>
             </div>
-        );
 
-    return (
-        <div className="space-y-3 sm:space-y-4 lg:space-y-4">
-            <h2 className="text-xs font-bold uppercase sm:text-sm lg:text-sm">Order History</h2>
-            {orders.map((o) => (
-                <div key={o.id} className="rounded-2xl border border-[#e5e5e5] bg-white overflow-hidden shadow-sm">
-                    <button
-                        onClick={() => setExpanded(expanded === o.id ? null : o.id)}
-                        className="w-full text-left px-4 py-3 flex items-center justify-between hover:bg-[#fafafa] transition sm:px-5 sm:py-4 lg:px-5 lg:py-4"
+            {/* Avatar stat */}
+            <div className="md:text-right flex-shrink-0 pb-1 flex md:flex-col items-center md:items-end gap-4 md:gap-2">
+              <div
+                className="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center text-white text-2xl flex-shrink-0"
+                style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
+              >
+                {initials}
+              </div>
+              <div>
+                <p className="text-[11px] tracking-[0.18em] uppercase text-[#888888]">
+                  {user.email}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── BODY ── */}
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-10 md:py-14">
+          <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-8 lg:gap-10 items-start">
+
+            {/* ── SIDEBAR ── */}
+            <aside className="lg:sticky lg:top-24">
+              <div className="rounded-2xl border border-[#e0ddd8] bg-white overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
+                {/* Mac header */}
+                <div className="bg-[#111111] px-5 py-3.5 flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+                  <span className="ml-auto text-[11px] tracking-[0.18em] uppercase text-white/30">
+                    Navigation
+                  </span>
+                </div>
+
+                {/* Profile summary */}
+                <div className="px-5 py-5 border-b border-[#e0ddd8]">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white flex-shrink-0"
+                      style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "18px" }}
                     >
-                        <div className="flex items-center gap-2 flex-wrap sm:gap-4">
-                            <span className="font-mono text-[10px] font-bold text-[#cc071e] sm:text-xs lg:text-xs">{o.order_number}</span>
-                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold capitalize sm:px-2.5 sm:text-xs lg:text-xs ${STATUS_COLORS[o.status] || "bg-gray-100 text-gray-800"}`}>
-                                {o.status}
-                            </span>
-                            <span className="text-[10px] text-[#999] sm:text-xs lg:text-xs">{new Date(o.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
-                        </div>
-                        <div className="flex items-center gap-2 sm:gap-3">
-                            <span className="text-xs font-bold sm:text-sm lg:text-sm">₹{o.total_amount?.toLocaleString("en-IN")}</span>
-                            <span className="text-[#999] text-base sm:text-lg lg:text-lg">{expanded === o.id ? "−" : "+"}</span>
-                        </div>
-                    </button>
-                    {expanded === o.id && (
-                        <div className="border-t border-[#f3f3f3] px-4 py-3 sm:px-5 sm:py-4 lg:px-5 lg:py-4">
-                            <table className="w-full text-[10px] sm:text-xs lg:text-xs">
-                                <thead>
-                                    <tr className="text-[#999] uppercase border-b border-[#f3f3f3]">
-                                        <th className="text-left py-2">Product</th>
-                                        <th className="text-left py-2">Variant</th>
-                                        <th className="text-center py-2">Qty</th>
-                                        <th className="text-right py-2">Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {o.order_items.map((item) => (
-                                        <tr key={item.id} className="border-b border-[#f9f9f9] last:border-0">
-                                            <td className="py-2.5 font-semibold">{item.product_name}</td>
-                                            <td className="py-2.5 text-[#666]">{item.color_name} / {item.size_label}</td>
-                                            <td className="py-2.5 text-center">{item.quantity}</td>
-                                            <td className="py-2.5 text-right font-semibold">₹{item.total_price.toLocaleString("en-IN")}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
+                      {initials}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-[#111111] truncate">
+                        {profile?.full_name || "Athlete"}
+                      </p>
+                      <p className="text-[11px] text-[#888888] truncate">{user.email}</p>
+                    </div>
+                  </div>
                 </div>
-            ))}
-        </div>
-    );
-}
 
-// ===================== WISHLIST TAB =====================
-function WishlistTab() {
-    const { items: wishlistItems, removeItem } = useWishlist();
-
-    if (wishlistItems.length === 0)
-        return (
-            <div className="rounded-2xl border border-[#e5e5e5] bg-white p-6 text-center sm:p-8 lg:p-10">
-                <p className="text-base font-bold sm:text-lg lg:text-lg">Your wishlist is empty</p>
-                <p className="mt-2 text-xs text-[#666] sm:text-sm lg:text-sm">Save products you love to find them later.</p>
-                <Link href="/upper" className="mt-4 inline-block rounded-full bg-[#cc071e] px-5 py-2 text-xs font-bold uppercase text-white hover:bg-red-700 transition sm:px-6 sm:text-sm lg:px-6 lg:text-sm">
-                    Browse Products
-                </Link>
-            </div>
-        );
-
-    return (
-        <div className="space-y-3 sm:space-y-4 lg:space-y-4">
-            <h2 className="text-xs font-bold uppercase sm:text-sm lg:text-sm">My Wishlist ({wishlistItems.length})</h2>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-3 lg:gap-4">
-                {wishlistItems.map((item) => (
-                    <div key={item.id} className="group relative rounded-xl border border-[#e5e5e5] bg-white overflow-hidden shadow-sm hover:shadow-md transition">
-                        <Link href={`/products/${item.id}`}>
-                            <div className="relative aspect-square bg-[#f3f3f3]">
-                                <Image
-                                    src={item.image || FALLBACK}
-                                    alt={item.name}
-                                    fill
-                                    sizes="(max-width: 768px) 50vw, 33vw"
-                                    className="object-cover"
-                                />
-                            </div>
-                            <div className="p-2 sm:p-3 lg:p-3">
-                                <p className="text-[10px] font-medium uppercase text-[#999]">{item.category}</p>
-                                <p className="mt-1 text-xs font-bold uppercase truncate">{item.name}</p>
-                                <p className="mt-1 text-xs font-bold text-[#cc071e] sm:text-sm lg:text-sm">₹{item.price.toLocaleString("en-IN")}</p>
-                            </div>
-                        </Link>
-                        <button
-                            onClick={() => removeItem(item.id)}
-                            className="absolute top-1 right-1 h-6 w-6 rounded-full bg-white/90 flex items-center justify-center text-[#cc071e] text-xs shadow hover:bg-red-50 transition sm:top-2 sm:right-2 sm:h-7 sm:w-7 lg:top-2 lg:right-2 lg:h-7 lg:w-7"
-                            aria-label="Remove from wishlist"
+                {/* Tab nav */}
+                <nav className="p-3 space-y-1">
+                  {TABS.map((t) => {
+                    const Icon = t.icon;
+                    const active = activeTab === t.key;
+                    return (
+                      <button
+                        key={t.key}
+                        onClick={() => setActiveTab(t.key)}
+                        className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all duration-150 ${
+                          active
+                            ? "bg-gray-900 text-white"
+                            : "text-[#555555] hover:bg-[#f0edea] hover:text-[#111111]"
+                        }`}
+                      >
+                        <Icon className="w-4 h-4 flex-shrink-0" />
+                        <span
+                          className="tracking-wide"
+                          style={{ fontFamily: active ? "'Bebas Neue', sans-serif" : undefined, letterSpacing: "0.06em" }}
                         >
-                            ✕
-                        </button>
-                    </div>
-                ))}
+                          {t.label}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </nav>
+
+                {/* Logout */}
+                <div className="px-3 pb-4">
+                  <div className="h-px bg-[#e0ddd8] mb-3" />
+                  <button
+                    onClick={logout}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-[#888888] hover:bg-red-50 hover:text-red-600 transition-all duration-150"
+                  >
+                    <FiLogOut className="w-4 h-4 flex-shrink-0" />
+                    <span className="tracking-wide">Logout</span>
+                  </button>
+                </div>
+              </div>
+            </aside>
+
+            {/* ── CONTENT ── */}
+            <div>
+              {activeTab === "orders"    && <OrdersTab    userId={user.id} />}
+              {activeTab === "wishlist"  && <WishlistTab  />}
+              {activeTab === "addresses" && <AddressesTab userId={user.id} />}
+              {activeTab === "settings"  && <SettingsTab  />}
             </div>
+
+          </div>
         </div>
-    );
+      </main>
+
+      <Footer />
+    </div>
+  );
 }
 
-// ===================== ADDRESSES TAB =====================
-function AddressesTab({ userId }: { userId: string }) {
-    const [addresses, setAddresses] = useState<Address[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [editing, setEditing] = useState<Address | null>(null);
-    const [showForm, setShowForm] = useState(false);
-    const [refreshKey, setRefreshKey] = useState(0);
-    const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
+/* ═══════════════════════════════════════════════
+   ORDERS TAB
+═══════════════════════════════════════════════ */
+function OrdersTab({ userId }: { userId: string }) {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [expanded, setExpanded] = useState<string | null>(null);
 
-    useEffect(() => {
-        let cancelled = false;
-        supabase
-            .from("addresses")
-            .select("*")
-            .eq("user_id", userId)
-            .order("is_default", { ascending: false })
-            .order("updated_at", { ascending: false })
-            .then(({ data }) => {
-                if (!cancelled) {
-                    setAddresses((data as Address[]) || []);
-                    setLoading(false);
-                }
-            });
-        return () => { cancelled = true; };
-    }, [userId, refreshKey]);
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from("orders")
+        .select("id,order_number,status,total_amount,created_at,shipping_full_name,order_items(id,product_name,color_name,size_label,quantity,unit_price,total_price)")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+      setOrders((data as Order[]) || []);
+      setLoading(false);
+    })();
+  }, [userId]);
 
-    const handleDelete = async (id: string) => {
-        await supabase.from("addresses").delete().eq("id", id);
-        refresh();
-    };
+  if (loading) return <Spinner />;
+  if (orders.length === 0)
+    return <EmptyState title="No Orders Yet" sub="Start shopping to see your orders here." cta="Shop Now" href="/upper" />;
 
-    const handleSetDefault = async (id: string) => {
-        await supabase.from("addresses").update({ is_default: false }).eq("user_id", userId);
-        await supabase.from("addresses").update({ is_default: true }).eq("id", id);
-        refresh();
-    };
+  return (
+    <div className="space-y-4">
+      <p className="text-[10px] font-medium tracking-[0.25em] uppercase text-[#111111]">Order History</p>
+      <h2
+        className="text-[#111111] leading-tight mb-6"
+        style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(28px,4vw,38px)", letterSpacing: "0.04em" }}
+      >
+        Your Orders
+      </h2>
 
-    const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const fd = new FormData(e.currentTarget);
-        const data = {
-            user_id: userId,
-            label: (fd.get("label") as string) || "Home",
-            full_name: fd.get("full_name") as string,
-            phone: fd.get("phone") as string,
-            address_line_1: fd.get("address_line_1") as string,
-            address_line_2: (fd.get("address_line_2") as string) || null,
-            city: fd.get("city") as string,
-            state: fd.get("state") as string,
-            postal_code: fd.get("postal_code") as string,
-            country: fd.get("country") as string,
-            is_default: addresses.length === 0, // First address is default
-        };
-        if (editing) {
-            await supabase.from("addresses").update(data).eq("id", editing.id);
-        } else {
-            await supabase.from("addresses").insert(data);
-        }
-        setEditing(null);
-        setShowForm(false);
-        refresh();
-    };
-
-    if (loading) return <div className="text-center py-12 text-xs text-[#999] sm:py-16 sm:text-sm lg:py-16 lg:text-sm">Loading addresses...</div>;
-
-    return (
-        <div className="space-y-3 sm:space-y-4 lg:space-y-4">
-            <div className="flex items-center justify-between gap-2">
-                <h2 className="text-xs font-bold uppercase sm:text-sm lg:text-sm">Saved Addresses</h2>
-                <button
-                    onClick={() => { setEditing(null); setShowForm(true); }}
-                    className="rounded-full bg-[#cc071e] px-3 py-1.5 text-[10px] font-bold uppercase text-white hover:bg-red-700 transition sm:px-4 sm:py-2 sm:text-xs lg:px-4 lg:py-2 lg:text-xs"
-                >
-                    + Add Address
-                </button>
+      {orders.map((o) => (
+        <div
+          key={o.id}
+          className="rounded-2xl border border-[#e0ddd8] bg-white hover:border-red-200 hover:shadow-[0_8px_32px_rgba(212,0,31,0.06)] transition-all duration-300 overflow-hidden"
+        >
+          {/* Order header row */}
+          <button
+            onClick={() => setExpanded(expanded === o.id ? null : o.id)}
+            className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 border-b border-[#e0ddd8] hover:bg-[#faf9f7] transition-colors"
+          >
+            <div className="flex items-center gap-3 flex-wrap min-w-0">
+              <span
+                className="text-[#111111] flex-shrink-0"
+                style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "15px", letterSpacing: "0.08em" }}
+              >
+                {o.order_number}
+              </span>
+              <span
+                className={`text-[9px] font-medium tracking-[0.2em] uppercase border rounded-full px-2.5 py-1 flex-shrink-0 ${STATUS_STYLES[o.status] || "bg-[#f0edea] text-[#888888] border-[#e0ddd8]"}`}
+              >
+                {o.status}
+              </span>
+              <span className="text-[11px] text-[#888888] flex-shrink-0">
+                {new Date(o.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+              </span>
             </div>
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <span
+                className="text-[#111111]"
+                style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "18px", letterSpacing: "0.04em" }}
+              >
+                ₹{o.total_amount?.toLocaleString("en-IN")}
+              </span>
+              <span className="w-6 h-6 rounded-full border border-[#e0ddd8] flex items-center justify-center text-[#888888] text-xs">
+                {expanded === o.id ? "−" : "+"}
+              </span>
+            </div>
+          </button>
 
-            {/* Address form modal */}
-            {(showForm || editing) && (
-                <div className="rounded-2xl border border-[#e5e5e5] bg-white p-4 shadow-sm sm:p-5 lg:p-5">
-                    <h3 className="text-xs font-bold uppercase mb-3 sm:text-sm sm:mb-4 lg:text-sm lg:mb-4">{editing ? "Edit Address" : "New Address"}</h3>
-                    <form onSubmit={handleSave} className="grid gap-2 sm:grid-cols-2 sm:gap-3 lg:gap-3">
-                        <input name="label" defaultValue={editing?.label || "Home"} placeholder="Label (e.g. Home, Office)"
-                            className="rounded-full border border-[#e5e5e5] px-3 py-2 text-xs focus:border-[#cc071e] focus:outline-none sm:px-4 sm:py-2.5 sm:text-sm lg:text-sm" />
-                        <input name="full_name" required defaultValue={editing?.full_name || ""} placeholder="Full Name"
-                            className="rounded-full border border-[#e5e5e5] px-3 py-2 text-xs focus:border-[#cc071e] focus:outline-none sm:px-4 sm:py-2.5 sm:text-sm lg:text-sm" />
-                        <input name="phone" required defaultValue={editing?.phone || ""} placeholder="Phone"
-                            className="rounded-full border border-[#e5e5e5] px-3 py-2 text-xs focus:border-[#cc071e] focus:outline-none sm:px-4 sm:py-2.5 sm:text-sm lg:text-sm" />
-                        <input name="address_line_1" required defaultValue={editing?.address_line_1 || ""} placeholder="Address Line 1"
-                            className="sm:col-span-2 rounded-full border border-[#e5e5e5] px-3 py-2 text-xs focus:border-[#cc071e] focus:outline-none sm:px-4 sm:py-2.5 sm:text-sm lg:text-sm" />
-                        <input name="address_line_2" defaultValue={editing?.address_line_2 || ""} placeholder="Address Line 2 (optional)"
-                            className="sm:col-span-2 rounded-full border border-[#e5e5e5] px-3 py-2 text-xs focus:border-[#cc071e] focus:outline-none sm:px-4 sm:py-2.5 sm:text-sm lg:text-sm" />
-                        <input name="city" required defaultValue={editing?.city || ""} placeholder="City"
-                            className="rounded-full border border-[#e5e5e5] px-3 py-2 text-xs focus:border-[#cc071e] focus:outline-none sm:px-4 sm:py-2.5 sm:text-sm lg:text-sm" />
-                        <input name="state" required defaultValue={editing?.state || ""} placeholder="State"
-                            className="rounded-full border border-[#e5e5e5] px-3 py-2 text-xs focus:border-[#cc071e] focus:outline-none sm:px-4 sm:py-2.5 sm:text-sm lg:text-sm" />
-                        <input name="postal_code" required defaultValue={editing?.postal_code || ""} placeholder="Postal Code"
-                            className="rounded-full border border-[#e5e5e5] px-3 py-2 text-xs focus:border-[#cc071e] focus:outline-none sm:px-4 sm:py-2.5 sm:text-sm lg:text-sm" />
-                        <input name="country" required defaultValue={editing?.country || "India"} placeholder="Country"
-                            className="rounded-full border border-[#e5e5e5] px-3 py-2 text-xs focus:border-[#cc071e] focus:outline-none sm:px-4 sm:py-2.5 sm:text-sm lg:text-sm" />
-                        <div className="sm:col-span-2 flex gap-2 mt-2 sm:gap-3">
-                            <button type="submit" className="rounded-full bg-[#cc071e] px-4 py-2 text-[10px] font-bold uppercase text-white hover:bg-red-700 transition sm:px-6 sm:py-2.5 sm:text-xs lg:text-xs">
-                                {editing ? "Update" : "Save"} Address
-                            </button>
-                            <button type="button" onClick={() => { setEditing(null); setShowForm(false); }}
-                                className="rounded-full border border-[#e5e5e5] px-4 py-2 text-[10px] font-bold uppercase hover:bg-[#f3f3f3] transition sm:px-6 sm:py-2.5 sm:text-xs lg:text-xs">
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            )}
-
-            {addresses.length === 0 && !showForm ? (
-                <div className="rounded-2xl border border-[#e5e5e5] bg-white p-6 text-center sm:p-8 lg:p-10">
-                    <p className="text-base font-bold sm:text-lg lg:text-lg">No saved addresses</p>
-                    <p className="mt-2 text-xs text-[#666] sm:text-sm lg:text-sm">Add an address to speed up your checkout.</p>
-                </div>
-            ) : (
-                <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:gap-4">
-                    {addresses.map((a) => (
-                        <div key={a.id} className={`rounded-2xl border bg-white p-4 shadow-sm relative sm:p-5 lg:p-5 ${a.is_default ? "border-[#cc071e]" : "border-[#e5e5e5]"}`}>
-                            {a.is_default && (
-                                <span className="absolute top-2 right-2 bg-[#cc071e] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase sm:top-3 sm:right-3">Default</span>
-                            )}
-                            <p className="text-[10px] font-bold uppercase text-[#999] mb-2 sm:text-xs lg:text-xs">{a.label || "Address"}</p>
-                            <p className="text-xs font-semibold sm:text-sm lg:text-sm">{a.full_name}</p>
-                            <p className="text-[10px] text-[#666] mt-1 sm:text-xs lg:text-xs">{a.address_line_1}{a.address_line_2 ? `, ${a.address_line_2}` : ""}</p>
-                            <p className="text-[10px] text-[#666] sm:text-xs lg:text-xs">{a.city}, {a.state} {a.postal_code}</p>
-                            <p className="text-[10px] text-[#666] sm:text-xs lg:text-xs">{a.country} · {a.phone}</p>
-                            <div className="flex gap-2 mt-3">
-                                <button onClick={() => { setEditing(a); setShowForm(false); }}
-                                    className="text-[10px] font-semibold text-[#cc071e] hover:underline sm:text-xs lg:text-xs">Edit</button>
-                                {!a.is_default && (
-                                    <button onClick={() => handleSetDefault(a.id)}
-                                        className="text-[10px] font-semibold text-[#333] hover:underline sm:text-xs lg:text-xs">Set Default</button>
-                                )}
-                                <button onClick={() => handleDelete(a.id)}
-                                    className="text-[10px] font-semibold text-[#999] hover:text-red-600 hover:underline sm:text-xs lg:text-xs">Delete</button>
-                            </div>
-                        </div>
+          {/* Expanded items */}
+          {expanded === o.id && (
+            <div className="px-6 py-5 bg-[#faf9f7]">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-[#e0ddd8]">
+                    {["Product", "Variant", "Qty", "Price"].map((h, i) => (
+                      <th
+                        key={h}
+                        className={`pb-3 text-[10px] font-medium tracking-[0.2em] uppercase text-[#888888] ${i === 0 ? "text-left" : i === 2 ? "text-center" : "text-right"}`}
+                      >
+                        {h}
+                      </th>
                     ))}
-                </div>
-            )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {o.order_items.map((item) => (
+                    <tr key={item.id} className="border-b border-[#e0ddd8] last:border-0">
+                      <td className="py-3 text-sm font-medium text-[#111111]">{item.product_name}</td>
+                      <td className="py-3 text-sm font-light text-[#888888]">{item.color_name} / {item.size_label}</td>
+                      <td className="py-3 text-sm text-center text-[#444444]">{item.quantity}</td>
+                      <td className="py-3 text-sm text-right font-medium text-[#111111]">₹{item.total_price.toLocaleString("en-IN")}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
-    );
+      ))}
+    </div>
+  );
 }
 
-// ===================== SETTINGS TAB =====================
-function SettingsTab() {
-    const { user, profile } = useAuth();
-    const [name, setName] = useState(profile?.full_name || "");
-    const [phone, setPhone] = useState(profile?.phone || "");
-    const [saving, setSaving] = useState(false);
-    const [saved, setSaved] = useState(false);
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [pwMsg, setPwMsg] = useState("");
-    const [pwSaving, setPwSaving] = useState(false);
+/* ═══════════════════════════════════════════════
+   WISHLIST TAB
+═══════════════════════════════════════════════ */
+function WishlistTab() {
+  const { items: wishlistItems, removeItem } = useWishlist();
 
-    const handleProfileSave = async () => {
-        if (!user) return;
-        setSaving(true);
-        await supabase.from("profiles").update({ full_name: name, phone }).eq("id", user.id);
-        setSaving(false);
-        setSaved(true);
-        setTimeout(() => setSaved(false), 2000);
+  if (wishlistItems.length === 0)
+    return <EmptyState title="Wishlist is Empty" sub="Save products you love to find them later." cta="Browse Products" href="/upper" />;
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <p className="text-[10px] font-medium tracking-[0.25em] uppercase text-[#111111] mb-1">Saved Items</p>
+        <h2
+          className="text-[#111111] leading-tight"
+          style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(28px,4vw,38px)", letterSpacing: "0.04em" }}
+        >
+          My Wishlist <span className="text-[#111111]">({wishlistItems.length})</span>
+        </h2>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        {wishlistItems.map((item) => (
+          <div
+            key={item.id}
+            className="group relative rounded-2xl border border-[#e0ddd8] bg-white hover:border-red-200 hover:shadow-[0_8px_32px_rgba(212,0,31,0.06)] transition-all duration-300 overflow-hidden"
+          >
+            <Link href={`/products/${item.id}`}>
+              <div className="relative aspect-square bg-[#f0edea]">
+                <Image src={item.image || FALLBACK} alt={item.name} fill sizes="(max-width: 768px) 50vw, 33vw" className="object-cover" />
+              </div>
+              <div className="p-4">
+                <p className="text-[10px] font-medium tracking-[0.2em] uppercase text-[#888888] mb-1">{item.category}</p>
+                <p
+                  className="text-[#111111] truncate leading-tight"
+                  style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(14px,2vw,17px)", letterSpacing: "0.04em" }}
+                >
+                  {item.name}
+                </p>
+                <p className="mt-1 text-sm font-medium text-[#111111]">₹{item.price.toLocaleString("en-IN")}</p>
+              </div>
+            </Link>
+            {/* Remove button */}
+            <button
+              onClick={() => removeItem(item.id)}
+              aria-label="Remove from wishlist"
+              className="absolute top-3 right-3 w-7 h-7 rounded-full bg-white border border-[#e0ddd8] flex items-center justify-center text-[#888888] hover:text-red-600 hover:border-red-200 transition-all text-xs shadow-sm"
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   ADDRESSES TAB
+═══════════════════════════════════════════════ */
+function AddressesTab({ userId }: { userId: string }) {
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<Address | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
+
+  useEffect(() => {
+    let cancelled = false;
+    supabase
+      .from("addresses").select("*").eq("user_id", userId)
+      .order("is_default", { ascending: false })
+      .order("updated_at", { ascending: false })
+      .then(({ data }) => {
+        if (!cancelled) { setAddresses((data as Address[]) || []); setLoading(false); }
+      });
+    return () => { cancelled = true; };
+  }, [userId, refreshKey]);
+
+  const handleDelete = async (id: string) => {
+    await supabase.from("addresses").delete().eq("id", id);
+    refresh();
+  };
+  const handleSetDefault = async (id: string) => {
+    await supabase.from("addresses").update({ is_default: false }).eq("user_id", userId);
+    await supabase.from("addresses").update({ is_default: true }).eq("id", id);
+    refresh();
+  };
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const data = {
+      user_id: userId,
+      label: (fd.get("label") as string) || "Home",
+      full_name: fd.get("full_name") as string,
+      phone: fd.get("phone") as string,
+      address_line_1: fd.get("address_line_1") as string,
+      address_line_2: (fd.get("address_line_2") as string) || null,
+      city: fd.get("city") as string,
+      state: fd.get("state") as string,
+      postal_code: fd.get("postal_code") as string,
+      country: fd.get("country") as string,
+      is_default: addresses.length === 0,
     };
+    if (editing) {
+      await supabase.from("addresses").update(data).eq("id", editing.id);
+    } else {
+      await supabase.from("addresses").insert(data);
+    }
+    setEditing(null); setShowForm(false); refresh();
+  };
 
-    const handlePasswordChange = async () => {
-        if (!newPassword || newPassword.length < 6) {
-            setPwMsg("Password must be at least 6 characters.");
-            return;
-        }
-        setPwSaving(true);
-        setPwMsg("");
-        const { error } = await supabase.auth.updateUser({ password: newPassword });
-        setPwSaving(false);
-        if (error) {
-            setPwMsg(error.message);
-        } else {
-            setPwMsg("Password updated successfully!");
-            setCurrentPassword("");
-            setNewPassword("");
-        }
-    };
+  if (loading) return <Spinner />;
 
-    return (
-        <div className="space-y-4 sm:space-y-6 lg:space-y-6">
-            {/* Profile */}
-            <div className="rounded-2xl border border-[#e5e5e5] bg-white p-4 shadow-sm sm:p-5 lg:p-5">
-                <h2 className="text-xs font-bold uppercase mb-3 sm:text-sm sm:mb-4 lg:text-sm lg:mb-4">Profile</h2>
-                <div className="grid gap-2 sm:grid-cols-2 sm:gap-3 lg:gap-3">
-                    <div>
-                        <label className="text-[10px] font-semibold uppercase text-[#555] sm:text-xs lg:text-xs">Email</label>
-                        <input value={user?.email || ""} disabled
-                            className="mt-1 w-full rounded-full border border-[#e5e5e5] bg-[#f9f9f9] px-3 py-2 text-xs text-[#999] sm:px-4 sm:py-2.5 sm:text-sm lg:text-sm" />
-                    </div>
-                    <div>
-                        <label className="text-[10px] font-semibold uppercase text-[#555] sm:text-xs lg:text-xs">Full Name</label>
-                        <input value={name} onChange={(e) => setName(e.target.value)}
-                            className="mt-1 w-full rounded-full border border-[#e5e5e5] px-3 py-2 text-xs focus:border-[#cc071e] focus:outline-none sm:px-4 sm:py-2.5 sm:text-sm lg:text-sm" />
-                    </div>
-                    <div>
-                        <label className="text-[10px] font-semibold uppercase text-[#555] sm:text-xs lg:text-xs">Phone</label>
-                        <input value={phone} onChange={(e) => setPhone(e.target.value)}
-                            className="mt-1 w-full rounded-full border border-[#e5e5e5] px-3 py-2 text-xs focus:border-[#cc071e] focus:outline-none sm:px-4 sm:py-2.5 sm:text-sm lg:text-sm" />
-                    </div>
-                </div>
-                <div className="mt-3 flex items-center gap-2 sm:mt-4 sm:gap-3">
-                    <button onClick={handleProfileSave} disabled={saving}
-                        className="rounded-full bg-[#cc071e] px-4 py-2 text-[10px] font-bold uppercase text-white hover:bg-red-700 transition disabled:opacity-50 sm:px-6 sm:py-2.5 sm:text-xs lg:text-xs">
-                        {saving ? "Saving..." : "Save Changes"}
-                    </button>
-                    {saved && <span className="text-[10px] text-green-600 font-semibold sm:text-xs lg:text-xs">✓ Saved</span>}
-                </div>
-            </div>
-        
-            {/* Change Password */}
-            <div className="rounded-2xl border border-[#e5e5e5] bg-white p-4 shadow-sm sm:p-5 lg:p-5">
-                <h2 className="text-xs font-bold uppercase mb-3 sm:text-sm sm:mb-4 lg:text-sm lg:mb-4">Change Password</h2>
-                <div className="grid gap-2 sm:grid-cols-2 sm:gap-3 max-w-md">
-                    <div className="sm:col-span-2">
-                        <label className="text-[10px] font-semibold uppercase text-[#555] sm:text-xs lg:text-xs">Current Password</label>
-                        <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)}
-                            className="mt-1 w-full rounded-full border border-[#e5e5e5] px-3 py-2 text-xs focus:border-[#cc071e] focus:outline-none sm:px-4 sm:py-2.5 sm:text-sm lg:text-sm" />
-                    </div>
-                    <div className="sm:col-span-2">
-                        <label className="text-[10px] font-semibold uppercase text-[#555] sm:text-xs lg:text-xs">New Password</label>
-                        <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}
-                            className="mt-1 w-full rounded-full border border-[#e5e5e5] px-3 py-2 text-xs focus:border-[#cc071e] focus:outline-none sm:px-4 sm:py-2.5 sm:text-sm lg:text-sm" />
-                    </div>
-                </div>
-                <div className="mt-3 flex items-center gap-2 sm:mt-4 sm:gap-3">
-                    <button onClick={handlePasswordChange} disabled={pwSaving}
-                        className="rounded-full bg-[#111] px-4 py-2 text-[10px] font-bold uppercase text-white hover:bg-[#333] transition disabled:opacity-50 sm:px-6 sm:py-2.5 sm:text-xs lg:text-xs">
-                        {pwSaving ? "Updating..." : "Update Password"}
-                    </button>
-                    {pwMsg && <span className={`text-[10px] font-semibold sm:text-xs lg:text-xs ${pwMsg.includes("success") ? "text-green-600" : "text-[#cc071e]"}`}>{pwMsg}</span>}
-                </div>
-            </div>
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-[10px] font-medium tracking-[0.25em] uppercase text-[#111111] mb-1">Saved</p>
+          <h2
+            className="text-[#111111] leading-tight"
+            style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(28px,4vw,38px)", letterSpacing: "0.04em" }}
+          >
+            Addresses
+          </h2>
         </div>
-    );
+        <button
+          onClick={() => { setEditing(null); setShowForm(true); }}
+          className="group inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full px-5 py-2.5 transition-all duration-200 hover:-translate-y-0.5 flex-shrink-0"
+        >
+          <BsPlusLg className="text-white font-medium text-[17px]" /> Add Address
+        </button>
+      </div>
+
+      {/* Address Form */}
+      {(showForm || editing) && (
+        <div className="rounded-2xl border border-[#e0ddd8] bg-white overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
+          <div className="bg-[#111111] px-6 py-3.5 flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+            <span className="ml-auto text-[11px] tracking-[0.18em] uppercase text-white/30">
+              {editing ? "Edit Address" : "New Address"}
+            </span>
+          </div>
+          <div className="p-6">
+            <form onSubmit={handleSave} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                { name: "label",          placeholder: "Label (e.g. Home, Office)", defaultValue: editing?.label ?? "Home",           span: false },
+                { name: "full_name",      placeholder: "Full Name",                 defaultValue: editing?.full_name ?? "",            span: false },
+                { name: "phone",          placeholder: "Phone",                     defaultValue: editing?.phone ?? "",                span: false },
+                { name: "address_line_1", placeholder: "Address Line 1",            defaultValue: editing?.address_line_1 ?? "",       span: true  },
+                { name: "address_line_2", placeholder: "Address Line 2 (optional)", defaultValue: editing?.address_line_2 ?? "",       span: true  },
+                { name: "city",           placeholder: "City",                      defaultValue: editing?.city ?? "",                 span: false },
+                { name: "state",          placeholder: "State",                     defaultValue: editing?.state ?? "",                span: false },
+                { name: "postal_code",    placeholder: "Postal Code",               defaultValue: editing?.postal_code ?? "",          span: false },
+                { name: "country",        placeholder: "Country",                   defaultValue: editing?.country ?? "India",         span: false },
+              ].map((f) => (
+                <input
+                  key={f.name}
+                  name={f.name}
+                  placeholder={f.placeholder}
+                  defaultValue={f.defaultValue}
+                  className={`${inputCls} ${f.span ? "sm:col-span-2" : ""}`}
+                />
+              ))}
+              <div className="sm:col-span-2 flex gap-3 pt-2">
+                <button
+                  type="submit"
+                  className="group inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white text-[10px] font-medium tracking-[0.12em] uppercase rounded-full px-4 py-2 transition-all duration-200"
+                >
+                  {editing ? "Update" : "Save"} Address
+                  <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setEditing(null); setShowForm(false); }}
+                  className="inline-flex items-center border border-[#e0ddd8] text-[#888888] hover:border-gray-300 hover:text-[#111111] text-[11px] font-medium tracking-[0.15em] uppercase rounded-full px-6 py-2.5 transition-all duration-200"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Address list */}
+      {addresses.length === 0 && !showForm ? (
+        <EmptyState title="No Saved Addresses" sub="Add an address to speed up your checkout." />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {addresses.map((a) => (
+            <div
+              key={a.id}
+              className={`relative rounded-2xl border bg-white transition-all duration-200 overflow-hidden ${
+                a.is_default ? "border-red-300 shadow-[0_4px_20px_rgba(212,0,31,0.08)]" : "border-[#e0ddd8]"
+              }`}
+            >
+              {/* Default badge */}
+              {a.is_default && (
+                <div className="bg-gray-900 px-4 py-1.5 flex items-center gap-2">
+                  <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-white">Default Address</span>
+                </div>
+              )}
+
+              <div className="p-5">
+                <p className="text-[10px] font-medium tracking-[0.2em] uppercase text-[#888888] mb-2">
+                  {a.label || "Address"}
+                </p>
+                <p className="text-sm font-medium text-[#111111]">{a.full_name}</p>
+                <p className="text-sm font-light text-[#666666] mt-1 leading-relaxed">
+                  {a.address_line_1}{a.address_line_2 ? `, ${a.address_line_2}` : ""}
+                  <br />{a.city}, {a.state} {a.postal_code}
+                  <br />{a.country} · {a.phone}
+                </p>
+                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-[#e0ddd8]">
+                  <button
+                    onClick={() => { setEditing(a); setShowForm(false); }}
+                    className="text-[11px] font-medium tracking-[0.1em] uppercase text-red-600 hover:opacity-70 transition-opacity"
+                  >
+                    Edit
+                  </button>
+                  {!a.is_default && (
+                    <button
+                      onClick={() => handleSetDefault(a.id)}
+                      className="text-[11px] font-medium tracking-[0.1em] uppercase text-[#444444] hover:text-[#111111] transition-colors"
+                    >
+                      Set Default
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleDelete(a.id)}
+                    className="text-[11px] font-medium tracking-[0.1em] uppercase text-[#cccccc] hover:text-red-600 transition-colors ml-auto"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   SETTINGS TAB
+═══════════════════════════════════════════════ */
+function SettingsTab() {
+  const { user, profile } = useAuth();
+  const [name, setName]   = useState(profile?.full_name || "");
+  const [phone, setPhone] = useState(profile?.phone || "");
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved]   = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword]         = useState("");
+  const [pwMsg, setPwMsg]   = useState("");
+  const [pwSaving, setPwSaving] = useState(false);
+
+  const handleProfileSave = async () => {
+    if (!user) return;
+    setSaving(true);
+    await supabase.from("profiles").update({ full_name: name, phone }).eq("id", user.id);
+    setSaving(false); setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
+
+  const handlePasswordChange = async () => {
+    if (!newPassword || newPassword.length < 6) { setPwMsg("Password must be at least 6 characters."); return; }
+    setPwSaving(true); setPwMsg("");
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    setPwSaving(false);
+    if (error) { setPwMsg(error.message); }
+    else { setPwMsg("Password updated successfully!"); setCurrentPassword(""); setNewPassword(""); }
+  };
+
+  /* shared section card */
+  const SectionCard = ({ header, children }: { header: string; children: React.ReactNode }) => (
+    <div className="rounded-2xl border border-[#e0ddd8] bg-white overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
+      <div className="bg-[#111111] px-6 py-3.5 flex items-center gap-2">
+        <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+        <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+        <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+        <span className="ml-auto text-[11px] tracking-[0.18em] uppercase text-white/30">{header}</span>
+      </div>
+      <div className="p-6">{children}</div>
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <p className="text-[10px] font-medium tracking-[0.25em] uppercase text-red-600 mb-1">Account</p>
+        <h2
+          className="text-[#111111] leading-tight mb-6"
+          style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(28px,4vw,38px)", letterSpacing: "0.04em" }}
+        >
+          Settings
+        </h2>
+      </div>
+
+      {/* Profile card */}
+      <SectionCard header="Profile">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+          <div>
+            <p className="text-[10px] font-medium tracking-[0.2em] uppercase text-[#888888] mb-1.5">Email</p>
+            <input value={user?.email || ""} disabled className={`${inputCls} opacity-50 cursor-not-allowed`} />
+          </div>
+          <div>
+            <p className="text-[10px] font-medium tracking-[0.2em] uppercase text-[#888888] mb-1.5">Full Name</p>
+            <input value={name} onChange={(e) => setName(e.target.value)} className={inputCls} />
+          </div>
+          <div>
+            <p className="text-[10px] font-medium tracking-[0.2em] uppercase text-[#888888] mb-1.5">Phone</p>
+            <input value={phone} onChange={(e) => setPhone(e.target.value)} className={inputCls} />
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleProfileSave}
+            disabled={saving}
+            className="group inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full px-6 py-2.5 transition-all duration-200 hover:-translate-y-0.5"
+          >
+            {saving ? "Saving…" : "Save Changes"}
+            {!saving && <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>}
+          </button>
+          {saved && (
+            <span className="text-[11px] font-medium text-green-600 tracking-wide">✓ Saved</span>
+          )}
+        </div>
+      </SectionCard>
+
+      {/* Password card */}
+      <SectionCard header="Security">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5 max-w-lg">
+          <div className="sm:col-span-2">
+            <p className="text-[10px] font-medium tracking-[0.2em] uppercase text-[#888888] mb-1.5">Current Password</p>
+            <input
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="••••••••"
+              className={inputCls}
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <p className="text-[10px] font-medium tracking-[0.2em] uppercase text-[#888888] mb-1.5">New Password</p>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Min. 6 characters"
+              className={inputCls}
+            />
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handlePasswordChange}
+            disabled={pwSaving}
+            className="group inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full px-6 py-2.5 transition-all duration-200 hover:-translate-y-0.5"
+          >
+            {pwSaving ? "Updating…" : "Update Password"}
+            {!pwSaving && <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>}
+          </button>
+          {pwMsg && (
+            <span className={`text-[11px] font-medium tracking-wide ${pwMsg.includes("success") ? "text-green-600" : "text-red-600"}`}>
+              {pwMsg}
+            </span>
+          )}
+        </div>
+      </SectionCard>
+    </div>
+  );
 }

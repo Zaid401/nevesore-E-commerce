@@ -115,8 +115,7 @@ export default function PrivacyPolicyPage() {
                   fontSize: "clamp(48px, 9vw, 100px)",
                 }}
               >
-                Privacy<br />
-                <span className="text-red-600">Policy</span>
+                Privacy<br />Policy
               </h1>
 
               <p className="text-base sm:text-lg font-light text-[#444444] leading-relaxed max-w-lg">
@@ -208,7 +207,7 @@ export default function PrivacyPolicyPage() {
                 </p>
                 <a
                   href="mailto:teams@neversore.com"
-                  className="group inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full px-5 py-2.5 transition-all duration-200 hover:-translate-y-0.5"
+                  className="group inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-700 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full px-5 py-2.5 transition-all duration-200 hover:-translate-y-0.5"
                 >
                   Email Us
                   <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>

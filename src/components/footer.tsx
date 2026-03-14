@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { FaFacebookF } from "react-icons/fa";
 
 const footerColumns = [
   {
@@ -50,29 +51,13 @@ const footerColumns = [
 
 const socialIcons = [
   {
-    label: "Community",
+    label: "facebook",
     href: "#",
     icon: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
-        <path
-          fill="currentColor"
-          d="M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4m-8 0a4 4 0 1 0-4-4 4 4 0 0 0 4 4m0 2c-3.33 0-10 1.67-10 5v2h8v-2.35A5.78 5.78 0 0 1 6 15m8 0c-.29 0-.61 0-.94.05A5.36 5.36 0 0 1 16 19.35V21h8v-2c0-3.33-6.67-5-10-5"
-        />
-      </svg>
+      <FaFacebookF className="h-5 w-5" aria-hidden="true" />
     ),
   },
-  {
-    label: "YouTube",
-    href: "#",
-    icon: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
-        <path
-          fill="currentColor"
-          d="M21.6 7.2a2.22 2.22 0 0 0-1.56-1.58C18.6 5.25 12 5.25 12 5.25s-6.6 0-8.04.37A2.22 2.22 0 0 0 2.4 7.2 23.23 23.23 0 0 0 2 12a23.23 23.23 0 0 0 .4 4.8 2.22 2.22 0 0 0 1.56 1.58c1.44.37 8.04.37 8.04.37s6.6 0 8.04-.37A2.22 2.22 0 0 0 21.6 16.8 23.23 23.23 0 0 0 22 12a23.23 23.23 0 0 0-.4-4.8M10 15.27V8.73L15.2 12z"
-        />
-      </svg>
-    ),
-  },
+  
   {
     label: "Instagram",
     href: "https://www.instagram.com/be.neversore?igsh=MWF4cTRmNDN1c3dwNA%3D%3",

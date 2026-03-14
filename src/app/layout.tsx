@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     siteName: "NEVERSORE",
     images: [
       {
-        url: shareImage,
+        url: "/favicon.png",
         width: 512,
         height: 512,
         alt: "NEVERSORE logo",
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "NEVERSORE - Premium Gym Outfits",
     description: "Shop premium gym and fitness apparel",
-    images: [shareImage],
+    images: ["/favicon.png"],
   },
 };
 

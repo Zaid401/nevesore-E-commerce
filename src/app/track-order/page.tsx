@@ -430,12 +430,12 @@ function TrackOrderInner() {
             <section className="rounded-2xl border border-[#e5e5e5] bg-white p-4 sm:p-5 lg:p-6 text-center shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
               <p className="text-xs sm:text-sm text-[#555555]">Need help with your order?</p>
               <a
-                href="mailto:support@neversore.com"
+                href="mailto:teams@neversore.com"
                 className="mt-2 sm:mt-3 block w-full rounded-full border border-[#cc071e] py-2 sm:py-3 text-xs font-bold uppercase tracking-[0.25em] text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white"
               >
                 Contact Support
               </a>
-              <p className="mt-2 sm:mt-3 text-xs text-[#555555]">support@neversore.com</p>
+              <p className="mt-2 sm:mt-3 text-xs text-[#555555]">teams@neversore.com</p>
             </section>
           </div>
         )}

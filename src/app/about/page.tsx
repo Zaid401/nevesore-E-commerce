@@ -150,7 +150,7 @@ export default function AboutPage() {
               >
                 "Push past discomfort.<br />
                 Show up consistently.<br />
-                <span className="text-red-600">Refuse to quit."</span>
+                <span className="text-[#111111]">Refuse to quit."</span>
               </blockquote>
               <p className="text-sm font-light text-[#888888] tracking-[0.15em] uppercase">
                 — The Neversore Standard
@@ -257,7 +257,7 @@ export default function AboutPage() {
                   }}
                 >
                   Gear Up.<br />
-                  <span className="text-red-600">Get After It.</span>
+                  <span className="text-[#111111]">Get After It.</span>
                 </h3>
                 <p className="text-sm font-light text-[#666666] leading-relaxed">
                   Explore the full collection and find gear that keeps up with
@@ -290,7 +290,7 @@ export default function AboutPage() {
                   </p>
                   <a
                     href="mailto:teams@neversore.com"
-                    className="text-sm text-red-600 hover:opacity-70 transition-opacity font-medium"
+                    className="text-sm text-[#111111] hover:opacity-70 transition-opacity font-medium"
                   >
                     teams@neversore.com
                   </a>

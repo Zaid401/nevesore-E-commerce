@@ -45,15 +45,15 @@ export default function Hero() {
         <div className="max-w-xl space-y-5 sm:space-y-6">
           <h1 className="text-3xl font-bold uppercase leading-snug text-white sm:text-5xl sm:leading-tight md:text-6xl">
             <span className="block whitespace-nowrap sm:inline">
-              The Most Defining,
+              The Most Defining
             </span>
             <span className="inline-flex flex-wrap items-baseline gap-2 ">
               <span
-                className={`${greatVibes.className} normal-case text-4xl leading-none sm:text-5xl md:text-6xl`}
+                className={`${greatVibes.className} normal-case text-4xl leading-none sm:text-6xl md:text-7xl`}
               >
                 Seamless
               </span>
-              <span className="text-2xl font-semibold  sm:text-3xl">
+              <span className="text-4xl font-semibold sm:text-6xl md:text-7xl">
                 TEE
               </span>
             </span>

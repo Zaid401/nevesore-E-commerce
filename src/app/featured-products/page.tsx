@@ -161,7 +161,7 @@ export default function FeaturedProductsPage() {
               Shop All
             </Link>
             <a
-              href="mailto:support@neversore.com"
+              href="mailto:teams@neversore.com"
               className="px-6 py-3 border-2 border-white text-xs font-bold uppercase text-white hover:bg-white hover:text-[#cc071e] transition-all sm:px-8 sm:text-sm"
             >
               Contact Us

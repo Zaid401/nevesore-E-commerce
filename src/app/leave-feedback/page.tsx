@@ -15,7 +15,7 @@ const submissionSteps = [
   },
   {
     title: "Step 2",
-    detail: "Email everything to support@neversore.com with your order ID or product name for context.",
+    detail: "Email everything to teams@neversore.com with your order ID or product name for context.",
   },
   {
     title: "Step 3",
@@ -83,7 +83,7 @@ export default function LeaveFeedbackPage() {
               </div>
               <div className="mt-6 rounded-xl border border-dashed border-red-200 bg-white p-5 text-base text-neutral-700 shadow-[0_14px_30px_rgba(15,23,42,0.08)] sm:text-lg">
                 <p>
-                  Email: <a className="text-red-500 transition hover:text-red-400" href="mailto:support@neversore.com">support@neversore.com</a>
+                  Email: <a className="text-red-500 transition hover:text-red-400" href="mailto:teams@neversore.com">teams@neversore.com</a>
                 </p>
                 <p className="mt-2">Response Time: 24–48 working hours</p>
               </div>

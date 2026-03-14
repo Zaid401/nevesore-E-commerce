@@ -207,7 +207,7 @@ export default function PrivacyPolicyPage() {
                   Request access, correction, or deletion of your data anytime.
                 </p>
                 <a
-                  href="mailto:support@neversore.com"
+                  href="mailto:teams@neversore.com"
                   className="group inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-[11px] font-medium tracking-[0.15em] uppercase rounded-full px-5 py-2.5 transition-all duration-200 hover:-translate-y-0.5"
                 >
                   Email Us
@@ -308,10 +308,10 @@ export default function PrivacyPolicyPage() {
                         Email
                       </p>
                       <a
-                        href="mailto:support@neversore.com"
-                        className="text-sm text-red-600 hover:opacity-70 transition-opacity font-medium"
+                        href="mailto:teams@neversore.com"
+                        className="text-sm text-[#111111] hover:opacity-70 transition-opacity font-medium"
                       >
-                        support@neversore.com
+                        teams@neversore.com
                       </a>
                     </div>
                     <div className="h-px bg-[#e0ddd8]" />

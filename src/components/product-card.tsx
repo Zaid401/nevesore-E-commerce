@@ -63,7 +63,7 @@ export default function ProductCard({ id, name, price, sale_price, image, catego
           </p>
         )}
         <div className="mt-2 flex items-center gap-2">
-          <p className="text-base font-bold text-red-600">₹{displayPrice.toLocaleString("en-IN")}</p>
+          <p className="text-base font-bold text-[#111111]">₹{displayPrice.toLocaleString("en-IN")}</p>
           {hasDiscount && (
             <p className="text-sm text-neutral-400 line-through">₹{price.toLocaleString("en-IN")}</p>
           )}

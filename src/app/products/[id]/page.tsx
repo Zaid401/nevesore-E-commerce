@@ -295,7 +295,7 @@ export default function ProductDetailPage() {
               <div className="h-0.5 w-1/3 bg-linear-to-r from-[#cc071e] to-transparent mb-4" />
 
               <div className="flex items-center space-x-4 mb-4">
-                <span className="text-xl font-semibold text-[#cc071e] sm:text-2xl lg:text-2xl">
+                <span className="text-xl font-semibold text-[#111111] sm:text-2xl lg:text-2xl">
                   {formatPrice(displayPrice)}
                 </span>
                 {product.sale_price && product.sale_price < product.base_price && !selectedVariant?.price_override && (
@@ -473,7 +473,7 @@ export default function ProductDetailPage() {
                       <p className="mt-1 text-xs text-gray-500">{item.color_name} â€¢ {item.size_label}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs font-bold text-[#cc071e] sm:text-sm lg:text-sm">{formatPrice(item.price * item.quantity)}</p>
+                      <p className="text-xs font-bold text-[#111111] sm:text-sm lg:text-sm">{formatPrice(item.price * item.quantity)}</p>
                       <p className="mt-1 text-[10px] text-gray-500 sm:text-xs lg:text-xs">Qty {item.quantity}</p>
                     </div>
                   </div>

@@ -66,7 +66,7 @@ export default function CartPage() {
                   fontSize: "clamp(48px, 9vw, 100px)",
                 }}
               >
-                Your <span className="text-red-600">Cart</span>
+                Your Cart
               </h1>
               <p className="text-base font-light text-[#444444]">
                 Premium essentials curated for peak performance.
@@ -138,7 +138,7 @@ export default function CartPage() {
                     <p className="text-[11px] font-medium tracking-[0.18em] uppercase text-[#888888]">
                       Free Shipping Progress
                     </p>
-                    <p className="text-[11px] font-medium tracking-[0.1em] uppercase text-red-600">
+                    <p className="text-[11px] font-medium tracking-[0.1em] uppercase text--[#111111]">
                       {Math.round(freeShippingProgress)}%
                     </p>
                   </div>
@@ -152,7 +152,7 @@ export default function CartPage() {
                     {remainingForFreeShipping > 0 ? (
                       <>Add <span className="text-[#111111] font-medium">&#8377;{remainingForFreeShipping.toLocaleString("en-IN")}</span> more to unlock free shipping.</>
                     ) : (
-                      <span className="text-red-600 font-medium">🎉 You've unlocked free shipping!</span>
+                      <span className="text-[#111111] font-medium">🎉 You've unlocked free shipping!</span>
                     )}
                   </p>
                 </div>

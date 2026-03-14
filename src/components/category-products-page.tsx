@@ -64,7 +64,7 @@ export default async function CategoryProductsPage({
     <main className="min-h-screen bg-neutral-50">
       <Navbar />
 
-      <section className="py-14 sm:py-14 lg:py-16">
+      <section className="py-17 sm:py-14 lg:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-6">
           <div className="mb-8 sm:mb-10 lg:mb-10">
             <span className="text-[10px] font-semibold uppercase  text-red-600 sm:text-xs">

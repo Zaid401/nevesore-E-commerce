@@ -40,16 +40,16 @@ function CategoryCard({ category }: { category: Category }) {
         <div className="absolute inset-0 bg-linear-to-t from-neutral-950/75 via-neutral-900/20 to-transparent" />
       </div>
 
-      <div className="relative flex h-full w-full flex-col justify-end p-3 sm:p-7">
+      <div className="relative flex h-full w-full flex-col items-center justify-center p-3 text-center sm:p-7">
         <h3 className="text-base sm:text-xl font-black uppercase tracking-wide text-white">
           {category.name}
         </h3>
         {category.description && (
-          <p className="mt-1 text-xs sm:text-sm text-neutral-300 line-clamp-2">
+          <p className="mt-1 text-xs text-neutral-300 line-clamp-2 sm:text-sm">
             {category.description}
           </p>
         )}
-        <div className="mt-4 hidden sm:flex items-center gap-2">
+        <div className="mt-4 hidden items-center gap-2 sm:flex">
           <span className="text-sm font-bold uppercase  text-white">Shop Now</span>
           <div className="h-px w-8 bg-red-500 transition-all duration-300 group-hover:w-14" />
         </div>

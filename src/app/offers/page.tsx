@@ -95,7 +95,7 @@ export default function OffersPage() {
                 </div>
               </div>
               <p className="mt-6 text-base text-neutral-600 sm:text-lg">
-                Need help redeeming an offer? Send your code and cart screenshot to <a className="text-red-500 transition hover:text-red-400" href="mailto:support@neversore.com">support@neversore.com</a> before checkout so we can confirm eligibility.
+                Need help redeeming an offer? Send your code and cart screenshot to <a className="text-red-500 transition hover:text-red-400" href="mailto:teams@neversore.com">teams@neversore.com</a> before checkout so we can confirm eligibility.
               </p>
             </div>
           </div>

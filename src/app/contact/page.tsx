@@ -139,7 +139,7 @@ export default function ContactPage() {
                 {item.link ? (
                   <a
                     href={item.link}
-                    className="block font-semibold text-red-600 hover:opacity-70 transition-opacity mb-3 leading-snug"
+                    className="block font-semibold text-black hover:opacity-70 transition-opacity mb-3 leading-snug"
                     style={{
                       fontFamily: "'Bebas Neue', sans-serif",
                       fontSize: "clamp(15px, 2vw, 20px)",

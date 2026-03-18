@@ -474,28 +474,26 @@ export default function Navbar() {
 
                 {/* Wishlist Quick Access */}
               
-
-                {/* Account + Login (Mobile) */}
-                <div className="mt-2 space-y-3">
-                  <h3 className="px-4 text-base font-semibold text-[#111111]">
-                    Account
-                  </h3>
-                  <Link
-                    href="/login"
-                    className="block bg-gray-900 px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-[#3a1b10]"
-                    onClick={handleCloseMenu}
-                  >
-                    Log In
-                  </Link>
-                  <Link
-                    href={user ? "/account" : "/signup"}
-                    className="block  border border-gray-700 px-4 py-[11px] text-center text-sm font-semibold text-gray-900 transition-colors hover:bg-[#fdf7f3]"
-                    onClick={handleCloseMenu}
-                  >
-                    Register
-                  </Link>
-                </div>
               </div>
+            </div>
+
+            {/* Account + Login (Mobile) pinned to bottom */}
+            <div className="border-t border-[#e5e5e5] px-6 py-5 space-y-3">
+              <h3 className="text-base font-semibold text-[#111111]">Account</h3>
+              <Link
+                href="/login"
+                className="block bg-gray-900 px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-[#3a1b10]"
+                onClick={handleCloseMenu}
+              >
+                Log In
+              </Link>
+              <Link
+                href={user ? "/account" : "/signup"}
+                className="block border border-gray-700 px-4 py-[11px] text-center text-sm font-semibold text-gray-900 transition-colors hover:bg-[#fdf7f3]"
+                onClick={handleCloseMenu}
+              >
+                Register
+              </Link>
             </div>
           </div>
         </>

@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type TouchEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -54,6 +54,7 @@ interface ProductData {
 }
 
 const FALLBACK_IMAGE = "/product/fallback.png";
+const SWIPE_THRESHOLD = 45;
 
 export default function ProductDetailPage() {
   const params = useParams<{ id: string }>();
@@ -71,11 +72,27 @@ export default function ProductDetailPage() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [imgErrors, setImgErrors] = useState<Set<number>>(new Set());
   const [cartImgErrors, setCartImgErrors] = useState<Set<string>>(new Set());
+  const [isMobile, setIsMobile] = useState(false);
+  const touchStartXRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!params?.id) return;
     fetchProduct(params.id);
   }, [params?.id]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    const handleChange = () => setIsMobile(mediaQuery.matches);
+    handleChange();
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", handleChange);
+      return () => mediaQuery.removeEventListener("change", handleChange);
+    }
+    mediaQuery.addListener(handleChange);
+    return () => mediaQuery.removeListener(handleChange);
+  }, []);
 
   const fetchProduct = async (id: string) => {
     setLoading(true);
@@ -181,6 +198,39 @@ export default function ProductDetailPage() {
   const displayImages = colorImages.length > 0 ? colorImages : globalImages;
   const heroImageSrc = displayImages[selectedImageIdx]?.image_url || displayImages[0]?.image_url || FALLBACK_IMAGE;
   const currentImageSrc = imgErrors.has(selectedImageIdx) ? FALLBACK_IMAGE : heroImageSrc;
+  const totalImages = displayImages.length;
+
+  const goToNextImage = () => {
+    if (totalImages === 0) return;
+    setSelectedImageIdx((prev) => (prev + 1) % totalImages);
+  };
+
+  const goToPrevImage = () => {
+    if (totalImages === 0) return;
+    setSelectedImageIdx((prev) => (prev - 1 + totalImages) % totalImages);
+  };
+
+  const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+    if (!isMobile || totalImages <= 1) return;
+    touchStartXRef.current = event.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+    if (!isMobile || totalImages <= 1 || touchStartXRef.current === null) return;
+    const deltaX = (event.changedTouches[0]?.clientX ?? 0) - touchStartXRef.current;
+    if (Math.abs(deltaX) >= SWIPE_THRESHOLD) {
+      if (deltaX < 0) {
+        goToNextImage();
+      } else {
+        goToPrevImage();
+      }
+    }
+    touchStartXRef.current = null;
+  };
+
+  const handleTouchCancel = () => {
+    touchStartXRef.current = null;
+  };
 
   // Reset image errors when color changes
   // (inline reset in the setSelectedColorIdx call below handles most cases)
@@ -275,7 +325,12 @@ export default function ProductDetailPage() {
               </div>
 
               {/* Main Image */}
-              <div className="order-1 bg-white rounded-sm overflow-hidden aspect-4/5 shadow-sm relative flex-1 lg:order-none">
+              <div
+                className="order-1 bg-white rounded-sm overflow-hidden aspect-4/5 shadow-sm relative flex-1 lg:order-none"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                onTouchCancel={handleTouchCancel}
+              >
                 {displayImages.length > 0 ? (
                   <Image
                     src={currentImageSrc}

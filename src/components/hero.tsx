@@ -49,7 +49,7 @@ export default function Hero() {
             </span>
             <span className="inline-flex flex-wrap items-baseline gap-2 ">
               <span
-                className={`${greatVibes.className} normal-case text-4xl leading-none sm:text-6xl md:text-7xl`}
+                className={`${greatVibes.className} normal-case text-6xl leading-none sm:text-8xl md:text-10xl`}
               >
                 Seamless
               </span>
@@ -68,11 +68,11 @@ export default function Hero() {
 
           <div className="pt-2 sm:pt-4">
             <Link
-              href="/best-sellers"
+              href="https://www.neversore.com/products/70912532-87ce-4627-9d38-af0a6c8f93f4"
               className="inline-flex flex-col text-sm font-semibold uppercase tracking-wide group"
             >
               <span className="text-white">
-                Explore Collection
+               Shop Now
               </span>
 
               <span className="mt-1 h-0.5 w-full bg-white transition-all duration-300 group-hover:w-10/12"></span>

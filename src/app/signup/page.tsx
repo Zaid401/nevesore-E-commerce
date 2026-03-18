@@ -231,7 +231,7 @@ export default function SignupPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="h-11 rounded-2xl bg-red-600 text-xs font-bold uppercase text-white transition-transform duration-150 hover:-translate-y-0.5 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 sm:h-12 sm:text-sm lg:h-12 lg:text-sm"
+                  className="h-11 rounded-2xl bg-gray-900 text-xs font-bold uppercase text-white transition-transform duration-150 hover:-translate-y-0.5 hover:bg-gray-800 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 sm:h-12 sm:text-sm lg:h-12 lg:text-sm"
                 >
                   {loading ? "Creating Account..." : "Create Account"}
                 </button>
@@ -255,7 +255,7 @@ export default function SignupPage() {
 
               <p className="text-center text-[10px] uppercase text-neutral-500 sm:text-xs lg:text-xs">
                 Already have an account?{" "}
-                <Link href="/login" className="text-red-600 transition-colors hover:text-red-700">
+                <Link href="/login" className="text-red-600 transition-colors hover:text-red-700 hover:underline">
                   Sign In
                 </Link>
               </p>

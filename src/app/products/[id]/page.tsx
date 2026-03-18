@@ -245,7 +245,7 @@ export default function ProductDetailPage() {
     <main className="bg-[#f8f8f8] min-h-screen text-slate-900">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 py-8 sm:py-10 lg:py-12">
+      <div className="max-w-7xl mx-auto px-4 pt-16 pb-8 sm:py-10 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12">
 
           {/* LEFT COLUMN - IMAGE GALLERY */}

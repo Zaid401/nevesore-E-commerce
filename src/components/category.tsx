@@ -25,7 +25,7 @@ function CategoryCard({ category }: { category: Category }) {
   return (
     <Link
       href={`/${category.slug}`}
-      className="group relative flex w-full overflow-hidden border border-neutral-100 bg-neutral-900 shadow-[0_8px_40px_rgba(0,0,0,0.12)] transition-shadow duration-300 hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)]"
+      className="group relative flex w-full overflow-hidden border border-neutral-100 bg-neutral-900 shadow-[0_8px_40px_rgba(0,0,0,0.12)] transition-shadow duration-300 hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] rounded-lg"
       style={{ aspectRatio: "3/4" }}
     >
       <div className="absolute inset-0">
@@ -61,7 +61,7 @@ function CategoryCard({ category }: { category: Category }) {
 // ─── Skeleton placeholder ──────────────────────────────────────────────────────
 function SkeletonGrid() {
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6">
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 ">
       {[...Array(8)].map((_, i) => (
         <div
           key={i}

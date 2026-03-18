@@ -161,8 +161,16 @@ export default function CartPage() {
                 {items.map((item) => (
                   <article
                     key={item.variant_id}
-                    className="group rounded-2xl border border-[#e0ddd8] bg-white hover:border-red-200 hover:shadow-[0_8px_32px_rgba(212,0,31,0.06)] transition-all duration-300 overflow-hidden"
+                    className="relative group rounded-2xl border border-[#e0ddd8] bg-white hover:border-red-200 hover:shadow-[0_8px_32px_rgba(212,0,31,0.06)] transition-all duration-300 overflow-hidden"
                   >
+                    <button
+                      type="button"
+                      onClick={() => removeItem(item.variant_id)}
+                      aria-label="Remove item"
+                      className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-[#e0ddd8] bg-white text-lg font-semibold text-[#bbbbbb] transition-colors duration-150 hover:border-red-300 hover:text-red-600"
+                    >
+                      −
+                    </button>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-5 p-5 sm:p-6">
                       {/* Product image */}
                       <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl bg-[#f0edea] border border-[#e0ddd8]">

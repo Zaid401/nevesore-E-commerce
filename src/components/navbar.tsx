@@ -119,19 +119,7 @@ export default function Navbar() {
             <span>Get 15% off regular-priced items.</span>
             
           </div>
-          <button
-            type="button"
-            aria-label="Hide announcement"
-            className="absolute right-6 rounded-full p-1.5 hover:bg-[#e5e5e5] transition"
-            onClick={() => setPromoVisible(false)}
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 text-[#111111]">
-              <path
-                fill="currentColor"
-                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"
-              />
-            </svg>
-          </button>
+          
         </div>
       )}
       {/* Desktop & Tablet Navbar */}
@@ -323,23 +311,11 @@ export default function Navbar() {
           <div className="flex items-center justify-center px-4 py-[2px] text-[12px] font-semibold text-[#111111] bg-[#f4f1ed] border-b border-[#e5e5e5]">
             <span className="mr-1 flex-1 text-center">Get 15% off regular-priced items.</span>
            
-            <button
-              type="button"
-              aria-label="Hide announcement"
-              className="ml-2 rounded-full p-1.5 hover:bg-[#e5e5e5] transition"
-              onClick={() => setPromoVisible(false)}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 text-[#111111]">
-                <path
-                  fill="currentColor"
-                  d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"
-                />
-              </svg>
-            </button>
+
           </div>
         )}
         {/* ROW 1: Main Navigation */}
-        <div className="flex items-center px-4 py-3 border-b border-[#f3f3f3]">
+        <div className="flex items-center px-4 py-2 border-b border-[#f3f3f3]">
           {/* Left: Hamburger Menu */}
           <div className="flex flex-1 items-center">
             <button

@@ -7,10 +7,10 @@ const footerColumns = [
     title: "Shop",
     links: [
       //{ label: "Active Wear", href: "/active" },
-      { label: "Best Sellers", href: "/best-sellers" },
-      { label: "Upper Wear", href: "/upper" },
+      { label: "Cart", href: "/cart" },
+      { label: "Wishlist", href: "/wishlist" },
 
-      { label: "Bottom Wear", href: "/bottom" },
+      { label: "Best Sellers", href: "/best-sellers" },
 
     ],
   },
@@ -52,7 +52,7 @@ const footerColumns = [
 const socialIcons = [
   {
     label: "facebook",
-    href: "#",
+    href: "https://www.facebook.com/people/Neversore/61561600970274/?mibextid=wwXIfr&rdid=enxQn05PzLFrYYOi&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F18mDzay9F8%2F%3Fmibextid%3DwwXIfr",
     icon: (
       <FaFacebookF className="h-5 w-5" aria-hidden="true" />
     ),
@@ -97,6 +97,7 @@ export default function Footer() {
                 <Link
                   key={item.label}
                   aria-label={item.label}
+                  target="_blank"
                   href={item.href}
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-700 transition-colors hover:border-red-500/80 hover:text-red-400 sm:h-12 sm:w-12"
                 >

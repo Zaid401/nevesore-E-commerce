@@ -360,7 +360,7 @@ export default function CheckoutPage() {
                       <button
                         type="button"
                         onClick={() => { setShowNewAddressForm(!showNewAddressForm); if (!showNewAddressForm) setSelectedAddressId(null); }}
-                        className="text-xs font-semibold text-[#cc071e] hover:text-red-700 underline"
+                        className="text-xs font-semibold text-gray-900 hover:text-gray-700 underline"
                       >
                         {showNewAddressForm ? "Use saved address" : "+ Add a new address"}
                       </button>
@@ -540,7 +540,7 @@ export default function CheckoutPage() {
                         placeholder="Discount code"
                         className="h-11 flex-1 rounded-full border border-[#e5e5e5] bg-white px-4 text-sm focus:border-[#cc071e] focus:outline-none" />
                       <button type="button" onClick={handleApplyCoupon}
-                        className="h-11 rounded-full border border-[#cc071e] px-4 text-xs font-bold uppercase tracking-[0.2em] text-[#cc071e] transition-all hover:bg-[#cc071e] hover:text-white">
+                        className="h-11 rounded-full border border-gray-900 px-4 text-xs font-bold uppercase tracking-[0.2em] text-gray-900 transition-all hover:bg-[#cc071e] hover:text-white">
                         Apply
                       </button>
                     </div>
@@ -556,7 +556,7 @@ export default function CheckoutPage() {
               )}
 
               <button type="button" onClick={placeOrder} disabled={isSubmitting || items.length === 0}
-                className="mt-5 w-full rounded-full bg-[#cc071e] py-4 text-xs font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-red-700 hover:shadow-[0_12px_30px_rgba(204,7,30,0.3)] disabled:opacity-50 disabled:cursor-not-allowed">
+                className="mt-5 w-full rounded-full bg-gray-900 py-4 text-xs font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-gray-700 hover:shadow-[0_12px_30px_rgba(204,7,30,0.3)] disabled:opacity-50 disabled:cursor-not-allowed">
                 {isSubmitting
                   ? (paymentMethod === "cod" ? "Placing Order…" : "Opening Payment…")
                   : (paymentMethod === "cod" ? "Place COD Order" : "Pay Now")}
@@ -576,7 +576,7 @@ export default function CheckoutPage() {
             <span>₹{displaySummary.total_amount.toLocaleString("en-IN")}</span>
           </div>
           <button type="button" onClick={placeOrder} disabled={isSubmitting || items.length === 0}
-            className="w-full rounded-full bg-[#cc071e] py-3 text-xs font-bold uppercase tracking-[0.2em] text-white disabled:opacity-50 disabled:cursor-not-allowed">
+            className="w-full rounded-full bg-gray-900 py-3 text-xs font-bold uppercase tracking-[0.2em] text-white disabled:opacity-50 disabled:cursor-not-allowed">
             {isSubmitting
               ? (paymentMethod === "cod" ? "Placing Order…" : "Opening Payment…")
               : (paymentMethod === "cod" ? "Place COD Order" : "Pay Now")}
